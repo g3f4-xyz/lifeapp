@@ -1,75 +1,55 @@
-// https://webpack.js.org/guides/hmr-react/
-const { resolve } = require('path');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
-const CLIENT_PATH = resolve(__dirname, 'client');
+const merge = require('webpack-merge');
 
-module.exports = {
-  entry: [
-    'react-hot-loader/patch',
-    // activate HMR for React
+const parts = require('./webpack.parts');
 
-    'webpack-dev-server/client?http://localhost:8080',
-    // bundle the client for webpack-dev-server
-    // and connect to the provided endpoint
-
-    'webpack/hot/only-dev-server',
-    // bundle the client for hot reloading
-    // only- means to only hot reload for successful updates
+const PATHS = {
+  client: path.join(__dirname, 'client'),
+  build: path.join(__dirname, 'build'),
+};
 
 
-    './index.js'
-    // the entry point of our app
-  ],
+const common = merge({
+  entry: {
+    app: PATHS.client,
+  },
   output: {
-    filename: 'bundle.js',
-    // the output bundle
-
-    path: resolve(CLIENT_PATH, 'dist'),
-
-    publicPath: '/'
-    // necessary for HMR to know where to load the hot update chunks
+    path: PATHS.build,
+    filename: '[name].js',
   },
-
-  context: resolve(CLIENT_PATH, 'src'),
-
-  devtool: 'inline-source-map',
-
-  devServer: {
-    hot: true,
-    // enable HMR on the server
-
-    contentBase: resolve(CLIENT_PATH, 'dist'),
-    // match the output path
-
-    publicPath: '/'
-    // match the output `publicPath`
-  },
-
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        use: [
-          'babel-loader',
-        ],
-        exclude: /node_modules/
-      },
-      {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader?modules',
-          'postcss-loader',
-        ],
-      },
-    ],
-  },
-
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    // enable HMR globally
-
-    new webpack.NamedModulesPlugin(),
-    // prints more readable module names in the browser console on HMR updates
+    new HtmlWebpackPlugin({
+      title: 'LifeApp',
+    }),
   ],
+});
+
+module.exports = function(env) {
+  if (env === 'production') {
+    return merge([
+      common,
+      parts.lintJavaScript({ include: PATHS.client }),
+    ]);
+  }
+
+  return merge([
+    common,
+    {
+      plugins: [
+        new webpack.NamedModulesPlugin(),
+      ],
+    },
+    parts.devServer({
+      host: process.env.HOST,
+      port: process.env.PORT,
+    }),
+    parts.lintJavaScript({
+      include: PATHS.client,
+      options: {
+        emitWarning: true,
+      },
+    }),
+  ]);
 };
