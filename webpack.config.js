@@ -10,7 +10,6 @@ const PATHS = {
   build: path.join(__dirname, 'build'),
 };
 
-
 const common = merge({
   entry: {
     app: PATHS.client,

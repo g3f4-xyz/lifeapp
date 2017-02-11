@@ -5,8 +5,10 @@
   "main": "lifeapp",
   "scripts": {
     "build": "webpack --env production",
+    "build:ss": "webpack --config webpack.server.js --env production",
     "lint:js": "eslint . --cache",
     "start": "nodemon --watch webpack.config.js --exec \"webpack-dev-server --env development\"",
+    "start:ss": "npm run build:ss && node ./build/server.js",
     "test": "mocha './{,!(node_modules)/**/}*.test.js'"
   },
   "keywords": [],
@@ -41,6 +43,9 @@
     "webpack-merge": "^2.6.1"
   },
   "dependencies": {
+    "express": "^4.14.1",
+    "express-graphql": "^0.6.3",
+    "graphql": "^0.9.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   }
