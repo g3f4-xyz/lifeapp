@@ -1,4 +1,4 @@
-const path = require('path');
+const { join } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
@@ -6,8 +6,8 @@ const merge = require('webpack-merge');
 const parts = require('./webpack.parts');
 
 const PATHS = {
-  client: path.join(__dirname, 'client'),
-  build: path.join(__dirname, 'build'),
+  client: join(__dirname, 'client'),
+  build: join(__dirname, 'build'),
 };
 
 const common = merge({
@@ -20,7 +20,9 @@ const common = merge({
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'LifeApp',
+      filename: 'index.html',
+      template: join(PATHS.client, 'index.html'),
+      inject: true
     }),
   ],
 });
