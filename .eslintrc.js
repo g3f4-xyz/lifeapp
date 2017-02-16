@@ -6,11 +6,25 @@ module.exports = {
     "node": true,
     "mocha": true,
   },
-  "extends": "airbnb",
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "module",
+    "allowImportExportEverywhere": true,
+    "ecmaFeatures": {
+      "jsx": true,
+    },
   },
+  "plugins": [
+    "react",
+  ],
   "rules": {
-    "func-names": 0
+    "comma-dangle": ["error", "always-multiline"],
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "no-unused-vars": ["warn"],
+    "no-console": 0,
   },
 };
