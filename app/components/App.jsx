@@ -1,14 +1,39 @@
 import React from 'react';
-import Header from './Header';
+import Relay from 'react-relay';
 
-export default class App extends React.Component {
-  state = { header: 'Welcome to LifeApp' };
+class App extends React.Component {
+  static propTypes = {
+    user: React.PropTypes.object,
+  };
 
   render() {
     return (
       <div>
-        <Header header={this.state.header} />
+        <h1>User tasks:</h1>
+        <ul>
+        {this.props.user.tasks.edges.map(edge =>
+          <li key={edge.node.id}>{edge.node.title} ({edge.node.priority})</li>
+        )}
+        </ul>
       </div>
     );
   }
 }
+
+export default Relay.createContainer(App, {
+  fragments: {
+    user: () => Relay.QL`
+      fragment on User {
+        tasks(first: 5) {
+          edges {
+            node {
+              id,
+              title,
+              priority,
+            },
+          },
+        },
+      }
+    `,
+  },
+});
