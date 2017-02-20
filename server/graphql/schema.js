@@ -1,13 +1,8 @@
-import { GraphQLSchema, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLSchema } from 'graphql';
+// import mutation from './mutation';
+import query from './query';
 
 export default new GraphQLSchema({
-  query: new GraphQLObjectType({
-    name: 'query',
-    fields: {
-      welcome: {
-        type: GraphQLString,
-        resolve: () => 'Welcome to LifeApp'
-      }
-    }
-  })
+  query,
+  // mutation
 });
