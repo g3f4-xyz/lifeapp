@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import Relay from 'react-relay';
 import './main.css';
-import App from './components/App';
+import App from './containers/App';
 import UserRoute from './routes/user';
 
 const render = App => {
@@ -22,5 +22,5 @@ const render = App => {
 render(App);
 
 if (module.hot) {
-  module.hot.accept('./components/App', () => render(App));
+  module.hot.accept('./containers/App', () => render(App));
 }

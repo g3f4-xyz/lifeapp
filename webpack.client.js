@@ -145,8 +145,11 @@ function reactDevelopment() {
 }
 
 module.exports = function(env) {
+  console.log(['BABEL_ENV'], process.env.BABEL_ENV);
   console.log(['env'], env);
-  process.env.BABEL_ENV = env;
+  if (!process.env.BABEL_ENV) {
+    process.env.BABEL_ENV = env;
+  }
 
   if (env === 'production') {
     return merge(production(), react());
