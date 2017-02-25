@@ -13,6 +13,12 @@ exports.devServer = function({ host, port }) {
       historyApiFallback: true, // for proper browser history
       hotOnly: true, // reload only without errors
       stats: 'errors-only', // print only errros
+      proxy: {
+        '/graphql': {
+          target: `http://localhost:${process.env.GRAPHQL_PORT}/`,
+          secure: false
+        }
+      },
     },
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
