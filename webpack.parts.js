@@ -13,9 +13,26 @@ exports.devServer = function({ host, port }) {
       historyApiFallback: true, // for proper browser history
       hotOnly: true, // reload only without errors
       stats: 'errors-only', // print only errros
+      proxy: {
+        "/graphql": {
+          target: "http://localhost:3000/",
+          secure: false
+        }
+      },
     },
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
+      // new webpack.LoaderOptionsPlugin({
+      //  // test: /\.xxx$/, // may apply this only for some modules
+      //  options: {
+      //    proxy: {
+      //      "/api": {
+      //        target: "https://other-server.example.com",
+      //        secure: false
+      //      }
+      //    }
+      //  }
+    //  })
     ],
   };
 };

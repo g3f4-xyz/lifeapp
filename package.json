@@ -7,7 +7,7 @@
     "build": "webpack --env production",
     "build:client": "webpack --env production --config webpack.client.js",
     "build:server": "webpack --env production --config webpack.server.js",
-    "client": "BABEL_ENV=HMR webpack-dev-server --env development --config webpack.client.js",
+    "client": "GRAPHQL_PORT=3000 BABEL_ENV=HMR webpack-dev-server --env development --config webpack.client.js",
     "lint:css": "stylelint app/**/*.css",
     "lint:js": "eslint . --cache",
     "server": "babel-watch server",
@@ -74,6 +74,7 @@
     "graphql-relay": "^0.5.1",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "react-motion": "^0.4.7",
     "react-relay": "^0.10.0"
   }
 }
