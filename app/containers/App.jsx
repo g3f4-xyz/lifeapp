@@ -1,5 +1,6 @@
 import React from 'react';
 import Relay from 'react-relay';
+import Tasks from './Tasks';
 
 class App extends React.Component {
   static propTypes = {
@@ -9,12 +10,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <h1>User tasks:</h1>
-        <ul>
-        {this.props.user.tasks.edges.map(edge =>
-          <li key={edge.node.id}>{edge.node.title} ({edge.node.priority})</li>
-        )}
-        </ul>
+        <Tasks tasks={this.props.user.tasks} />
       </div>
     );
   }
@@ -25,13 +21,7 @@ export default Relay.createContainer(App, {
     user: () => Relay.QL`
       fragment on User {
         tasks(first: 5) {
-          edges {
-            node {
-              id,
-              title,
-              priority,
-            },
-          },
+          ${Tasks.getFragment('tasks')},
         },
       }
     `,

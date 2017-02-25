@@ -5,7 +5,12 @@
     "./plugins/babelRelayPlugin"
   ],
   "presets": [
-    "es2015",
+    [
+      "es2015",
+      {
+        "modules": false
+      }
+    ],
     "react",
     "stage-0"
   ],
@@ -22,6 +27,16 @@
         "stage-0"
       ],
     },
+    "server": {
+      "plugins": [
+        "syntax-dynamic-import",
+      ],
+      "presets": [
+        "es2015",
+        "react",
+        "stage-0"
+      ],
+    },
     "HMR": {
       "plugins": [
         "transform-runtime",
@@ -29,7 +44,12 @@
         "./plugins/babelRelayPlugin",
       ],
       "presets": [
-        "es2015",
+        [
+          "es2015",
+          {
+            "modules": false
+          }
+        ],
         "react",
         "stage-0"
       ],
