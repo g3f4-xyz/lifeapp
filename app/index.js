@@ -4,7 +4,7 @@ import { AppContainer } from 'react-hot-loader';
 import Relay from 'react-relay';
 import './main.css';
 import App from './containers/App';
-import UserRoute from './routes/user';
+import AppRoute from './routes/app';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
@@ -19,7 +19,7 @@ const render = App => {
         <Relay.Renderer
           environment={Relay.Store}
           Container={App}
-          queryConfig={new UserRoute()}
+          queryConfig={new AppRoute()}
         />
       </MuiThemeProvider>
     </AppContainer>,

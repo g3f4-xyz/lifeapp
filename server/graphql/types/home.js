@@ -9,8 +9,8 @@ import { taskConnection } from '../connections';
 import { getTasks } from '../../api';
 
 export default new GraphQLObjectType({
-  name: 'User',
-  description: 'Application user',
+  name: 'Home',
+  description: 'Home module',
   fields: () => ({
     id: globalIdField('User'),
     tasks: {

@@ -3,7 +3,7 @@ import {
   nodeDefinitions,
 } from 'graphql-relay';
 // import { #FIXME get rid off cyclic dependency
-//   userType,
+//   homeType,
 //   taskType,
 // } from './types';
 import {

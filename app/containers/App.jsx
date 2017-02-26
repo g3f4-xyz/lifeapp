@@ -1,16 +1,18 @@
 import React from 'react';
 import Relay from 'react-relay';
-import Tasks from './Tasks';
+import Home from '../modules/Home';
 
 class App extends React.Component {
   static propTypes = {
-    user: React.PropTypes.object,
+    app: React.PropTypes.shape({
+      home: React.PropTypes.object,
+    }),
   };
 
   render() {
     return (
       <div>
-        <Tasks tasks={this.props.user.tasks} />
+        <Home home={this.props.app.home} />
       </div>
     );
   }
@@ -18,11 +20,11 @@ class App extends React.Component {
 
 export default Relay.createContainer(App, {
   fragments: {
-    user: () => Relay.QL`
-      fragment on User {
-        tasks(first: 5) {
-          ${Tasks.getFragment('tasks')},
-        },
+    app: () => Relay.QL`
+      fragment on App {
+        home {
+          ${Home.getFragment('home')},
+        }
       }
     `,
   },

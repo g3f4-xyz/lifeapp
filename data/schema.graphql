@@ -1,3 +1,17 @@
+# Application entry point
+type App {
+  home: Home
+}
+
+# Home module
+type Home implements Node {
+  # The ID of an object
+  id: ID!
+
+  # User's tasks
+  tasks(after: String, first: Int, before: String, last: Int): TaskConnection
+}
+
 # An object with an ID
 interface Node {
   # The id of the object.
@@ -20,12 +34,7 @@ type PageInfo {
 }
 
 type Query {
-  # Fetches an object given its ID
-  node(
-    # The ID of an object
-    id: ID!
-  ): Node
-  user: User
+  app: App
 }
 
 # A task
@@ -56,13 +65,4 @@ type TaskEdge {
 
   # A cursor for use in pagination
   cursor: String!
-}
-
-# Application user
-type User implements Node {
-  # The ID of an object
-  id: ID!
-
-  # User's tasks
-  tasks(after: String, first: Int, before: String, last: Int): TaskConnection
 }

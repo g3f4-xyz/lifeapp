@@ -1,7 +1,7 @@
 import taskType from './task';
-import userType from './user';
+import homeType from './user';
 
 export {
   taskType,
-  userType,
+  homeType,
 };
