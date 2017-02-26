@@ -1,5 +1,5 @@
 import { GraphQLObjectType } from 'graphql';
-import appType from './types/app';
+import appType from './entries/app';
 
 export default new GraphQLObjectType({
   name: 'Query',

@@ -1,6 +1,6 @@
 import { GraphQLObjectType } from 'graphql';
 import { getHome } from '../../api'
-import homeType from './home';
+import homeType from '../modules/home';
 
 export default new GraphQLObjectType({
   name: 'App',
