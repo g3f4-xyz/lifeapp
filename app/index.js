@@ -5,15 +5,23 @@ import Relay from 'react-relay';
 import './main.css';
 import App from './containers/App';
 import UserRoute from './routes/user';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+
+// Needed for onTouchTap
+// http://stackoverflow.com/a/34015469/988941
+injectTapEventPlugin();
 
 const render = App => {
   ReactDOM.render(
     <AppContainer>
-      <Relay.Renderer
-        environment={Relay.Store}
-        Container={App}
-        queryConfig={new UserRoute()}
-      />
+      <MuiThemeProvider>
+        <Relay.Renderer
+          environment={Relay.Store}
+          Container={App}
+          queryConfig={new UserRoute()}
+        />
+      </MuiThemeProvider>
     </AppContainer>,
     document.getElementById('app')
   );
