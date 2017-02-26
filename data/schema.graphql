@@ -1,3 +1,8 @@
+# Application entry point
+type App {
+  user: User
+}
+
 # An object with an ID
 interface Node {
   # The id of the object.
@@ -20,12 +25,7 @@ type PageInfo {
 }
 
 type Query {
-  # Fetches an object given its ID
-  node(
-    # The ID of an object
-    id: ID!
-  ): Node
-  user: User
+  app: App
 }
 
 # A task
