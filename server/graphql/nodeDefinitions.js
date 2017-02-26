@@ -7,7 +7,7 @@ import {
 //   taskType,
 // } from './types';
 import {
-  getUser,
+  getHome,
   getTask,
 } from '../api';
 import {
@@ -16,7 +16,7 @@ import {
 } from '../models';
 
 const GETTERS = {
-  User: getUser,
+  Home: getHome,
   Task: getTask,
 };
 const idFetcher = globalId => {
@@ -26,7 +26,7 @@ const idFetcher = globalId => {
 };
 const typeResolver = obj => {
   if (obj instanceof Home) {
-    return require('./types/home');
+    return require('./modules/home');
   } else if (obj instanceof Task)  {
     return require('./types/task');
   } else {
