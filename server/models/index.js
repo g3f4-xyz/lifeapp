@@ -1,7 +1,7 @@
-import User from './User';
+import Home from './Home';
 import Task from './Task';
 
 export {
-  User,
+  Home,
   Task,
 };

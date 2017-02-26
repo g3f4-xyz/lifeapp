@@ -11,7 +11,7 @@ import {
   getTask,
 } from '../api';
 import {
-  User,
+  Home,
   Task,
 } from '../models';
 
@@ -25,10 +25,10 @@ const idFetcher = globalId => {
   return GETTERS[type] ? GETTERS[type](id) : null;
 };
 const typeResolver = obj => {
-  if (obj instanceof User) {
-    return require('./types/user');
+  if (obj instanceof Home) {
+    return require('./types/home');
   } else if (obj instanceof Task)  {
-    return require('./types/user');
+    return require('./types/task');
   } else {
     return null;
   }

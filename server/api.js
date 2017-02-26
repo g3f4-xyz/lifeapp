@@ -1,12 +1,12 @@
 import tasksMocks from './mocks/tasks';
-import usersMocks from './mocks/users';
+import homeMocks from './mocks/home';
 
-const getUser = usersMocks;
+const getHome = homeMocks;
 const getTask = tasksMocks;
 const getTasks = tasksMocks;
 
 export {
-  getUser,
+  getHome,
   getTask,
   getTasks,
 };

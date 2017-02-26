@@ -1,5 +1,5 @@
 import { GraphQLObjectType } from 'graphql';
-import { getUser } from '../../api'
+import { getHome } from '../../api'
 import homeType from './home';
 
 export default new GraphQLObjectType({
@@ -8,7 +8,7 @@ export default new GraphQLObjectType({
   fields: () => ({
     home: {
       type: homeType,
-      resolve: () => getUser('1'),
+      resolve: () => getHome(),
     },
   }),
 });

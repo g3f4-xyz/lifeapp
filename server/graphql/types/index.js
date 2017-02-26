@@ -1,7 +1,9 @@
-import taskType from './task';
+import appType from './app';
 import homeType from './home';
+import taskType from './task';
 
 export {
-  taskType,
+  appType,
   homeType,
+  taskType,
 };
