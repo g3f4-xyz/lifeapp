@@ -1,15 +1,19 @@
 import React from 'react';
+import Paper from 'material-ui/Paper';
 
 export default class Module extends React.Component {
   static propTypes = {
     children: React.PropTypes.node,
+    style: React.PropTypes.object,
   };
 
   render() {
+    const { children, style } = this.props;
+
     return (
-      <div style={{ width: '100%', height: '100%' }}>
-        {this.props.children}
-      </div>
+      <Paper style={style} zDepth={5} >
+        {children}
+      </Paper>
     );
   }
 }
