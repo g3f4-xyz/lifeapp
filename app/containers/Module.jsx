@@ -1,5 +1,11 @@
 import React from 'react';
 
+const styles = {
+  textAlign: 'center',
+  padding: '10px',
+  overflow: 'hidden',
+};
+
 export default class Module extends React.Component {
   static propTypes = {
     children: React.PropTypes.node,
@@ -10,7 +16,7 @@ export default class Module extends React.Component {
     const { children, style } = this.props;
 
     return (
-      <div style={style} >
+      <div style={{ ...style, ...styles }} >
         {children}
       </div>
     );

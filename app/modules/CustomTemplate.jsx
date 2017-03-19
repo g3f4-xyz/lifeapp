@@ -1,11 +1,17 @@
 import React from 'react';
+import Icon from 'material-ui/svg-icons/action/date-range';
+
+const styles = {
+  icon: {
+    width: '80%',
+    height: '80%',
+  },
+};
 
 export default class CustomTemplate extends React.Component {
   render() {
     return (
-      <h1>
-        CustomTemplate
-      </h1>
+      <Icon style={styles.icon} />
     );
   }
 }

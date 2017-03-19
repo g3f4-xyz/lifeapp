@@ -25,7 +25,7 @@ class App extends React.Component {
     },
   };
 
-  onDirection = (viewPortOffset) => this.setState({ viewPortOffset });
+  onModuleChange = (viewPortOffset) => this.setState({ viewPortOffset });
 
   render() {
     const modules = [
@@ -109,7 +109,7 @@ class App extends React.Component {
         <Grid
           modules={modules}
           viewPortOffset={viewPortOffset}
-          onDirection={this.onDirection}
+          onModuleChange={this.onModuleChange}
         />
       </div>
     );

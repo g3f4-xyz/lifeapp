@@ -1,27 +1,40 @@
 import React from 'react';
-import FlatButton from 'material-ui/FlatButton';
+import IconButton from 'material-ui/IconButton';
+import UpIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
+import DownIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
+import LeftIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
+import RightIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 
 const styles = {
   right: {
     position: 'absolute',
     top: '50%',
-    left: '88%',
+    right: 0,
+    transform: 'translateY(-50%)',
   },
   left: {
     position: 'absolute',
     top: '50%',
-    left: '0%',
+    left: 0,
+    transform: 'translateY(-50%)',
   },
   up: {
     position: 'absolute',
-    top: '0%',
     left: '50%',
+    transform: 'translateX(-50%)',
   },
   down: {
     position: 'absolute',
-    top: '90%',
     left: '50%',
+    transform: 'translateX(-50%)',
+    bottom: 0,
   },
+};
+const ICONS = {
+  right: <RightIcon />,
+  left: <LeftIcon />,
+  up: <UpIcon />,
+  down: <DownIcon />,
 };
 
 export default class DirectionButton extends React.Component {
@@ -31,19 +44,33 @@ export default class DirectionButton extends React.Component {
     onClick: React.PropTypes.func,
   };
 
-  onClick = () => this.props.onClick(this.props.direction);
+  state = {
+    visible: false,
+  };
+
+  onClick = () => this.props.onClick && this.props.onClick(this.props.direction);
+
+  onMouseEnter = () => {
+    this.setState({ visible: true });
+  };
+
+  onMouseLeave = () => {
+    this.setState({ visible: false });
+  };
 
   render() {
     const { direction, display } = this.props;
+    const { visible } = this.state;
 
     return display ? (
-      <div>
-        <FlatButton
-          label={direction}
-          style={styles[direction]}
-          onClick={this.onClick}
-        />
-      </div>
+      <IconButton
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
+        style={{ ...styles[direction], zoom: 2, opacity: visible ? 1 : 0.1 }}
+        onClick={this.onClick}
+      >
+        {ICONS[direction]}
+      </IconButton>
     ) : null;
   }
 }
