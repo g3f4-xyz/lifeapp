@@ -1,5 +1,4 @@
 import React from 'react';
-import Paper from 'material-ui/Paper';
 
 export default class Module extends React.Component {
   static propTypes = {
@@ -11,9 +10,9 @@ export default class Module extends React.Component {
     const { children, style } = this.props;
 
     return (
-      <Paper style={style} zDepth={5} >
+      <div style={style} >
         {children}
-      </Paper>
+      </div>
     );
   }
 }

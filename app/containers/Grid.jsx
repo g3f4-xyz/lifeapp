@@ -1,8 +1,11 @@
 import React from 'react';
+import shallowequal from 'shallowequal';
 import FlatButton from 'material-ui/FlatButton';
+import Paper from 'material-ui/Paper';
+import { GridList, GridTile } from 'material-ui/GridList';
 import Module from './Module';
 import DirectionsButtons from './DirectionsButtons';
-import shallowequal from 'shallowequal';
+import PaperForGridTile from '../components/PaperForGridTile';
 
 const DEFAULT_SIZE = {
   columns: 3,
@@ -12,11 +15,8 @@ const DEFAULT_SIZE = {
 const styles = {
   gridView: {
     module: {
-      height: '200px',
-      width: '300px',
       textAlign: 'center',
       padding: '10px',
-      margin: '10px',
       overflow: 'hidden',
       display: 'inline-flex',
     },
@@ -28,6 +28,19 @@ const styles = {
       padding: '10px',
       margin: '10px',
     },
+  },
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+  },
+  gridList: {
+    overflowY: 'auto',
+    margin: 15,
+  },
+  gridTile: {
+    // width: '95%',
+    // height: '95%'
   },
 };
 
@@ -43,36 +56,35 @@ export default class Grid extends React.Component {
     gridViewMode: false,
   };
 
-  renderSingleModule() {
-    const { modules, viewPortOffset, onDirection, size = DEFAULT_SIZE } = this.props;
-    const module = modules.find((module) => shallowequal(module.offset, viewPortOffset));
-
-    return module ? (
-      <div>
-        <DirectionsButtons gridSize={size} onDirectionClick={onDirection} viewPortOffset={viewPortOffset} />
-        <Module style={styles.singleModule.module}>{module.node}</Module>
-      </div>
-    ) : null;
+  componentDidMount() {
+    this.setState({ rootHeight: window.innerHeight - 60 });
   }
-
-  renderGridView = () => {
-    const { size = DEFAULT_SIZE, modules } = this.props;
-    const { columns, rows } = size;
-    const rowsIndexes = Array.from({ length: rows }, (_, index) => index);
-    const columnsIndexes = Array.from({ length: columns }, (_, index) => index);
-
-    return rowsIndexes.map(rowOffset => (
-      <div key={rowOffset}>
-        {columnsIndexes.map(columnOffset => {
-          const module = modules.find((module) => module.offset.column === columnOffset && module.offset.row === rowOffset);
-
-          return module ? <Module style={styles.gridView.module} key={columnOffset}>{module.node}</Module> : null;
-        })}
+  
+  renderGridView = (modules, size) => {
+    return (
+      <div style={styles.root} >
+        <GridList
+          cellHeight={this.state.rootHeight / size.columns}
+          cols={size.columns}
+          style={styles.gridList}
+        >
+        {modules.map(({ node }, key) => (
+          <GridTile
+            style={styles.gridTile}
+            containerElement={<PaperForGridTile zDepth={3} />}
+            key={key}
+          >
+            <Module style={styles.gridView.module}>{node}</Module>
+          </GridTile>
+        ))}
+        </GridList>
       </div>
-    ));
+    );
   };
 
   render() {
+    const { modules, size = DEFAULT_SIZE, viewPortOffset } = this.props;
+
     return (
       <div>
         <FlatButton
@@ -80,7 +92,10 @@ export default class Grid extends React.Component {
           style={{ position: 'absolute', left: '85%' }}
           onClick={() => this.setState({ gridViewMode: !this.state.gridViewMode })}
         />
-        {this.state.gridViewMode ? this.renderGridView() : this.renderSingleModule()}
+        {this.state.gridViewMode ?
+          this.renderGridView(modules, size)
+          :
+          this.renderGridView([modules.find(module => shallowequal(viewPortOffset, module.offset))], { columns: 1, rows: 1 })}
       </div>
     );
   }
