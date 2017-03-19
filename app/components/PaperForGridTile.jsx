@@ -4,6 +4,10 @@ import {Paper} from 'material-ui';
 import _ from 'lodash';
 
 class PaperForGridTile extends React.Component {
+  static propTypes = {
+    style: React.PropTypes.object,
+  };
+
   render() {
     return (
         <Paper
