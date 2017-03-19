@@ -19,7 +19,7 @@ const styles = {
       margin: '10px',
       overflow: 'hidden',
       display: 'inline-flex',
-    }
+    },
   },
   singleModule: {
     module: {
@@ -27,8 +27,8 @@ const styles = {
       textAlign: 'center',
       padding: '10px',
       margin: '10px',
-    }
-  }
+    },
+  },
 };
 
 export default class Grid extends React.Component {
