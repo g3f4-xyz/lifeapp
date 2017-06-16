@@ -1,11 +1,11 @@
-import {
+const {
   GraphQLObjectType,
   GraphQLString,
-} from 'graphql';
-import { globalIdField } from 'graphql-relay';
-import { nodeInterface } from '../nodeDefinitions';
+} = require('graphql');
+const { globalIdField } = require('graphql-relay');
+const { nodeInterface } = require('../nodeDefinitions');
 
-export default new GraphQLObjectType({
+module.exports = new GraphQLObjectType({
   name: 'Task',
   description: 'A task',
   fields: () => ({

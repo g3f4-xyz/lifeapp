@@ -1,7 +1,7 @@
-import { GraphQLObjectType } from 'graphql';
-import appType from './entries/app';
+const { GraphQLObjectType } = require('graphql');
+const appType = require('./entries/app');
 
-export default new GraphQLObjectType({
+module.exports = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
     app: {

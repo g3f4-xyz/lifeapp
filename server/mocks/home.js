@@ -1,7 +1,5 @@
-import Home from '../models/Home';
+const Module = require('../models/Module');
+const HomeInstance = new Module({ id: 'HOME', name: 'Home module' });
 
-const HomeInstance = new Home();
-HomeInstance.id = 'HOME';
-HomeInstance.name = 'Home module';
-
-export default id => HomeInstance;
+// export default id => HomeInstance;
+module.exports = id => HomeInstance;

@@ -1,14 +1,14 @@
-import { GraphQLObjectType } from 'graphql';
-import {
+const { GraphQLObjectType } = require('graphql');
+const {
   connectionArgs,
   connectionFromArray,
   globalIdField,
-} from 'graphql-relay';
-import { nodeInterface } from '../nodeDefinitions';
-import { taskConnection } from '../connections';
-import { getTasks } from '../../api';
+} = require('graphql-relay');
+const { nodeInterface } = require('../nodeDefinitions');
+const { taskConnection } = require('../connections');
+const { getTasks } = require('../../api');
 
-export default new GraphQLObjectType({
+module.exports = new GraphQLObjectType({
   name: 'Home',
   description: 'Home module',
   fields: () => ({

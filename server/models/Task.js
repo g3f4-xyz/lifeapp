@@ -1,1 +1,3 @@
-export default class Task {}
+class Task {}
+
+module.exports = Task;

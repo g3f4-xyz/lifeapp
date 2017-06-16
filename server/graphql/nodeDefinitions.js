@@ -1,19 +1,15 @@
-import {
+const {
   fromGlobalId,
   nodeDefinitions,
-} from 'graphql-relay';
-// import { #FIXME get rid off cyclic dependency
-//   homeType,
-//   taskType,
-// } from './types';
-import {
+} = require('graphql-relay');
+const {
   getHome,
   getTask,
-} from '../api';
-import {
+} = require('../api');
+const {
   Home,
   Task,
-} from '../models';
+} = require('../models');
 
 const GETTERS = {
   Home: getHome,
@@ -32,6 +28,7 @@ const typeResolver = obj => {
   } else {
     return null;
   }
-}
+};
 
-export const { nodeInterface, nodeField } = nodeDefinitions(idFetcher, typeResolver);
+const { nodeInterface, nodeField } = nodeDefinitions(idFetcher, typeResolver);
+module.exports = { nodeInterface, nodeField };
