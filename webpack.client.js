@@ -30,7 +30,7 @@ const common = merge([
       modules: ['app', 'node_modules'],
     },
   },
-  parts.lintCSS({ include: PATHS.app }),
+  // parts.lintCSS({ include: PATHS.app }),
   parts.loadImages({
     options: {
       limit: 15000,
@@ -82,7 +82,7 @@ function production() {
         },
       ],
     }),
-    parts.lintJavaScript({ include: PATHS.app }),
+    // parts.lintJavaScript({ include: PATHS.app }),
     parts.extractCSS({
       use: ['css-loader', parts.autoprefix()],
     }),
@@ -108,12 +108,12 @@ function development() {
       host: process.env.HOST,
       port: process.env.PORT,
     }),
-    parts.lintJavaScript({
-      include: PATHS.app,
-      options: {
-        emitWarning: true,
-      },
-    }),
+    // parts.lintJavaScript({
+    //   include: PATHS.app,
+    //   options: {
+    //     emitWarning: true,
+    //   },
+    // }),
     parts.loadCSS(),
   ]);
 }

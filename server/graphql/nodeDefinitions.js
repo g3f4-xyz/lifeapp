@@ -21,17 +21,19 @@ const GETTERS = {
 };
 const idFetcher = globalId => {
   const { type, id } = fromGlobalId(globalId);
+  console.log(['nodeDefinitions.idFetcher'], globalId, { type, id });
 
   return GETTERS[type] ? GETTERS[type](id) : null;
 };
 const typeResolver = obj => {
+  console.log(['nodeDefinitions.typeResolver'], obj);
   if (obj instanceof Home) {
-    return require('./modules/home');
+    return require('./modules/home').default;
   } else if (obj instanceof Task)  {
-    return require('./types/task');
+    return require('./types/task').default;
   } else {
     return null;
   }
-}
+};
 
 export const { nodeInterface, nodeField } = nodeDefinitions(idFetcher, typeResolver);
