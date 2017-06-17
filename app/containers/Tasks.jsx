@@ -8,6 +8,8 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
+import FlatButton from 'material-ui/FlatButton';
+import More from 'material-ui/svg-icons/navigation/more-horiz';
 
 const TABLE_CONFIG = {
   selectable: true,
@@ -66,11 +68,20 @@ class TasksList extends React.Component {
 class Tasks extends React.Component {
   static propTypes = {
     tasks: React.PropTypes.object,
+    onMore: React.PropTypes.func,
   };
 
   render() {
+    const { tasks, onMore } = this.props;
     return (
-      <TasksList data={this.props.tasks.edges.map(({ node }) => node)}/>
+      <div>
+        <TasksList data={tasks.edges.map(({ node }) => node)}/>
+        <FlatButton
+          icon={<More />}
+          style={{ margin: 12 }}
+          onClick={onMore}
+        />
+      </div>
     );
   }
 }
