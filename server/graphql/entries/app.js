@@ -1,8 +1,8 @@
-const { GraphQLObjectType } = require('graphql');
-const { getHome } = require('../../api');
-const homeType = require('../modules/home');
+import { GraphQLObjectType } from 'graphql';
+import { getHome } from '../../api'
+import homeType from '../modules/home';
 
-module.exports = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: 'App',
   description: 'Application entry point',
   fields: () => ({

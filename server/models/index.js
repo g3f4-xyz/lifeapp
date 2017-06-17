@@ -1,7 +1,7 @@
-const Module = require('./Module');
-const Task = require('./Task');
+import Home from './Home';
+import Task from './Task';
 
-module.exports = {
-  Module,
+export {
+  Home,
   Task,
 };

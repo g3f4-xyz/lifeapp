@@ -1,5 +1,5 @@
-const taskType = require('./task');
+import taskType from './task';
 
-module.exports = {
+export {
   taskType,
 };

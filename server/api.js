@@ -1,8 +1,12 @@
-const tasksMocks = require('./mocks/tasks');
-const homeMocks = require('./mocks/home');
+import tasksMocks from './mocks/tasks';
+import homeMocks from './mocks/home';
 
-module.exports = {
-  getHome: homeMocks,
-  getTask: tasksMocks,
-  getTasks: tasksMocks,
+const getHome = homeMocks;
+const getTask = tasksMocks;
+const getTasks = tasksMocks;
+
+export {
+  getHome,
+  getTask,
+  getTasks,
 };

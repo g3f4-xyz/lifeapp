@@ -1,6 +1,6 @@
-const Task = require('../models/Task');
+import Task from '../models/Task';
 
-const tasks = ['Clean up desk', 'Write a recommendation letter', 'Doctor appointment'].map((title, i) => {
+const tasks = ['Clean up desk', 'Write a recomendation letter', 'Doctor appointment'].map((title, i) => {
   const task = new Task();
 
   task.title = title;
@@ -10,4 +10,4 @@ const tasks = ['Clean up desk', 'Write a recommendation letter', 'Doctor appoint
   return task;
 });
 
-module.exports = id => id ? tasks.find(task => task.id === id) : tasks;
+export default id => id ? tasks.find(task => task.id === id) : tasks;
