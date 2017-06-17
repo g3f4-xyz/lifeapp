@@ -1,6 +1,6 @@
-const { GraphQLObjectType } = require('graphql');
+import { GraphQLObjectType } from 'graphql';
 
-module.exports = new GraphQLObjectType({
+export default new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({}),
 });
