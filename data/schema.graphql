@@ -1,6 +1,7 @@
 # Application entry point
 type App {
   home: Home
+  taskDetails(id: String): Task
 }
 
 # Home module
@@ -35,6 +36,12 @@ type PageInfo {
 
 type Query {
   app: App
+
+  # Fetches an object given its ID
+  node(
+    # The ID of an object
+    id: ID!
+  ): Node
 }
 
 # A task
