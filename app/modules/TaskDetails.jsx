@@ -1,6 +1,7 @@
 import React from 'react';
 import Relay from 'react-relay';
-import Icon from 'material-ui/svg-icons/notification/event-note';
+import Paper from 'material-ui/Paper';
+import { Icon, Label, Value } from '../components';
 
 const styles = {
   leftCol: {
@@ -20,7 +21,7 @@ const styles = {
   root: {
   },
   row: {
-    marginBottom: 20
+    margin: 10,
   },
 };
 
@@ -35,38 +36,56 @@ class TaskDetails extends React.Component {
       return null;
     }
 
-    const { title, priority, creationDate, finishDate, progress, isDone, note } = this.props.taskDetails;
+    const { title, priority, creationDate, finishDate, progress, status, note } = this.props.taskDetails;
 
     return (
       <div style={styles.root}>
         <h1>{title}</h1>
         <div style={styles.leftCol}>
-          <div style={styles.row}>
-            <Icon style={styles.icon} />
-            {priority}
-          </div>
-          <div style={styles.row}>
-            <Icon style={styles.icon} />
-            {creationDate}
-          </div>
-          <div style={styles.row}>
-            <Icon style={styles.icon} />
-            {progress}
-          </div>
+          <Paper style={styles.row}>
+            <div style={{ textAlign: 'center' }}>
+              <Icon type={'eventNote'} />
+              <Label>Priority</Label>
+            </div>
+            <Value>{priority}</Value>
+          </Paper>
+          <Paper style={styles.row}>
+            <div style={{ textAlign: 'center' }}>
+              <Icon type={'diskFull'} />
+             <Label>Creation Date</Label>
+            </div>
+            <Value>{creationDate}</Value>
+          </Paper>
+          <Paper style={styles.row}>
+            <div style={{ textAlign: 'center' }}>
+              <Icon type={'diskFull'} />
+              <Label>Progress</Label>
+            </div>
+            <Value>{progress}</Value>
+          </Paper>
         </div>
         <div style={styles.rightCol}>
-          <div style={styles.row}>
-            <Icon style={styles.icon} />
-            {isDone.toString()}
-          </div>
-          <div style={styles.row}>
-            <Icon style={styles.icon} />
-            {finishDate}
-          </div>
-          <div style={styles.row}>
-            <Icon style={styles.icon} />
-            {note}
-          </div>
+          <Paper style={styles.row}>
+            <div style={{ textAlign: 'center' }}>
+              <Icon type={'diskFull'} />
+             <Label>Status</Label>
+            </div>
+            <Value>{status}</Value>
+          </Paper>
+          <Paper style={styles.row}>
+            <div style={{ textAlign: 'center' }}>
+              <Icon type={'diskFull'} />
+              <Label>Finish Date</Label>
+            </div>
+            <Value>{finishDate}</Value>
+          </Paper>
+          <Paper style={styles.row}>
+            <div style={{ textAlign: 'center' }}>
+              <Icon type={'diskFull'} />
+              <Label>Note</Label>
+            </div>
+            <Value>{note}</Value>
+          </Paper>
         </div>
       </div>
     );
@@ -83,7 +102,7 @@ export default Relay.createContainer(TaskDetails, {
         creationDate
         finishDate
         progress
-        isDone
+        status
         note
       }
     `,

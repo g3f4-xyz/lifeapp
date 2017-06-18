@@ -55,17 +55,17 @@ class TasksList extends React.Component {
               </TableHeaderColumn>
             </TableRow>
             <TableRow>
-              <TableHeaderColumn tooltip="The ID">ID</TableHeaderColumn>
               <TableHeaderColumn tooltip="The title of task">Title</TableHeaderColumn>
               <TableHeaderColumn tooltip="The priority of task">Priority</TableHeaderColumn>
+              <TableHeaderColumn tooltip="The task status">Status</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody {...body}>
-          {this.props.data.map(({ id, title, priority }, index) => (
+          {this.props.data.map(({ title, priority, status }, index) => (
             <TableRow key={index}>
-              <TableRowColumn>{id}</TableRowColumn>
               <TableRowColumn>{title}</TableRowColumn>
               <TableRowColumn>{priority}</TableRowColumn>
+              <TableRowColumn>{status}</TableRowColumn>
             </TableRow>
           ))}
           </TableBody>
@@ -109,6 +109,7 @@ export default Relay.createContainer(Tasks, {
             id,
             title,
             priority,
+            status,
           },
         },
       }

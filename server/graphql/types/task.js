@@ -1,7 +1,6 @@
 import {
   GraphQLObjectType,
   GraphQLString,
-  GraphQLBoolean,
 } from 'graphql';
 import { globalIdField } from 'graphql-relay';
 import { nodeInterface } from '../nodeDefinitions';
@@ -31,9 +30,9 @@ export default new GraphQLObjectType({
       type: GraphQLString,
       description: 'Task progress',
     },
-    isDone: {
-      type: GraphQLBoolean,
-      description: 'Task isDone',
+    status: {
+      type: GraphQLString,
+      description: 'Task status',
     },
     note: {
       type: GraphQLString,

@@ -498,12 +498,12 @@
               "deprecationReason": null
             },
             {
-              "name": "isDone",
-              "description": "Task isDone",
+              "name": "status",
+              "description": "Task status",
               "args": [],
               "type": {
                 "kind": "SCALAR",
-                "name": "Boolean",
+                "name": "String",
                 "ofType": null
               },
               "isDeprecated": false,

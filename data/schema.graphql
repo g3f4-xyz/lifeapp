@@ -64,8 +64,8 @@ type Task implements Node {
   # Task progress
   progress: String
 
-  # Task isDone
-  isDone: Boolean
+  # Task status
+  status: String
 
   # Task note
   note: String
