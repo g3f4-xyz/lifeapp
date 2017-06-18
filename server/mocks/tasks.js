@@ -1,9 +1,10 @@
 import { lorem, random, date } from 'faker';
 import Task from '../models/Task';
 
+const LENGTH = 100;
 const PRIORITIES = ['urgent', 'normal'];
 const STATUSES = ['done', 'in progress', 'planned', 'cancelled'];
-const tasks = Array.from({ length: 100 }).map((_, index) => new Task({
+export default Array.from({ length: LENGTH }).map((_, index) => new Task({
   id: index.toString(),
   title: lorem.sentence(),
   priority: PRIORITIES[random.number() % 2],
@@ -13,4 +14,3 @@ const tasks = Array.from({ length: 100 }).map((_, index) => new Task({
   status: STATUSES[random.number() % STATUSES.length],
   note: lorem.sentences(),
 }));
-export default id => id ? tasks.find(task => task.id === id) : tasks;

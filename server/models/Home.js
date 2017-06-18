@@ -1,1 +1,5 @@
-export default class Home {}
+export default class Home {
+  constructor({ id, name }) {
+    Object.assign(this, { id, name });
+  }
+}

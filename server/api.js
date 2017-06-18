@@ -1,9 +1,8 @@
-import tasksMocks from './mocks/tasks';
-import homeMocks from './mocks/home';
-
-const getHome = homeMocks;
-const getTask = tasksMocks;
-const getTasks = tasksMocks;
+import {
+  getHome,
+  getTask,
+  getTasks,
+} from './mocks/api';
 
 export {
   getHome,

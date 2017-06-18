@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLString } from 'graphql';
-import { getHome, getTask } from '../../api'
-import homeType from '../modules/home';
+import { getHome } from '../../api'
+import homeType from '../types/modules/home';
 import taskType from '../types/task';
 import { idFetcher } from '../nodeDefinitions';
 

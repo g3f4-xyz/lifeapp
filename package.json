@@ -1,6 +1,6 @@
 {
   "name": "lifeapp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Level up with LifeApp",
   "main": "lifeapp",
   "scripts": {
@@ -14,6 +14,7 @@
     "start": "npm run build && node build/server",
     "stats": "webpack --env production --profile --json > stats.json",
     "test": "mocha './{,!(node_modules)/**/}*.test.js'",
+    "update:mocks": "BABEL_ENV=scripts babel-node ./scripts/updateMocks",
     "update:schema": "BABEL_ENV=scripts babel-node ./scripts/updateSchema"
   },
   "keywords": [],
