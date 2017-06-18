@@ -14,7 +14,8 @@ const STORE_APPLIES = [
   },
 ];
 
-export default data => STORE_APPLIES.reduce((result, { dataKey, apply }) => ({
-  ...result,
-  [dataKey]: apply(data[dataKey])
-}), {});
+export default data => STORE_APPLIES.reduce((result, { dataKey, apply }) => Object.assign(
+  {},
+  result,
+  { [dataKey]: apply(data[dataKey]) }
+), {});
