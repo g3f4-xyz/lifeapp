@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import Relay from 'react-relay';
-// import './main.css';
+import './main.css';
 import App from './containers/App';
 import AppRoute from './routes/app';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
