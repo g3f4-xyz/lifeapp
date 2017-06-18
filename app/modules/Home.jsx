@@ -7,6 +7,7 @@ const pageSize = 4;
 class Home extends React.Component {
   static propTypes = {
     home: React.PropTypes.object,
+    onDetails: React.PropTypes.func,
   };
 
   onMore = () => this.props.relay.setVariables({
@@ -15,7 +16,11 @@ class Home extends React.Component {
 
   render() {
     return (
-      <Tasks tasks={this.props.home.tasks} onMore={this.onMore} />
+      <Tasks
+        tasks={this.props.home.tasks}
+        onMore={this.onMore}
+        onSelect={this.props.onDetails}
+      />
     );
   }
 }

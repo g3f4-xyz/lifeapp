@@ -2,8 +2,9 @@ import React from 'react';
 
 const styles = {
   textAlign: 'center',
-  padding: '10px',
+  margin: '2%',
   overflow: 'hidden',
+  height: '96%',
 };
 
 export default class Module extends React.Component {

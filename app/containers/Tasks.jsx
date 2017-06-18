@@ -30,6 +30,13 @@ const TABLE_CONFIG = {
 class TasksList extends React.Component {
   static propTypes = {
     data: React.PropTypes.array,
+    onSelect: React.PropTypes.func,
+  };
+
+  onSelect = ([index]) => {
+    if (index) {
+      this.props.onSelect(this.props.data[index].id);
+    }
   };
 
   render() {
@@ -37,7 +44,10 @@ class TasksList extends React.Component {
 
     return (
       <div>
-        <Table {...table}>
+        <Table
+          {...table}
+          onRowSelection={this.onSelect}
+        >
           <TableHeader {...header}>
             <TableRow>
               <TableHeaderColumn colSpan="3" tooltip="Super Header">
@@ -69,13 +79,17 @@ class Tasks extends React.Component {
   static propTypes = {
     tasks: React.PropTypes.object,
     onMore: React.PropTypes.func,
+    onSelect: React.PropTypes.func,
   };
 
   render() {
-    const { tasks, onMore } = this.props;
+    const { tasks, onMore, onSelect } = this.props;
     return (
       <div>
-        <TasksList data={tasks.edges.map(({ node }) => node)}/>
+        <TasksList
+          data={tasks.edges.map(({ node }) => node)}
+          onSelect={onSelect}
+        />
         <FlatButton
           icon={<More />}
           style={{ margin: 12 }}
