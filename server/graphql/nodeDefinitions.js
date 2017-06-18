@@ -31,7 +31,7 @@ export const idFetcher = globalId => {
 const typeResolver = obj => {
   console.log(['nodeDefinitions.typeResolver'], obj);
   if (obj instanceof Home) {
-    return require('./modules/home').default; // FIXME
+    return require('./types/modules/home').default; // FIXME
   } else if (obj instanceof Task)  {
     return require('./types/task').default; // FIXME
   }
