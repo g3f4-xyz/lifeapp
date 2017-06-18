@@ -35,7 +35,7 @@ class TaskDetails extends React.Component {
       return null;
     }
 
-    const { title, priority } = this.props.taskDetails;
+    const { title, priority, creationDate, finishDate, progress, isDone, note } = this.props.taskDetails;
 
     return (
       <div style={styles.root}>
@@ -47,33 +47,25 @@ class TaskDetails extends React.Component {
           </div>
           <div style={styles.row}>
             <Icon style={styles.icon} />
-            left
+            {creationDate}
           </div>
           <div style={styles.row}>
             <Icon style={styles.icon} />
-            left
-          </div>
-          <div style={styles.row}>
-            <Icon style={styles.icon} />
-            left
+            {progress}
           </div>
         </div>
         <div style={styles.rightCol}>
           <div style={styles.row}>
             <Icon style={styles.icon} />
-            right
+            {isDone.toString()}
           </div>
           <div style={styles.row}>
             <Icon style={styles.icon} />
-            right
+            {finishDate}
           </div>
           <div style={styles.row}>
             <Icon style={styles.icon} />
-            right
-          </div>
-          <div style={styles.row}>
-            <Icon style={styles.icon} />
-            right
+            {note}
           </div>
         </div>
       </div>
@@ -88,6 +80,11 @@ export default Relay.createContainer(TaskDetails, {
         id
         title
         priority
+        creationDate
+        finishDate
+        progress
+        isDone
+        note
       }
     `,
   },

@@ -1,5 +1,5 @@
 export default class Task {
-  constructor({ id, title, priority }) {
-    Object.assign(this, { id, title, priority });
+  constructor({ id, title, priority, creationDate, finishDate, progress, isDone, note }) {
+    Object.assign(this, { id, title, priority, creationDate, finishDate, progress, isDone, note });
   }
 }

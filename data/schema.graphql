@@ -54,6 +54,21 @@ type Task implements Node {
 
   # Task priority
   priority: String
+
+  # Task creationDate
+  creationDate: String
+
+  # Task finishDate
+  finishDate: String
+
+  # Task progress
+  progress: String
+
+  # Task isDone
+  isDone: Boolean
+
+  # Task note
+  note: String
 }
 
 # A connection to a list of items.

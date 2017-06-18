@@ -196,7 +196,7 @@ exports.loadJavaScript = function({ include, exclude }) {
           test: /\.jsx?$/,
           loader: 'babel-loader',
           options: {
-            cacheDirectory: true,
+            cacheDirectory: false,
           },
         },
       ],

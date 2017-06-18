@@ -21,7 +21,7 @@ class App extends React.Component {
 
   state = {
     viewPortOffset: {
-      column: 2,
+      column: 1,
       row: 1,
     },
   };
