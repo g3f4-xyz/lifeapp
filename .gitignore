@@ -14,3 +14,6 @@ build
 .env
 npm-debug.log
 .eslintcache
+.idea/
+graphql.*
+npm-debug.*

@@ -72,7 +72,7 @@ export default class Grid extends React.Component {
             key={key}
             onClick={() => this.onModuleChange(offset)}
           >
-            <Module style={{}}>{node}</Module>
+            <Module style={{ zoom: gridViewMode ? 0.5 : 1 }}>{node}</Module>
           </GridTile>
         ))}
         </GridList>
