@@ -3,7 +3,7 @@ import React from 'react';
 const styles = {
   textAlign: 'center',
   margin: '2%',
-  overflow: 'hidden',
+  overflow: 'auto',
   height: '96%',
 };
 

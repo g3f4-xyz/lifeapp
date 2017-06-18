@@ -2,7 +2,7 @@ import React from 'react';
 import Relay from 'react-relay';
 import Tasks from '../containers/Tasks';
 
-const pageSize = 4;
+const pageSize = 10;
 
 class Home extends React.Component {
   static propTypes = {
