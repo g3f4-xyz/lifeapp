@@ -2,10 +2,6 @@ import {
   fromGlobalId,
   nodeDefinitions,
 } from 'graphql-relay';
-// import { #FIXME get rid off cyclic dependency
-//   homeType,
-//   taskType,
-// } from './types';
 import {
   getHome,
   getTask,
@@ -19,7 +15,7 @@ const GETTERS = {
   Home: getHome,
   Task: getTask,
 };
-const idFetcher = globalId => {
+export const idFetcher = globalId => {
   const { type, id } = fromGlobalId(globalId);
   console.log(['nodeDefinitions.idFetcher'], globalId, { type, id });
 
@@ -28,9 +24,9 @@ const idFetcher = globalId => {
 const typeResolver = obj => {
   console.log(['nodeDefinitions.typeResolver'], obj);
   if (obj instanceof Home) {
-    return require('./modules/home').default;
+    return require('./modules/home').default; // FIXME
   } else if (obj instanceof Task)  {
-    return require('./types/task').default;
+    return require('./types/task').default; // FIXME
   } else {
     return null;
   }
