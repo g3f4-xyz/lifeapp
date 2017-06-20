@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 
 const config = {
   devtool: 'sourcemap',
@@ -7,12 +6,15 @@ const config = {
   output: {
     path: path.join(__dirname, 'build'),
     filename: 'server.js',
-    libraryTarget: 'commonjs2'
+    libraryTarget: 'commonjs2',
   },
   target: 'node',
   externals: /^[a-z\-0-9]+$/,
 };
 
 module.exports = function(env) {
+  console.log(['env'], env);
+  process.env.BABEL_ENV = env;
+  
   return config;
 };

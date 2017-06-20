@@ -2,7 +2,7 @@
   "plugins": [
     "transform-runtime",
     "syntax-dynamic-import",
-    "react-hot-loader/babel"
+    "./plugins/babelRelayPlugin"
   ],
   "presets": [
     [
@@ -15,9 +15,32 @@
     "stage-0"
   ],
   "env": {
-    "development": {
+    "production": {
       "plugins": [
-        "react-hot-loader/babel"
+        "transform-runtime",
+        "syntax-dynamic-import",
+        "./plugins/babelRelayPlugin",
+      ],
+      "presets": [
+        "es2015",
+        "react",
+        "stage-0"
+      ],
+    },
+    "server": {
+      "plugins": [
+        "syntax-dynamic-import",
+      ],
+      "presets": [
+        "es2015",
+        "react",
+        "stage-0"
+      ],
+    },
+    "scripts": {
+      "presets": [
+        "es2015",
+        "stage-0"
       ]
     }
   }
