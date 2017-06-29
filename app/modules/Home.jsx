@@ -10,6 +10,10 @@ class Home extends React.Component {
     onDetails: React.PropTypes.func,
   };
 
+  componentDidMount() {
+    console.log(['Home.componentDidMount'])
+  }
+
   onMore = () => this.props.relay.setVariables({
     pageSize: this.props.relay.variables.pageSize + pageSize
   });

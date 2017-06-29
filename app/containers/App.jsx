@@ -11,6 +11,92 @@ import Templates from '../modules/Templates';
 import Settings from '../modules/Settings';
 import Grid from './Grid';
 
+const MODULES_IDS = {
+  HOME: 'Home',
+  ENTER: 'Enter',
+  TASK_CREATE: 'TaskCreate',
+  TASK_EDIT: 'TaskEdit',
+  TASK_DETAILS: 'TaskDetails',
+  TEMPLATES: 'Templates',
+  SETTINGS: 'Settings',
+  ATTACHMENT_PREVIEW: 'AttachmentPreview',
+  CUSTOM_TEMPLATE: 'CustomTemplate',
+};
+const MODULES = [
+  {
+    id: MODULES_IDS.HOME,
+    Component: Home,
+    offset: {
+      column: 1,
+      row: 1,
+    },
+  },
+  {
+    id: MODULES_IDS.ENTER,
+    Component: Enter,
+    offset: {
+      column: 1,
+      row: 0,
+    },
+  },
+  {
+    id: MODULES_IDS.TASK_CREATE,
+    Component: TaskCreate,
+    offset: {
+      column: 0,
+      row: 0,
+    },
+  },
+  {
+    id: MODULES_IDS.TASK_EDIT,
+    Component: TaskEdit,
+    offset: {
+      column: 2,
+      row: 0,
+    },
+  },
+  {
+    id: MODULES_IDS.TASK_DETAILS,
+    Component: TaskDetails,
+    offset: {
+      column: 2,
+      row: 1,
+    },
+  },
+  {
+    id: MODULES_IDS.TEMPLATES,
+    Component: Templates,
+    offset: {
+      column: 0,
+      row: 1,
+    },
+  },
+  {
+    id: MODULES_IDS.SETTINGS,
+    Component: Settings,
+    offset: {
+      column: 1,
+      row: 2,
+    },
+  },
+  {
+    id: MODULES_IDS.ATTACHMENT_PREVIEW,
+    Component: AttachmentPreview,
+    offset: {
+      column: 2,
+      row: 2,
+    },
+  },
+  {
+    id: MODULES_IDS.CUSTOM_TEMPLATE,
+    Component: CustomTemplate,
+    offset: {
+      column: 0,
+      row: 2,
+    },
+  },
+];
+
 class App extends React.Component {
   static propTypes = {
     app: React.PropTypes.shape({
@@ -26,6 +112,17 @@ class App extends React.Component {
     },
   };
 
+  handlers = {
+    [MODULES_IDS.HOME]: () => ({
+      home: this.props.app.home,
+      onDetails: this.onDetails,
+    }),
+    [MODULES_IDS.TASK_DETAILS]: () => ({
+      taskDetails: this.props.app.taskDetails,
+      onDetails: this.onDetails,
+    }),
+  };
+
   onDetails = (selectedTaskId) => {
     this.props.relay.setVariables({ selectedTaskId }, () => {
       this.onModuleChange({
@@ -38,91 +135,12 @@ class App extends React.Component {
   onModuleChange = (viewPortOffset) => this.setState({ viewPortOffset });
 
   render() {
-    const modules = [
-      {
-        desc: 'Home module',
-        node: <Home
-          home={this.props.app.home}
-          onDetails={this.onDetails}
-        />,
-        offset: {
-          column: 1,
-          row: 1,
-        },
-      },
-      {
-        desc: 'Enter module',
-        node: <Enter />,
-        offset: {
-          column: 1,
-          row: 0,
-        },
-      },
-      {
-        desc: 'TaskCreate module',
-        node: <TaskCreate />,
-        offset: {
-          column: 0,
-          row: 0,
-        },
-      },
-      {
-        desc: 'TaskEdit module',
-        node: <TaskEdit />,
-        offset: {
-          column: 2,
-          row: 0,
-        },
-      },
-      {
-        desc: 'TaskDetails module',
-        node: <TaskDetails
-          taskDetails={this.props.app.taskDetails}
-          onDetails={this.onDetails}
-        />,
-        offset: {
-          column: 2,
-          row: 1,
-        },
-      },
-      {
-        desc: 'Templates module',
-        node: <Templates />,
-        offset: {
-          column: 0,
-          row: 1,
-        },
-      },
-      {
-        desc: 'Settings module',
-        node: <Settings />,
-        offset: {
-          column: 1,
-          row: 2,
-        },
-      },
-      {
-        desc: 'AttachmentPreview module',
-        node: <AttachmentPreview />,
-        offset: {
-          column: 2,
-          row: 2,
-        },
-      },
-      {
-        desc: 'CustomTemplate module',
-        node: <CustomTemplate />,
-        offset: {
-          column: 0,
-          row: 2,
-        },
-      },
-    ];
 
     return (
       <div>
         <Grid
-          modules={modules}
+          modules={MODULES}
+          handlers={this.handlers}
           viewPortOffset={this.state.viewPortOffset}
           onModuleChange={this.onModuleChange}
         />
