@@ -1,3 +1,13 @@
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#app {
+  margin-right: 15px;
+}
+
 ::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
