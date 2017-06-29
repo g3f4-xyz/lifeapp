@@ -5,12 +5,23 @@ import { GridList, GridTile } from 'material-ui/GridList';
 import Module from './Module';
 import DirectionsButtons from './DirectionsButtons';
 import PaperForGridTile from '../components/PaperForGridTile';
-import RaisedButtonForGridTile from '../components/RaisedButtonForGridTile';
 import ViewModuleIcon from 'material-ui/svg-icons/action/view-module';
+import ZoomIcon from 'material-ui/svg-icons/maps/zoom-out-map';
 
 const DEFAULT_SIZE = {
   columns: 3,
   rows: 3,
+};
+
+const sortModules = (current, next) => {
+  const { offset: { column: currentColumn, row: currentRow } } = current;
+  const { offset: { column: nextColumn, row: nextRow } } = next;
+
+  if (currentRow !== nextRow) {
+    return currentRow > nextRow;
+  }
+
+  return currentColumn > nextColumn ;
 };
 
 export default class Grid extends React.Component {
@@ -34,22 +45,40 @@ export default class Grid extends React.Component {
     };
   }
 
-  onModuleChange = (offset) => {
-    if (this.props.onModuleChange) {
+  onZoom = (id) => {
+    const { offset } = this.props.modules.find(module => module.id === id);
+
+    if (offset && this.props.onModuleChange) {
       this.props.onModuleChange(offset);
+      this.setState({ gridViewMode: false });
     }
-    this.setState({ gridViewMode: false });
   };
 
+  getTiles() {
+    const { modules, viewPortOffset } = this.props;
+
+    return this.state.gridViewMode ? modules.sort(sortModules) : modules.reduce((result, module) => {
+      if (shallowequal(module.offset, viewPortOffset)) {
+        return [
+          module,
+          ...result,
+        ];
+      }
+
+      return [
+        ...result,
+        module,
+      ];
+    }, []);
+  }
+
   render() {
-    const { size = DEFAULT_SIZE, viewPortOffset, onModuleChange } = this.props;
+    const { size = DEFAULT_SIZE, viewPortOffset, onModuleChange, handlers } = this.props;
     const { gridViewMode } = this.state;
-    const modules = gridViewMode ? this.props.modules : [this.props.modules.find(module => shallowequal(module.offset, viewPortOffset))];
     const cellHeight = gridViewMode ?
       (this.state.innerHeight / size.columns) - 26 / size.columns
       : this.state.innerHeight - 18;
     const cols = gridViewMode ? size.columns : 1;
-    const containerElement = gridViewMode ? <RaisedButtonForGridTile /> : <PaperForGridTile zDepth={3} />;
 
     return (
       <div>
@@ -66,13 +95,32 @@ export default class Grid extends React.Component {
           cellHeight={cellHeight}
           cols={cols}
         >
-        {modules.map(({ node, offset }, key) => (
+        {this.getTiles().map(({ Component, id, offset }, key) => (
           <GridTile
-            containerElement={containerElement}
-            key={key}
-            onClick={() => this.onModuleChange(offset)}
+            containerElement={<PaperForGridTile zDepth={3} />}
+            key={id}
+            onMouseEnter={() => {
+              this.setState({ hovered: id });
+            }}
+            onMouseLeave={() => {
+              this.setState({ hovered: null });
+            }}
           >
-            <Module style={{ zoom: gridViewMode ? 1 / DEFAULT_SIZE.columns : 1 }}>{node}</Module>
+            <ZoomIcon
+              style={{
+                display: gridViewMode && id === this.state.hovered ? 'block' : 'none',
+                bottom: 0,
+                right: 0,
+                width: '25%',
+                height: '25%',
+                position: 'absolute',
+                zIndex: 9
+              }}
+              onClick={() => this.onZoom(id)}
+            />
+            <Module style={{ zoom: gridViewMode ? 1 / DEFAULT_SIZE.columns : 1 }}>
+              <Component {...(handlers[id] ? handlers[id]() : {})} />
+            </Module>
           </GridTile>
         ))}
         </GridList>

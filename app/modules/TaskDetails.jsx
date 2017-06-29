@@ -14,10 +14,6 @@ const styles = {
     width: '50%',
     textAlign: 'left',
   },
-  icon: {
-    // width: '80%',
-    // height: '80%',
-  },
   root: {
   },
   row: {
@@ -30,8 +26,6 @@ class TaskDetails extends React.Component {
     taskDetails: React.PropTypes.object,
   };
   render() {
-    console.log(['this.props.taskDetails'], this.props.taskDetails);
-
     if (!this.props.taskDetails) {
       return null;
     }
