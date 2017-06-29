@@ -11,7 +11,7 @@
     "lint:css": "stylelint app/**/*.css",
     "lint:js": "eslint . --cache",
     "server": "BABEL_ENV=server babel-watch server",
-    "start": "npm run build && node build/server",
+    "start": "npm --optimize_for_size --max_old_space_size=460 --gc_interval=100 run build && node --optimize_for_size --max_old_space_size=460 --gc_interval=100 build/server",
     "stats": "webpack --env production --profile --json > stats.json",
     "test": "mocha './{,!(node_modules)/**/}*.test.js'",
     "update:mocks": "BABEL_ENV=scripts babel-node ./scripts/updateMocks",
