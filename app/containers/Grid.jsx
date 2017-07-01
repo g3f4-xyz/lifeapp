@@ -116,7 +116,9 @@ export default class Grid extends React.Component {
             <ViewModuleIcon />
           </IconButton>
         )}
-        <DirectionsButtons gridSize={size} onDirectionClick={this.onModuleChange} viewPortOffset={viewPortOffset} />
+        {!gridViewMode && tiles.length > 1 && (
+          <DirectionsButtons gridSize={size} onDirectionClick={this.onModuleChange} viewPortOffset={viewPortOffset} />
+        )}
         <GridList
           cellHeight={cellHeight}
           cols={cols}
