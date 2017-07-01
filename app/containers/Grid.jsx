@@ -128,10 +128,14 @@ export default class Grid extends React.Component {
             containerElement={<PaperForGridTile zDepth={3} />}
             key={id}
             onMouseEnter={() => {
-              this.setState({ hovered: id });
+              if (gridViewMode) {
+                this.setState({ hovered: id });
+              }
             }}
             onMouseLeave={() => {
-              this.setState({ hovered: null });
+              if (gridViewMode) {
+               this.setState({ hovered: null });
+              }
             }}
           >
             <ZoomIcon
