@@ -1,5 +1,6 @@
 import React from 'react';
 import Relay from 'react-relay';
+import shallowequal from 'shallowequal';
 import AttachmentPreview from '../modules/AttachmentPreview';
 import CustomTemplate from '../modules/CustomTemplate';
 import Enter from '../modules/Enter';
@@ -106,6 +107,7 @@ class App extends React.Component {
   };
 
   state = {
+    visited: [MODULES_IDS.HOME],
     viewPortOffset: {
       column: 1,
       row: 1,
@@ -123,7 +125,7 @@ class App extends React.Component {
     }),
   };
 
-  onDetails = (selectedTaskId) => {
+  onDetails = selectedTaskId => {
     this.props.relay.setVariables({ selectedTaskId }, () => {
       this.onModuleChange({
         column: 2,
@@ -132,15 +134,25 @@ class App extends React.Component {
     });
   };
 
-  onModuleChange = (viewPortOffset) => this.setState({ viewPortOffset });
+  onModuleChange = viewPortOffset => {
+    const { id } = MODULES.find(({ offset }) => shallowequal(viewPortOffset, offset));
+    const { visited } = this.state;
+
+    this.setState({
+      visited: visited.includes(id) ? visited : [...visited, id],
+      viewPortOffset,
+    });
+  };
 
   render() {
 
     return (
       <div>
         <Grid
+          dynamic
           modules={MODULES}
           handlers={this.handlers}
+          visited={this.state.visited}
           viewPortOffset={this.state.viewPortOffset}
           onModuleChange={this.onModuleChange}
         />

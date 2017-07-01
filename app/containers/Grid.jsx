@@ -1,3 +1,4 @@
+// Wynieść Grid od oddzielnego repozytorium i udostępnić na npm
 import React from 'react';
 import shallowequal from 'shallowequal';
 import IconButton from 'material-ui/IconButton';
@@ -45,19 +46,42 @@ export default class Grid extends React.Component {
     };
   }
 
-  onZoom = (id) => {
+  getDynamicSize(count) {
+    const countSqrt = Math.sqrt(count);
+    const horizontal = this.state.innerWidth > this.state.innerHeight;
+    const gridSize = countSqrt % 1 === 0 ? countSqrt : parseInt(countSqrt) + 1;
+    const freeTiles = Math.pow(gridSize, 2) - count;
+    const isEmptyLine = freeTiles >= gridSize;
+    const size = isEmptyLine ? {
+      columns: !horizontal ? gridSize : gridSize - 1,
+      rows: horizontal ? gridSize : gridSize - 1,
+    } : {
+      columns: gridSize,
+      rows: gridSize,
+    };
+
+    return size;
+  }
+
+  onZoom = id => {
     const { offset } = this.props.modules.find(module => module.id === id);
 
-    if (offset && this.props.onModuleChange) {
-      this.props.onModuleChange(offset);
+    if (offset) {
+      this.onModuleChange(offset);
       this.setState({ gridViewMode: false });
     }
   };
 
-  getTiles() {
-    const { modules, viewPortOffset } = this.props;
+  onModuleChange = offset => {
+    if (this.props.onModuleChange) {
+      this.props.onModuleChange(offset);
+    }
+  };
 
-    return this.state.gridViewMode ? modules.sort(sortModules) : modules.reduce((result, module) => {
+  getTiles() {
+    const { modules, viewPortOffset, visited } = this.props;
+
+    return (this.state.gridViewMode ? modules.sort(sortModules) : modules.reduce((result, module) => {
       if (shallowequal(module.offset, viewPortOffset)) {
         return [
           module,
@@ -69,20 +93,22 @@ export default class Grid extends React.Component {
         ...result,
         module,
       ];
-    }, []);
+    }, [])).filter(({ id }) => visited.includes(id));
   }
 
   render() {
-    const { size = DEFAULT_SIZE, viewPortOffset, onModuleChange, handlers } = this.props;
+    const { viewPortOffset, handlers, dynamic } = this.props;
+    const tiles = this.getTiles();
+    const size = dynamic ? this.getDynamicSize(tiles.length) : this.props.size || DEFAULT_SIZE;
     const { gridViewMode } = this.state;
     const cellHeight = gridViewMode ?
       (this.state.innerHeight / size.columns) - 26 / size.columns
       : this.state.innerHeight - 18;
-    const cols = gridViewMode ? size.columns : 1;
+    const cols = gridViewMode ? size.rows : 1;
 
     return (
       <div>
-        {!gridViewMode && (
+        {!gridViewMode && tiles.length > 1 && (
           <IconButton
             style={{ position: 'absolute', right: 10, opacity: 0.5 }}
             onClick={() => this.setState({ gridViewMode: !this.state.gridViewMode })}
@@ -90,12 +116,12 @@ export default class Grid extends React.Component {
             <ViewModuleIcon />
           </IconButton>
         )}
-        <DirectionsButtons gridSize={size} onDirectionClick={onModuleChange} viewPortOffset={viewPortOffset} />
+        <DirectionsButtons gridSize={size} onDirectionClick={this.onModuleChange} viewPortOffset={viewPortOffset} />
         <GridList
           cellHeight={cellHeight}
           cols={cols}
         >
-        {this.getTiles().map(({ Component, id, offset }, key) => (
+        {tiles.map(({ Component, id, offset }, key) => (
           <GridTile
             containerElement={<PaperForGridTile zDepth={3} />}
             key={id}
@@ -118,7 +144,7 @@ export default class Grid extends React.Component {
               }}
               onClick={() => this.onZoom(id)}
             />
-            <Module style={{ zoom: gridViewMode ? 1 / DEFAULT_SIZE.columns : 1 }}>
+            <Module style={{ zoom: gridViewMode ? 1 / size.columns : 1 }}>
               <Component {...(handlers[id] ? handlers[id]() : {})} />
             </Module>
           </GridTile>
