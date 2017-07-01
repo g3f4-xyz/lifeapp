@@ -92,7 +92,13 @@ class Tasks extends React.Component {
         />
         <FlatButton
           icon={<More />}
-          style={{ margin: 12, float: 'right' }}
+          style={{
+            zIndex: 9,
+            zoom: 3,
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+          }}
           onClick={onMore}
         />
       </div>

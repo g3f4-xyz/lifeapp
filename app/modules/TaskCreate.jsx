@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 // import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import AddButton from 'material-ui/svg-icons/navigation/check';
@@ -23,6 +24,10 @@ const styles = {
 };
 
 class TaskCreate extends React.Component {
+  static propTypes = {
+    onAdd: PropTypes.func,
+  };
+
   state = {
     task: {
       title: '',
@@ -47,6 +52,12 @@ class TaskCreate extends React.Component {
       }
     })
   }
+
+  onAdd = () => {
+    if (this.props.onAdd) {
+      this.props.onAdd(this.state.task);
+    }
+  };
 
   render() {
     const { title, priority, creationDate, progress, finishDate, status, note } = this.state.task;
@@ -166,12 +177,18 @@ class TaskCreate extends React.Component {
               }}
             />
           </Paper>
-          <AddButton style={{
-            position: 'absolute',
-            bottom: 0,
-            right: 0,
-            margin: 20,
-          }} />
+          <AddButton
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              color: '#8BC34A',
+              right: 0,
+              margin: 20,
+              width: '20%',
+              height: '20%',
+            }}
+            onClick={this.onAdd}
+          />
         </div>
       </div>
     );

@@ -25,6 +25,11 @@ class TaskDetails extends React.Component {
   static propTypes = {
     taskDetails: React.PropTypes.object,
   };
+
+  componentDidMount() {
+    console.log(['TaskDetails:componentDidMount']);
+  }
+
   render() {
     if (!this.props.taskDetails) {
       return null;
