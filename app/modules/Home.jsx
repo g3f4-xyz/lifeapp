@@ -3,29 +3,37 @@ import Relay from 'react-relay';
 import FlatButton from 'material-ui/FlatButton';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import Tasks from '../containers/Tasks';
+import AddTask from '../mutations/AddTask';
+import Radio from 'backbone.radio';
 
+const channel = Radio.channel('app');
 const pageSize = 10;
 
 class Home extends React.Component {
   static propTypes = {
     home: React.PropTypes.object,
     onDetails: React.PropTypes.func,
-    onTaskCreate: React.PropTypes.func,
+    onAdd: React.PropTypes.func,
+    onAdded: React.PropTypes.func,
   };
 
   componentDidMount() {
     console.log(['Home:componentDidMount']);
+    channel.reply('addTask', task => {
+      this.props.relay.commitUpdate(new AddTask({ home: this.props.home, task }), {
+        onFailure: transaction => {
+          this.props.onAdded(transaction);
+        },
+        onSuccess: response => {
+          this.props.onAdded(response);
+        },
+      })
+    });
   }
 
   onMore = () => this.props.relay.setVariables({
     pageSize: this.props.relay.variables.pageSize + pageSize
   });
-
-  onTaskCreate = () => {
-    if (this.props.onTaskCreate) {
-      this.props.onTaskCreate();
-    }
-  };
 
   render() {
     return (
@@ -45,7 +53,7 @@ class Home extends React.Component {
             left: 0,
             zoom: 3,
           }}
-          onClick={this.onTaskCreate}
+          onClick={this.props.onAdd}
         />
       </div>
     );
@@ -62,6 +70,7 @@ export default Relay.createContainer(Home, {
         tasks(first: $pageSize) {
           ${Tasks.getFragment('tasks')},
         },
+        ${AddTask.getFragment('home')},
       }
     `,
   },

@@ -117,31 +117,27 @@ class App extends React.Component {
   handlers = {
     [MODULES_IDS.HOME]: () => ({
       home: this.props.app.home,
+      onAdd: () => {
+        this.onModuleChange({
+          column: 0,
+          row: 0,
+        });
+      },
+      onAdded: this.onAdded,
       onDetails: this.onDetails,
-      onTaskCreate: this.onTaskCreate,
     }),
     [MODULES_IDS.TASK_DETAILS]: () => ({
       taskDetails: this.props.app.taskDetails,
       onDetails: this.onDetails,
     }),
     [MODULES_IDS.TASK_CREATE]: () => ({
-      onAdd: this.onAdd,
     }),
   };
 
-  onAdd = task => {
-    console.log(['onAdd'], task);
+  onAdded = response => {
     this.onModuleChange({
       column: 1,
       row: 1,
-    });
-  };
-
-  onTaskCreate = () => {
-    console.log(['onTaskCreate']);
-    this.onModuleChange({
-      column: 0,
-      row: 0,
     });
   };
 
@@ -165,7 +161,6 @@ class App extends React.Component {
   };
 
   render() {
-
     return (
       <div>
         <Grid

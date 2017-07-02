@@ -1,7 +1,7 @@
 import { lorem, random, date } from 'faker';
 import Task from '../models/Task';
 
-const LENGTH = 100;
+const LENGTH = 5;
 const PRIORITIES = ['urgent', 'normal'];
 const STATUSES = ['done', 'in progress', 'planned', 'cancelled'];
 export default Array.from({ length: LENGTH }).map((_, index) => new Task({

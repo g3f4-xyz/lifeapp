@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import Relay from 'react-relay';
 import Paper from 'material-ui/Paper';
 import AddButton from 'material-ui/svg-icons/navigation/check';
 import { Icon, Label, Input, Date, Select, Slider } from '../components';
+import Radio from 'backbone.radio';
+
+const channel = Radio.channel('app');
 
 const styles = {
   leftCol: {
@@ -54,9 +56,7 @@ class TaskCreate extends React.Component {
   }
 
   onAdd = () => {
-    if (this.props.onAdd) {
-      this.props.onAdd(this.state.task);
-    }
+    channel.request('addTask', this.state.task);
   };
 
   render() {
@@ -64,6 +64,18 @@ class TaskCreate extends React.Component {
 
     return (
       <div style={styles.root}>
+        <AddButton
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            color: '#8BC34A',
+            right: 0,
+            margin: 20,
+            width: '20%',
+            height: '20%',
+          }}
+          onClick={this.onAdd}
+        />
         <Input
           multiLine
           hintText="Enter title of new task"
@@ -72,7 +84,6 @@ class TaskCreate extends React.Component {
             fontSize: '32px',
           }}
           onChange={(e, title) => {
-            console.log(['title.onChange'], title);
             this.updateTask({ title });
           }}
         />
@@ -93,7 +104,6 @@ class TaskCreate extends React.Component {
               text: 'In progress',
             }]}
             onChange={(e, priority) => {
-              console.log(['priority.onChange'], priority)
               this.updateTask({ priority });
             }}
           />
@@ -107,7 +117,6 @@ class TaskCreate extends React.Component {
               value={creationDate}
               hintText="Change creation date"
               onChange={(e, creationDate) => {
-                console.log(['creationDate.onChange'], creationDate)
                 this.updateTask({ creationDate });
               }}
             />
@@ -120,7 +129,6 @@ class TaskCreate extends React.Component {
             <Slider
               value={progress}
               onChange={(e, progress) => {
-                console.log(['progress.onChange'], progress)
                 this.updateTask({ progress });
               }}
             />
@@ -143,7 +151,6 @@ class TaskCreate extends React.Component {
                 text: 'Urgent',
               }]}
               onChange={(e, status) => {
-                console.log(['status.onChange'], status)
                 this.updateTask({ status });
               }}
             />
@@ -157,7 +164,6 @@ class TaskCreate extends React.Component {
               value={finishDate}
               hintText="Set finish date"
               onChange={(e, finishDate) => {
-                console.log(['finishDate.onChange'], finishDate)
                 this.updateTask({ finishDate });
               }}
             />
@@ -172,23 +178,10 @@ class TaskCreate extends React.Component {
               value={note}
               hintText="Add task note"
               onChange={(e, note) => {
-                console.log(['note.onChange'], note)
                 this.updateTask({ note });
               }}
             />
           </Paper>
-          <AddButton
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              color: '#8BC34A',
-              right: 0,
-              margin: 20,
-              width: '20%',
-              height: '20%',
-            }}
-            onClick={this.onAdd}
-          />
         </div>
       </div>
     );
@@ -196,20 +189,3 @@ class TaskCreate extends React.Component {
 }
 
 export default TaskCreate;
-
-// export default Relay.createContainer(TaskCreate, {
-//   fragments: {
-//     taskDetails: () => Relay.QL`
-//       fragment on Task {
-//         id
-//         title
-//         priority
-//         creationDate
-//         finishDate
-//         progress
-//         status
-//         note
-//       }
-//     `,
-//   },
-// });
