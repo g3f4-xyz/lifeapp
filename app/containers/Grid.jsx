@@ -84,7 +84,10 @@ export default class Grid extends React.Component {
     return (this.state.gridViewMode ? modules.sort(sortModules) : modules.reduce((result, module) => {
       if (shallowequal(module.offset, viewPortOffset)) {
         return [
-          module,
+          {
+            ...module,
+            inViewPort: true,
+          },
           ...result,
         ];
       }
@@ -123,8 +126,9 @@ export default class Grid extends React.Component {
           cellHeight={cellHeight}
           cols={cols}
         >
-        {tiles.map(({ Component, id, offset }, key) => (
+        {tiles.map(({ Component, id, offset, inViewPort }, key) => (
           <GridTile
+            style={{ display: !gridViewMode && !inViewPort ? 'none' : 'block' }}
             containerElement={<PaperForGridTile zDepth={3} />}
             key={id}
             onMouseEnter={() => {

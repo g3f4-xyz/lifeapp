@@ -22,7 +22,7 @@ const addTask = task => {
 };
 const getHome = () => store.home;
 const getTask = id => store.tasks.find(task => task.id === id);
-const getTasks = () => store.tasks;
+const getTasks = () => store.tasks.sort((a, b) => a.id < b.id);
 
 export {
   addTask,
