@@ -6,7 +6,7 @@ const config = {
   output: {
     path: path.join(__dirname, 'build'),
     filename: 'server.js',
-    libraryTarget: 'commonjs2',
+    libraryTarget: 'amd',
   },
   target: 'node',
   externals: /^[a-z\-0-9]+$/,

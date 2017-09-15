@@ -2,7 +2,7 @@
   "plugins": [
     "transform-runtime",
     "syntax-dynamic-import",
-    "./plugins/babelRelayPlugin"
+    ["relay", { "schema": "data/schema.graphql" }]
   ],
   "presets": [
     [
@@ -19,7 +19,7 @@
       "plugins": [
         "transform-runtime",
         "syntax-dynamic-import",
-        "./plugins/babelRelayPlugin",
+        "./plugins/babelRelayPlugin"
       ],
       "presets": [
         "es2015",
@@ -29,7 +29,7 @@
     },
     "server": {
       "plugins": [
-        "syntax-dynamic-import",
+        "syntax-dynamic-import"
       ],
       "presets": [
         "es2015",

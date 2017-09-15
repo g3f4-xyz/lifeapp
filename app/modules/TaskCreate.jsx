@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import CircularProgress from 'material-ui/CircularProgress';
 import Paper from 'material-ui/Paper';
 import AddButton from 'material-ui/svg-icons/navigation/check';
 import { Icon, Label, Input, Date, Select, Slider } from '../components';
-import Radio from 'backbone.radio';
-
-const channel = Radio.channel('app');
+import environment from '../environment';
+import addTask from '../mutations/addTask';
 
 const styles = {
   leftCol: {
@@ -31,6 +31,7 @@ class TaskCreate extends React.Component {
   };
 
   state = {
+    pending: false,
     task: {
       title: '',
       priority: null,
@@ -42,10 +43,6 @@ class TaskCreate extends React.Component {
     },
   };
 
-  componentDidMount() {
-    console.log(['TaskCreate:componentDidMount']);
-  }
-
   updateTask(update) {
     this.setState({
       task: {
@@ -56,7 +53,11 @@ class TaskCreate extends React.Component {
   }
 
   onAdd = () => {
-    channel.request('addTask', this.state.task);
+    this.setState({ pending: true });
+    addTask(environment, this.state.task, this.props.parentID, (response, errors) => {
+      this.props.onAdded(response, errors);
+      this.setState({ pending: false });
+    })
   };
 
   render() {
@@ -64,18 +65,32 @@ class TaskCreate extends React.Component {
 
     return (
       <div style={styles.root}>
-        <AddButton
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            color: '#8BC34A',
-            right: 0,
-            margin: 20,
-            width: '20%',
-            height: '20%',
-          }}
-          onClick={this.onAdd}
-        />
+        {this.state.pending ? (
+          <CircularProgress
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              right: 0,
+              zoom: 2,
+              margin: 20,
+            }}
+            size={60} thickness={6}
+          />
+        ) : (
+          <AddButton
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              color: '#8BC34A',
+              right: 0,
+              margin: 20,
+              width: '20%',
+              height: '20%',
+            }}
+            onClick={this.onAdd}
+          />
+        )}
+
         <Input
           multiLine
           hintText="Enter title of new task"

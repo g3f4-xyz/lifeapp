@@ -1,46 +1,22 @@
 import React from 'react';
-import Relay from 'react-relay';
+import PropTypes from 'prop-types';
+import { createFragmentContainer, graphql } from 'react-relay'
 import FlatButton from 'material-ui/FlatButton';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import Tasks from '../containers/Tasks';
-import AddTask from '../mutations/AddTask';
-import Radio from 'backbone.radio';
-
-const channel = Radio.channel('app');
-const pageSize = 10;
 
 class Home extends React.Component {
   static propTypes = {
-    home: React.PropTypes.object,
-    onDetails: React.PropTypes.func,
-    onAdd: React.PropTypes.func,
-    onAdded: React.PropTypes.func,
+    data: PropTypes.object,
+    onDetails: PropTypes.func,
+    onAdd: PropTypes.func,
   };
-
-  componentDidMount() {
-    console.log(['Home:componentDidMount']);
-    channel.reply('addTask', task => {
-      this.props.relay.commitUpdate(new AddTask({ home: this.props.home, task }), {
-        onFailure: transaction => {
-          this.props.onAdded(transaction);
-        },
-        onSuccess: response => {
-          this.props.onAdded(response);
-        },
-      })
-    });
-  }
-
-  onMore = () => this.props.relay.setVariables({
-    pageSize: this.props.relay.variables.pageSize + pageSize
-  });
 
   render() {
     return (
       <div>
         <Tasks
-          tasks={this.props.home.tasks}
-          onMore={this.onMore}
+          data={this.props.data.home}
           onSelect={this.props.onDetails}
         />
         <FlatButton
@@ -60,18 +36,14 @@ class Home extends React.Component {
   }
 }
 
-export default Relay.createContainer(Home, {
-  initialVariables: {
-    pageSize: pageSize
-  },
-  fragments: {
-    home: () => Relay.QL`
-      fragment on Home {
-        tasks(first: $pageSize) {
-          ${Tasks.getFragment('tasks')},
-        },
-        ${AddTask.getFragment('home')},
+export default createFragmentContainer(
+  Home,
+  graphql.experimental`
+    fragment Home on App {
+      home {
+        id
+        ...Tasks
       }
-    `,
-  },
-});
+    }
+  `
+);

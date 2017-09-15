@@ -15,10 +15,10 @@ const GETTERS = {
   Home: getHome,
   Task: getTask,
 };
-export const idFetcher = globalId => {
+export const idFetcher = async globalId => {
   const { type, id } = fromGlobalId(globalId);
   console.log(['nodeDefinitions.idFetcher'], globalId, { type, id });
-  const node = GETTERS[type] ? GETTERS[type](id) : null;
+  const node = await GETTERS[type] ? GETTERS[type](id) : null;
 
   if (node) {
     return node;

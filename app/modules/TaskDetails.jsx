@@ -1,5 +1,8 @@
+import PropTypes from 'prop-types';
 import React from 'react';
-import Relay from 'react-relay';
+import { QueryRenderer, graphql } from 'react-relay';
+import environment from '../environment';
+import CircularProgress from 'material-ui/CircularProgress';
 import Paper from 'material-ui/Paper';
 import { Icon, Label, Value } from '../components';
 
@@ -23,18 +26,14 @@ const styles = {
 
 class TaskDetails extends React.Component {
   static propTypes = {
-    taskDetails: React.PropTypes.object,
+    selectedTaskId: PropTypes.string,
   };
 
-  componentDidMount() {
-    console.log(['TaskDetails:componentDidMount']);
+  componentWillReceiveProps(nextProps) {
+    console.log(['componentWillReceiveProps'], nextProps)
   }
 
   render() {
-    if (!this.props.taskDetails) {
-      return null;
-    }
-
     const { title, priority, creationDate, finishDate, progress, status, note } = this.props.taskDetails;
 
     return (
@@ -91,10 +90,14 @@ class TaskDetails extends React.Component {
   }
 }
 
-export default Relay.createContainer(TaskDetails, {
-  fragments: {
-    taskDetails: () => Relay.QL`
-      fragment on Task {
+/*export default createRefetchContainer(
+  TaskDetails,
+  graphql.experimental`
+    fragment TaskDetails on App
+    @argumentDefinitions(
+      selectedTaskId: {type: "String", defaultValue: null}
+    ) {
+      taskDetails (id: $selectedTaskId) {
         id
         title
         priority
@@ -104,6 +107,63 @@ export default Relay.createContainer(TaskDetails, {
         status
         note
       }
-    `,
-  },
-});
+    }
+  `,
+  graphql.experimental`
+    query TaskDetailsRefetchQuery($selectedTaskId: String) {
+      app {
+        ...TaskDetails
+      }
+    }
+  `,
+);*/
+
+export default class DataProvider extends React.Component {
+  render() {
+    return (
+      <QueryRenderer
+        environment={environment}
+        query={graphql`
+          query TaskDetailsQuery($selectedTaskId: String) {
+            app {
+              taskDetails (id: $selectedTaskId) {
+                id
+                title
+                priority
+                creationDate
+                finishDate
+                progress
+                status
+                note
+              }
+            }
+          }
+        `}
+        variables={{
+          selectedTaskId: this.props.selectedTaskId,
+        }}
+        render={({error, props}) => {
+          if (error) {
+            return <div>{JSON.stringify(error)}</div>;
+          } else if (props) {
+            return <TaskDetails {...props.app} />;
+          }
+          return (
+            <CircularProgress
+              style={{
+                margin: 'auto',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+              }}
+              size={180}
+              thickness={15}
+            />
+          );
+        }}
+      />
+    );
+  }
+}
