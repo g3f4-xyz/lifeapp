@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackTemplate = require('html-webpack-template');
+const RelayCompilerWebpackPlugin = require('relay-compiler-webpack-plugin')
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const glob = require('glob');
@@ -63,14 +64,14 @@ function production() {
       ],
     },
     parts.clean(PATHS.build),
-    parts.minifyJavaScript({ useSourceMap: true }),
-    parts.minifyCSS({
-      options: {
-        discardComments: {
-          removeAll: true,
-        },
-      },
-    }),
+    // parts.minifyJavaScript({ useSourceMap: true }),
+    // parts.minifyCSS({
+    //   options: {
+    //     discardComments: {
+    //       removeAll: true,
+    //     },
+    //   },
+    // }),
     parts.extractBundles({
       bundles: [
         {
@@ -108,6 +109,7 @@ function development() {
       host: process.env.HOST,
       port: process.env.PORT,
     }),
+    { devtool: 'source-map' },
     // parts.lintJavaScript({
     //   include: PATHS.app,
     //   options: {
@@ -124,6 +126,10 @@ function react() {
       app: PATHS.app,
     },
     plugins: [
+      // new RelayCompilerWebpackPlugin({
+      //   schema: path.resolve(__dirname, './data/schema.graphql'), // or schema.json
+      //   src: path.resolve(__dirname, './app'),
+      // }),
       new HtmlWebpackPlugin({
         template: HtmlWebpackTemplate,
         title: 'LifeApp',

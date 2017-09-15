@@ -1,6 +1,9 @@
-import React from 'react';
-import Relay from 'react-relay';
+import React, { Component } from 'react';
+import { QueryRenderer, graphql } from 'react-relay'
 import shallowequal from 'shallowequal';
+import CircularProgress from 'material-ui/CircularProgress';
+import Grid from './Grid';
+import environment from '../environment';
 import AttachmentPreview from '../modules/AttachmentPreview';
 import CustomTemplate from '../modules/CustomTemplate';
 import Enter from '../modules/Enter';
@@ -10,7 +13,6 @@ import TaskEdit from '../modules/TaskEdit';
 import TaskDetails from '../modules/TaskDetails';
 import Templates from '../modules/Templates';
 import Settings from '../modules/Settings';
-import Grid from './Grid';
 
 const MODULES_IDS = {
   HOME: 'Home',
@@ -98,15 +100,9 @@ const MODULES = [
   },
 ];
 
-class App extends React.Component {
-  static propTypes = {
-    app: React.PropTypes.shape({
-      home: React.PropTypes.object,
-      taskDetails: React.PropTypes.object,
-    }),
-  };
-
+class App extends Component {
   state = {
+    selectedTaskId: null, // #TODO rozbudować scheme na froncie żeby przechowywała tą informacje
     visited: [MODULES_IDS.HOME],
     viewPortOffset: {
       column: 1,
@@ -115,26 +111,28 @@ class App extends React.Component {
   };
 
   handlers = {
-    [MODULES_IDS.HOME]: () => ({
-      home: this.props.app.home,
-      onAdd: () => {
-        this.onModuleChange({
-          column: 0,
-          row: 0,
-        });
-      },
-      onAdded: this.onAdded,
-      onDetails: this.onDetails,
-    }),
+    [MODULES_IDS.HOME]: () => {
+      return {
+        data: this.data.app,
+        onAdd: () => {
+          this.onModuleChange({
+            column: 0,
+            row: 0,
+          });
+        },
+        onDetails: this.onDetails,
+      }
+    },
     [MODULES_IDS.TASK_DETAILS]: () => ({
-      taskDetails: this.props.app.taskDetails,
-      onDetails: this.onDetails,
+      selectedTaskId: this.state.selectedTaskId
     }),
     [MODULES_IDS.TASK_CREATE]: () => ({
+      onAdded: this.onAdded,
+      parentID: this.data.app.home.id
     }),
   };
 
-  onAdded = response => {
+  onAdded = () => {
     this.onModuleChange({
       column: 1,
       row: 1,
@@ -142,11 +140,10 @@ class App extends React.Component {
   };
 
   onDetails = selectedTaskId => {
-    this.props.relay.setVariables({ selectedTaskId }, () => {
-      this.onModuleChange({
-        column: 2,
-        row: 1,
-      });
+    this.setState({ selectedTaskId });
+    this.onModuleChange({
+      column: 2,
+      row: 1,
     });
   };
 
@@ -160,36 +157,66 @@ class App extends React.Component {
     });
   };
 
+  renderGrid() {
+    return (
+      <Grid
+        dynamic
+        modules={MODULES}
+        handlers={this.handlers}
+        visited={this.state.visited}
+        viewPortOffset={this.state.viewPortOffset}
+        onModuleChange={this.onModuleChange}
+      />
+    );
+  }
+
   render() {
     return (
-      <div>
-        <Grid
-          dynamic
-          modules={MODULES}
-          handlers={this.handlers}
-          visited={this.state.visited}
-          viewPortOffset={this.state.viewPortOffset}
-          onModuleChange={this.onModuleChange}
-        />
-      </div>
+      <QueryRenderer
+        environment={environment}
+        query={graphql`
+          query AppQuery(
+            $count: Int!
+            $cursor: String
+          ) {
+            app {
+              ...Home
+              home {
+                id
+              }
+            }
+          }
+        `}
+        variables={{
+          count: 5
+        }}
+        render={({error, props}) => {
+          if (error) {
+            return <div>{JSON.stringify(error)}</div>;
+          } else if (props) {
+            this.data = props;
+
+            return this.renderGrid();
+          }
+          return (
+            <CircularProgress
+              style={{
+                margin: 'auto',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+              }}
+              size={180}
+              thickness={15}
+            />
+          );
+        }}
+      />
+
     );
   }
 }
 
-export default Relay.createContainer(App, {
-  initialVariables: {
-    selectedTaskId: null,
-  },
-  fragments: {
-    app: () => Relay.QL`
-      fragment on App {
-        home {
-          ${Home.getFragment('home')},
-        }
-        taskDetails (id: $selectedTaskId) {
-          ${TaskDetails.getFragment('taskDetails')},
-        }
-      }
-    `,
-  },
-});
+export default App;

@@ -1,5 +1,7 @@
 import React from 'react';
-import Relay from 'react-relay';
+import PropTypes from 'prop-types';
+import { createPaginationContainer, graphql } from 'react-relay';
+import CircularProgress from 'material-ui/CircularProgress';
 import {
   Table,
   TableBody,
@@ -11,6 +13,7 @@ import {
 import FlatButton from 'material-ui/FlatButton';
 import More from 'material-ui/svg-icons/navigation/more-horiz';
 
+const PAGE_SIZE = 5;
 const TABLE_CONFIG = {
   selectable: true,
   style: { backgroundColor:'transparent' },
@@ -29,8 +32,8 @@ const TABLE_CONFIG = {
 
 class TasksList extends React.Component {
   static propTypes = {
-    data: React.PropTypes.array,
-    onSelect: React.PropTypes.func,
+    data: PropTypes.array,
+    onSelect: PropTypes.func,
   };
 
   onSelect = ([index]) => {
@@ -77,48 +80,114 @@ class TasksList extends React.Component {
 
 class Tasks extends React.Component {
   static propTypes = {
-    tasks: React.PropTypes.object,
+    data: React.PropTypes.object,
     onMore: React.PropTypes.func,
     onSelect: React.PropTypes.func,
   };
 
+  state = {
+    loading: false,
+  };
+
+  onMore = () => {
+    if (!this.props.relay.hasMore() || this.props.relay.isLoading()) {
+      return;
+    }
+
+    this.props.relay.loadMore(PAGE_SIZE, () => {
+      this.forceUpdate(); // when data comes, relay.isLoading is returning true, so we need to render page one more time
+    });
+
+    this.forceUpdate(); // initializing loadMore doesn't invoke rendering DOM. To change moreIcon to loader we need to render page
+  };
+
   render() {
-    const { tasks, onMore, onSelect } = this.props;
+    const { data: { tasks: { edges } }, onSelect } = this.props;
+
     return (
       <div>
         <TasksList
-          data={tasks.edges.map(({ node }) => node)}
+          data={edges.map(({ node }) => node)}
           onSelect={onSelect}
         />
-        <FlatButton
-          icon={<More />}
-          style={{
-            zIndex: 9,
-            zoom: 3,
-            position: 'absolute',
-            bottom: 0,
-            right: 0,
-          }}
-          onClick={onMore}
-        />
+        {this.props.relay.hasMore() && !this.props.relay.isLoading() ? (
+          <FlatButton
+            icon={<More />}
+            style={{
+              zIndex: 9,
+              zoom: 3,
+              position: 'absolute',
+              bottom: 0,
+              right: 0,
+            }}
+            onClick={this.onMore}
+          />
+        ) : (
+          <CircularProgress
+            size={80}
+            thickness={10}
+            style={{
+              zIndex: 9,
+              position: 'absolute',
+              bottom: 0,
+              right: 80,
+              margin: 10,
+            }}
+          />
+        )}
       </div>
     );
   }
 }
 
-export default Relay.createContainer(Tasks, {
-  fragments: {
-    tasks: () => Relay.QL`
-      fragment on TaskConnection {
+export default createPaginationContainer(
+  Tasks,
+  graphql`
+    fragment Tasks on Home {
+      tasks (
+        first: $count
+        after: $cursor
+      ) @connection(key: "Tasks_tasks") {
         edges {
           node {
             id,
             title,
             priority,
             status,
-          },
-        },
+          }
+        }
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
       }
-    `,
-  },
-});
+    }
+  `,
+  {
+    direction: 'forward',
+    getConnectionFromProps(props) {
+      return props.data && props.data.tasks;
+    },
+    getFragmentVariables(prevVars, totalCount) {
+      return {
+        ...prevVars,
+        count: totalCount,
+      };
+    },
+    getVariables(props, { count, cursor }) {
+      return { count, cursor };
+    },
+    query: graphql`
+      query TasksPaginationQuery(
+        $count: Int!
+        $cursor: String
+      ) {
+        app {
+          home {
+            ...Tasks
+          }
+        }
+      }
+    `
+  }
+);

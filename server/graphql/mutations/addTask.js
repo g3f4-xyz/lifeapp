@@ -33,26 +33,24 @@ export default mutationWithClientMutationId({
   outputFields: {
     newTaskEdge: {
       type: TaskEdge,
-      resolve: task => {
-        console.log(['mutations.addTask.outputFields.newTaskEdge'], task)
+      resolve: async node => {
+        console.log(['mutations.addTask.outputFields.newTaskEdge'], node)
+        const tasks = await getTasks();
 
         return {
-          cursor: cursorForObjectInConnection(
-            getTasks(),
-            task
-          ),
-          node: task,
+          node,
+          cursor: cursorForObjectInConnection(tasks, node),
         };
       },
     },
     home: {
       type: homeType,
-      resolve: (payload) => getHome(),
+      resolve: async payload => await getHome(),
     },
   },
-  mutateAndGetPayload: (task) => {
+  mutateAndGetPayload: async task => {
     console.log(['addTask.mutateAndGetPayload'], task);
 
-    return addTask(new Task(task));
+    return await addTask(new Task(task));
   },
 })
