@@ -9,7 +9,7 @@ const server = express();
 
 server.use(express.static(process.cwd() + '/build'));
 server.use('/graphql', cors(), graphQLHTTP(() => ({
-  schema, pretty: true, graphiql: true
+  schema, pretty: true, graphiql: true,
 })));
 server.listen(PORT, () => console.log(
   `GraphQL Server is now running on http://localhost:${PORT}/graphql`

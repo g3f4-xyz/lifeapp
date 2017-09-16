@@ -10,7 +10,7 @@ const STORE_APPLIES = [
   },
   {
     dataKey: 'tasks',
-    apply: tasks => tasks.map(task => new Task(task))
+    apply: tasks => tasks.map(task => new Task(task)),
   },
 ];
 
