@@ -6,7 +6,7 @@ import {
 } from 'relay-runtime';
 
 function fetchQuery(operation, variables) {
-  return fetch('http://localhost:30000/graphql', {
+  return fetch('https://g3f4-lifeapp.herokuapp.com/graphql', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',

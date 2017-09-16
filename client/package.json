@@ -2,7 +2,7 @@
   "name": "boilerplate",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:30000/graphql/",
+  "proxy": "https://g3f4-lifeapp.herokuapp.com/graphql/",
   "dependencies": {
     "babel-plugin-relay": "^1.3.0",
     "material-ui": "^0.19.1",
