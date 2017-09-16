@@ -34,7 +34,7 @@ export default mutationWithClientMutationId({
     newTaskEdge: {
       type: TaskEdge,
       resolve: async node => {
-        console.log(['mutations.addTask.outputFields.newTaskEdge'], node)
+        console.log(['mutations.addTask.outputFields.newTaskEdge'], node);
         const tasks = await getTasks();
 
         return {
@@ -45,7 +45,7 @@ export default mutationWithClientMutationId({
     },
     home: {
       type: homeType,
-      resolve: async payload => await getHome(),
+      resolve: async () => await getHome(),
     },
   },
   mutateAndGetPayload: async task => {
@@ -53,4 +53,4 @@ export default mutationWithClientMutationId({
 
     return await addTask(new Task(task));
   },
-})
+});

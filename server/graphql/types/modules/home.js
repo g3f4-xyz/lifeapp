@@ -20,7 +20,7 @@ export default new GraphQLObjectType({
       resolve: async (_, args) => {
         const tasks = await getTasks();
 
-        return connectionFromArray(tasks, args)
+        return connectionFromArray(tasks, args);
       },
     },
   }),
