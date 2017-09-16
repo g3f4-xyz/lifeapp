@@ -9,7 +9,7 @@ if (!text.includes('babel-plugin-relay')) {
   if (text.includes('const plugins = [')) {
     text = text.replace(
       'const plugins = [',
-      'const plugins = [\n  require.resolve(\'babel-plugin-relay\'),',
+      'const plugins = [\n  require.resolve(\'babel-plugin-relay\'),'
     );
     fs.writeFileSync(file, text, 'utf8');
   } else {
