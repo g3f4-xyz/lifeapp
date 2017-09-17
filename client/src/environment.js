@@ -5,8 +5,10 @@ import {
   Store,
 } from 'relay-runtime';
 
+const HOST = process.env.GRAPHQL_HOST || 'http://localhost:30000/graphql';
+
 function fetchQuery(operation, variables) {
-  return fetch('https://g3f4-lifeapp.herokuapp.com/graphql', {
+  return fetch(HOST, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
