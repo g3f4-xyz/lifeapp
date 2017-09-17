@@ -1,3 +1,20 @@
+input addTaskInput {
+  title: String!
+  priority: String!
+  status: String!
+  creationDate: String
+  progress: String
+  finishDate: String
+  note: String
+  clientMutationId: String
+}
+
+type addTaskPayload {
+  newTaskEdge: TaskEdge
+  home: Home
+  clientMutationId: String
+}
+
 # Application entry point
 type App {
   home: Home
@@ -11,6 +28,10 @@ type Home implements Node {
 
   # User's tasks
   tasks(after: String, first: Int, before: String, last: Int): TaskConnection
+}
+
+type Mutation {
+  addTask(input: addTaskInput!): addTaskPayload
 }
 
 # An object with an ID

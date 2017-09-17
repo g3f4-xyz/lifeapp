@@ -4,4 +4,4 @@ import tasks from './tasks';
 export default {
   home,
   tasks,
-}
+};

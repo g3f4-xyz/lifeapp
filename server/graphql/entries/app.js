@@ -1,5 +1,5 @@
 import { GraphQLObjectType, GraphQLString } from 'graphql';
-import { getHome } from '../../api'
+import { getHome } from '../../api';
 import homeType from '../types/modules/home';
 import taskType from '../types/task';
 import { idFetcher } from '../nodeDefinitions';
@@ -10,15 +10,15 @@ export default new GraphQLObjectType({
   fields: () => ({
     home: {
       type: homeType,
-      resolve: () => getHome(),
+      resolve: async () => await getHome(),
     },
     taskDetails: {
       type: taskType,
       args: {
-        id: { type: GraphQLString }
+        id: { type: GraphQLString },
       },
-      resolve: (_, { id }) => {
-        return id ? idFetcher(id) : null;
+      resolve: async (_, { id }) => {
+        return await id ? idFetcher(id) : null;
       },
     },
   }),

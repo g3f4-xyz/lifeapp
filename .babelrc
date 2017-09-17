@@ -1,41 +1,28 @@
 {
   "plugins": [
-    "transform-runtime",
     "syntax-dynamic-import",
-    "./plugins/babelRelayPlugin"
+    ["transform-runtime", {
+      "polyfill": false,
+      "regenerator": true
+    }]
   ],
   "presets": [
-    [
-      "es2015",
-      {
-        "modules": false
-      }
-    ],
-    "react",
+    "es2015",
     "stage-0"
   ],
   "env": {
-    "production": {
-      "plugins": [
-        "transform-runtime",
-        "syntax-dynamic-import",
-        "./plugins/babelRelayPlugin",
-      ],
-      "presets": [
-        "es2015",
-        "react",
-        "stage-0"
-      ],
-    },
     "server": {
       "plugins": [
         "syntax-dynamic-import",
+        ["transform-runtime", {
+          "polyfill": false,
+          "regenerator": true
+        }]
       ],
       "presets": [
         "es2015",
-        "react",
         "stage-0"
-      ],
+      ]
     },
     "scripts": {
       "presets": [

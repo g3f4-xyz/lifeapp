@@ -17,7 +17,11 @@ export default new GraphQLObjectType({
       type: taskConnection,
       description: 'User\'s tasks',
       args: connectionArgs,
-      resolve: (_, args) => connectionFromArray(getTasks(), args),
+      resolve: async (_, args) => {
+        const tasks = await getTasks();
+
+        return connectionFromArray(tasks, args);
+      },
     },
   }),
   interfaces: [nodeInterface],
