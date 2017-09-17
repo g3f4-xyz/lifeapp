@@ -4,7 +4,7 @@
   "description": "Level up with LifeApp",
   "main": "lifeapp",
   "scripts": {
-    "build": "npm run build:server && npm run build:client",
+    "build": "npm run build:server && npm run build:client && cp package.json build/",
     "build:client": "cd client && node setup && react-scripts build && cp -r build/* ../build && cd -",
     "build:server": "webpack --env production --config webpack.server.js",
     "lint": "eslint",
