@@ -4,12 +4,15 @@
   "description": "Level up with LifeApp",
   "main": "lifeapp",
   "scripts": {
-    "build": "webpack --env production --config webpack.server.js",
+    "build": "npm run build:server && npm run build:client",
+    "build:client": "cd client && node setup && react-scripts build && cp -r build/* ../build && cd -",
+    "build:server": "webpack --env production --config webpack.server.js",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "dev": "BABEL_ENV=server babel-watch server",
-    "start": "node --optimize_for_size --max_old_space_size=460 --gc_interval=100 build/server",
+    "start": "npm run build && node --optimize_for_size --max_old_space_size=460 --gc_interval=100 build/server",
     "stats": "webpack --env production --profile --json > stats.json",
+    "test": "node setup && react-scripts test --env=jsdom",
     "update:mocks": "BABEL_ENV=scripts babel-node ./scripts/updateMocks",
     "update:schema": "BABEL_ENV=scripts babel-node ./scripts/updateSchema"
   },
@@ -53,6 +56,7 @@
     "faker": "^4.1.0",
     "graphql": "^0.11.3",
     "graphql-relay": "^0.5.1",
-    "immutability-helper": "^2.3.1"
+    "immutability-helper": "^2.3.1",
+    "react-scripts": "1.0.13"
   }
 }
