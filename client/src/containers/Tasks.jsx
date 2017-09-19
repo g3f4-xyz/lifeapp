@@ -16,9 +16,9 @@ import More from 'material-ui/svg-icons/navigation/more-horiz';
 const PAGE_SIZE = 5;
 const TABLE_CONFIG = {
   selectable: true,
-  style: { backgroundColor:'transparent' },
+  style: { backgroundColor: 'transparent' },
   header: {
-    style: { backgroundColor:'transparent' },
+    style: { backgroundColor: 'transparent' },
     displaySelectAll: false,
     adjustForCheckbox: false,
   },
@@ -46,34 +46,32 @@ class TasksList extends React.Component {
     const { header, body, ...table } = TABLE_CONFIG;
 
     return (
-      <div>
-        <Table
-          {...table}
-          onRowSelection={this.onSelect}
-        >
-          <TableHeader {...header}>
-            <TableRow>
-              <TableHeaderColumn colSpan="3" tooltip="Super Header">
-                User task's list
-              </TableHeaderColumn>
-            </TableRow>
-            <TableRow>
-              <TableHeaderColumn tooltip="The title of task">Title</TableHeaderColumn>
-              <TableHeaderColumn tooltip="The priority of task">Priority</TableHeaderColumn>
-              <TableHeaderColumn tooltip="The task status">Status</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody {...body}>
-          {this.props.data.map(({ title, priority, status }, index) => (
-            <TableRow key={index}>
-              <TableRowColumn>{title}</TableRowColumn>
-              <TableRowColumn>{priority}</TableRowColumn>
-              <TableRowColumn>{status}</TableRowColumn>
-            </TableRow>
-          ))}
-          </TableBody>
-        </Table>
-      </div>
+      <Table
+        {...table}
+        onRowSelection={this.onSelect}
+      >
+        <TableHeader {...header}>
+          <TableRow>
+            <TableHeaderColumn colSpan="3" tooltip="Super Header">
+              User task's list
+            </TableHeaderColumn>
+          </TableRow>
+          <TableRow>
+            <TableHeaderColumn tooltip="The title of task">Title</TableHeaderColumn>
+            <TableHeaderColumn tooltip="The priority of task">Priority</TableHeaderColumn>
+            <TableHeaderColumn tooltip="The task status">Status</TableHeaderColumn>
+          </TableRow>
+        </TableHeader>
+        <TableBody {...body}>
+        {this.props.data.map(({ title, priority, status }, index) => (
+          <TableRow key={index}>
+            <TableRowColumn>{title}</TableRowColumn>
+            <TableRowColumn>{priority}</TableRowColumn>
+            <TableRowColumn>{status}</TableRowColumn>
+          </TableRow>
+        ))}
+        </TableBody>
+      </Table>
     );
   }
 }
@@ -83,10 +81,6 @@ class Tasks extends React.Component {
     data: PropTypes.object,
     onMore: PropTypes.func,
     onSelect: PropTypes.func,
-  };
-
-  state = {
-    loading: false,
   };
 
   onMore = () => {
@@ -104,14 +98,15 @@ class Tasks extends React.Component {
   render() {
     const { data: { tasks: { edges } }, onSelect } = this.props;
 
-    return (
-      <div>
+    return [
         <TasksList
+          key="Tasks:TasksList"
           data={edges.map(({ node }) => node)}
           onSelect={onSelect}
-        />
-        {this.props.relay.hasMore() && !this.props.relay.isLoading() ? (
+        />,
+        this.props.relay.hasMore() && !this.props.relay.isLoading() ? (
           <FlatButton
+            key="Tasks:FlatButton"
             icon={<More />}
             style={{
               zIndex: 9,
@@ -124,6 +119,7 @@ class Tasks extends React.Component {
           />
         ) : (
           <CircularProgress
+            key="Tasks:CircularProgress"
             size={80}
             thickness={10}
             style={{
@@ -134,9 +130,8 @@ class Tasks extends React.Component {
               margin: 10,
             }}
           />
-        )}
-      </div>
-    );
+        )
+    ];
   }
 }
 

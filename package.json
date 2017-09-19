@@ -4,9 +4,11 @@
   "description": "Level up with LifeApp",
   "main": "lifeapp",
   "scripts": {
-    "build": "npm run build:server && npm run build:client",
+    "build": "rm -rf build && npm run build:server && npm run build:client",
     "build:client": "cd client && node setup && react-scripts build && cp -r build/* ../build && cd -",
     "build:server": "webpack --env production --config webpack.server.js",
+    "heroku:build": "rm -rf build && npm run build:server && npm run heroku:build:client",
+    "heroku:build:client": "cd client && npm run heroku:build && cd -",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "dev": "BABEL_ENV=server babel-watch server",

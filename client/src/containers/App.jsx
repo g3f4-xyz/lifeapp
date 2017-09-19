@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { QueryRenderer, graphql } from 'react-relay'
-// import { AppContainer } from 'react-hot-loader';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-// import injectTapEventPlugin from 'react-tap-event-plugin';
 import shallowequal from 'shallowequal';
 import CircularProgress from 'material-ui/CircularProgress';
+import ErrorBoundary from './ErrorBoundary';
 import Grid from './Grid';
 import environment from '../environment';
 import AttachmentPreview from '../modules/AttachmentPreview';
@@ -30,6 +29,7 @@ const MODULES_IDS = {
 };
 const MODULES = [
   {
+    locked: true,
     id: MODULES_IDS.HOME,
     Component: Home,
     offset: {
@@ -38,6 +38,7 @@ const MODULES = [
     },
   },
   {
+    locked: false,
     id: MODULES_IDS.ENTER,
     Component: Enter,
     offset: {
@@ -46,6 +47,7 @@ const MODULES = [
     },
   },
   {
+    locked: false,
     id: MODULES_IDS.TASK_CREATE,
     Component: TaskCreate,
     offset: {
@@ -54,6 +56,7 @@ const MODULES = [
     },
   },
   {
+    locked: false,
     id: MODULES_IDS.TASK_EDIT,
     Component: TaskEdit,
     offset: {
@@ -62,6 +65,7 @@ const MODULES = [
     },
   },
   {
+    locked: false,
     id: MODULES_IDS.TASK_DETAILS,
     Component: TaskDetails,
     offset: {
@@ -70,6 +74,7 @@ const MODULES = [
     },
   },
   {
+    locked: false,
     id: MODULES_IDS.TEMPLATES,
     Component: Templates,
     offset: {
@@ -78,6 +83,7 @@ const MODULES = [
     },
   },
   {
+    locked: false,
     id: MODULES_IDS.SETTINGS,
     Component: Settings,
     offset: {
@@ -86,6 +92,7 @@ const MODULES = [
     },
   },
   {
+    locked: false,
     id: MODULES_IDS.ATTACHMENT_PREVIEW,
     Component: AttachmentPreview,
     offset: {
@@ -94,6 +101,7 @@ const MODULES = [
     },
   },
   {
+    locked: false,
     id: MODULES_IDS.CUSTOM_TEMPLATE,
     Component: CustomTemplate,
     offset: {
@@ -160,9 +168,16 @@ class App extends Component {
     });
   };
 
+  onModuleClose = moduleId => {
+    this.setState({
+      visited: this.state.visited.filter(id => id !== moduleId)
+    });
+  };
+
   renderGrid() {
     return (
       <Grid
+        onModuleClose={this.onModuleClose}
         dynamic
         modules={MODULES}
         handlers={this.handlers}
@@ -176,48 +191,50 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider>
-        <QueryRenderer
-          environment={environment}
-          query={graphql`
-            query AppQuery(
-              $count: Int!
-              $cursor: String
-            ) {
-              app {
-                ...Home
-                home {
-                  id
+        <ErrorBoundary>
+          <QueryRenderer
+            environment={environment}
+            query={graphql`
+              query AppQuery(
+                $count: Int!
+                $cursor: String
+              ) {
+                app {
+                  ...Home
+                  home {
+                    id
+                  }
                 }
               }
-            }
-          `}
-          variables={{
-            count: 5
-          }}
-          render={({error, props}) => {
-            if (error) {
-              return <div>{JSON.stringify(error)}</div>;
-            } else if (props) {
-              this.data = props;
+            `}
+            variables={{
+              count: 5
+            }}
+            render={({error, props}) => {
+              if (error) {
+                return <div>{JSON.stringify(error)}</div>;
+              } else if (props) {
+                this.data = props;
 
-              return this.renderGrid();
-            }
-            return (
-              <CircularProgress
-                style={{
-                  margin: 'auto',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  bottom: 0,
-                  right: 0,
-                }}
-                size={180}
-                thickness={15}
-              />
-            );
-          }}
-        />
+                return this.renderGrid();
+              }
+              return (
+                <CircularProgress
+                  style={{
+                    margin: 'auto',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    bottom: 0,
+                    right: 0,
+                  }}
+                  size={180}
+                  thickness={15}
+                />
+              );
+            }}
+          />
+          </ErrorBoundary>
       </MuiThemeProvider>
     );
   }

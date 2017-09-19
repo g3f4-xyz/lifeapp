@@ -13,26 +13,26 @@ class Home extends React.Component {
   };
 
   render() {
-    return (
-      <div>
-        <Tasks
-          data={this.props.data.home}
-          onSelect={this.props.onDetails}
-        />
-        <FlatButton
-          icon={<AddCircle />}
-          style={{
-            zIndex: 9,
-            position: 'absolute',
-            bottom: 0,
-            color: '#8BC34A',
-            left: 0,
-            zoom: 3,
-          }}
-          onClick={this.props.onAdd}
-        />
-      </div>
-    );
+    return [
+      <Tasks
+        key="Home:Tasks"
+        data={this.props.data.home}
+        onSelect={this.props.onDetails}
+      />,
+      <FlatButton
+        key="Home:FlatButton"
+        icon={<AddCircle />}
+        style={{
+          zIndex: 9,
+          position: 'absolute',
+          bottom: 0,
+          color: '#8BC34A',
+          left: 0,
+          zoom: 3,
+        }}
+        onClick={this.props.onAdd}
+      />
+    ];
   }
 }
 
