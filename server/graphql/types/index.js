@@ -1,8 +1,8 @@
-import homeType from './modules/home';
-import taskType from './task';
-import appType from './app';
+const homeType = require('./modules/home');
+const taskType = require('./task');
+const appType = require('./app');
 
-export {
+module.exports = {
   appType,
   homeType,
   taskType,

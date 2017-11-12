@@ -1,6 +1,6 @@
-import update from 'immutability-helper';
-import data from './data.json';
-import createStore from '../utils/createStore';
+const update = require('immutability-helper');
+const data = require('./data.json');
+const createStore = require('../utils/createStore');
 
 const getRandomDelay = () => parseInt(Math.random() * 3000);
 let store = createStore(data);

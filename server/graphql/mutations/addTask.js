@@ -1,11 +1,11 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql';
-import { mutationWithClientMutationId, cursorForObjectInConnection } from 'graphql-relay';
-import { homeType } from '../types';
+const { GraphQLNonNull, GraphQLString } = require('graphql');
+const { mutationWithClientMutationId, cursorForObjectInConnection } = require('graphql-relay');
+const { homeType } = require('../types');
 
-import { addTask, getHome, getTasks } from '../../api';
-import { TaskEdge } from '../connections';
+const { addTask, getHome, getTasks } = require('../../api');
+const { TaskEdge } = require('../connections');
 
-export default mutationWithClientMutationId({
+module.exports = mutationWithClientMutationId({
   name: 'addTask',
   inputFields: {
     title: {

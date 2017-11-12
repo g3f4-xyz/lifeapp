@@ -1,10 +1,10 @@
-import { lorem, random, date } from 'faker';
-import Task from '../models/Task';
+const { lorem, random, date } = require('faker');
+const Task = require('../models/Task');
 
 const LENGTH = 20;
 const PRIORITIES = ['urgent', 'normal'];
 const STATUSES = ['done', 'in progress', 'planned', 'cancelled'];
-export default Array.from({ length: LENGTH }).map((_, index) => new Task({
+module.exports = Array.from({ length: LENGTH }).map((_, index) => new Task({
   id: index.toString(),
   title: lorem.sentence(),
   priority: PRIORITIES[random.number() % 2],

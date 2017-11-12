@@ -63,13 +63,13 @@ class TasksList extends React.Component {
           </TableRow>
         </TableHeader>
         <TableBody {...body}>
-        {this.props.data.map(({ title, priority, status }, index) => (
-          <TableRow key={index}>
-            <TableRowColumn>{title}</TableRowColumn>
-            <TableRowColumn>{priority}</TableRowColumn>
-            <TableRowColumn>{status}</TableRowColumn>
-          </TableRow>
-        ))}
+          {this.props.data.map(({ title, priority, status }, index) => (
+            <TableRow key={index}>
+              <TableRowColumn>{title}</TableRowColumn>
+              <TableRowColumn>{priority}</TableRowColumn>
+              <TableRowColumn>{status}</TableRowColumn>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     );
@@ -96,41 +96,43 @@ class Tasks extends React.Component {
   };
 
   render() {
-    const { data: { tasks: { edges } }, onSelect } = this.props;
+    const { data: { tasks: { edges, pageInfo: { hasNextPage } } }, onSelect } = this.props;
+
+    console.log(['hasNextPage'], hasNextPage)
 
     return [
-        <TasksList
-          key="Tasks:TasksList"
-          data={edges.map(({ node }) => node)}
-          onSelect={onSelect}
-        />,
-        this.props.relay.hasMore() && !this.props.relay.isLoading() ? (
-          <FlatButton
-            key="Tasks:FlatButton"
-            icon={<More />}
-            style={{
-              zIndex: 9,
-              zoom: 3,
-              position: 'absolute',
-              bottom: 0,
-              right: 0,
-            }}
-            onClick={this.onMore}
-          />
-        ) : (
-          <CircularProgress
-            key="Tasks:CircularProgress"
-            size={80}
-            thickness={10}
-            style={{
-              zIndex: 9,
-              position: 'absolute',
-              bottom: 0,
-              right: 80,
-              margin: 10,
-            }}
-          />
-        )
+      <TasksList
+        key="Tasks:TasksList"
+        data={edges.map(({ node }) => node)}
+        onSelect={onSelect}
+      />,
+      hasNextPage && (this.props.relay.hasMore() && !this.props.relay.isLoading() ? (
+        <FlatButton
+          key="Tasks:FlatButton"
+          icon={<More />}
+          style={{
+            zIndex: 9,
+            zoom: 3,
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+          }}
+          onClick={this.onMore}
+        />
+      ) : (
+        <CircularProgress
+          key="Tasks:CircularProgress"
+          size={80}
+          thickness={10}
+          style={{
+            zIndex: 9,
+            position: 'absolute',
+            bottom: 0,
+            right: 80,
+            margin: 10,
+          }}
+        />
+      )),
     ];
   }
 }
@@ -183,6 +185,6 @@ export default createPaginationContainer(
           }
         }
       }
-    `
+    `,
   }
 );

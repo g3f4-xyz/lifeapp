@@ -1,8 +1,8 @@
-import cors from 'cors';
-import express from 'express';
-import graphQLHTTP from 'express-graphql';
-import mongoose from 'mongoose';
-import schema from './graphql/schema';
+const cors = require('cors');
+const express = require('express');
+const graphQLHTTP = require('express-graphql');
+const mongoose = require('mongoose');
+const schema = require('./graphql/schema');
 
 // Use native promises
 mongoose.Promise = global.Promise;

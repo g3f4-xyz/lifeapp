@@ -145,8 +145,6 @@ export default class Grid extends React.Component {
     const { gridViewMode } = this.state;
     const { viewPortOffset } = this.props;
 
-    console.log(['rendering grid controls'])
-
     return [
       <IconButton
         key="renderGridControls:Switch"
@@ -213,8 +211,6 @@ export default class Grid extends React.Component {
       : this.state.innerHeight - 18;
     const cols = gridViewMode ? size.rows : 1;
     const showGridControls = !gridViewMode && tiles.length > 1;
-
-    console.log(['showGridControls'], showGridControls)
 
     return [
       showGridControls && this.renderGridControls(),
