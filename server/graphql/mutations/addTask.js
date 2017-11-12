@@ -1,4 +1,4 @@
-const { GraphQLNonNull, GraphQLString } = require('graphql');
+const { GraphQLNonNull, GraphQLString, GraphQLID } = require('graphql');
 const { mutationWithClientMutationId, cursorForObjectInConnection } = require('graphql-relay');
 const { homeType } = require('../types');
 
@@ -8,6 +8,9 @@ const { TaskEdge } = require('../connections');
 module.exports = mutationWithClientMutationId({
   name: 'addTask',
   inputFields: {
+    id: {
+      type: new GraphQLNonNull(GraphQLID),
+    },
     title: {
       type: new GraphQLNonNull(GraphQLString),
     },

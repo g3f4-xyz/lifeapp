@@ -138,8 +138,7 @@ class App extends Component {
       selectedTaskId: this.state.selectedTaskId
     }),
     [MODULES_IDS.TASK_CREATE]: () => ({
-      onAdded: this.onAdded,
-      parentID: this.data.app.home.id
+      onAdded: this.onAdded
     }),
   };
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import DatePicker from 'material-ui/DatePicker';
 
 const style = {
@@ -9,10 +8,7 @@ const style = {
 };
 
 class Date extends React.Component {
-  static propTypes = {
-    home: PropTypes.object,
-    onDetails: PropTypes.func,
-  };
+  static propTypes = DatePicker.propTypes;
 
   render() {
     return (

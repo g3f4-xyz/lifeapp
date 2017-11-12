@@ -140,7 +140,7 @@ export default class Grid extends React.Component {
       },
     };
   }
-  
+
   renderGridControls() {
     const { gridViewMode } = this.state;
     const { viewPortOffset } = this.props;
@@ -148,7 +148,7 @@ export default class Grid extends React.Component {
     return [
       <IconButton
         key="renderGridControls:Switch"
-        style={{ position: 'absolute', right: 10, opacity: 0.5 }}
+        style={{ position: 'absolute', right: 10, opacity: 0.5, zIndex: 9 }}
         onClick={() => this.setState({ gridViewMode: !gridViewMode })}
       >
         <ViewModuleIcon />

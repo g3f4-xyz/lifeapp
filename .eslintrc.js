@@ -1,23 +1,11 @@
 module.exports = {
   "env": {
-    "browser": true,
     "commonjs": true,
     "es6": true,
     "node": true,
     "mocha": true,
   },
   "extends": ["eslint:recommended", "plugin:react/recommended"],
-  "parser": "babel-eslint",
-  "parserOptions": {
-    "sourceType": "module",
-    "allowImportExportEverywhere": true,
-    "ecmaFeatures": {
-      "jsx": true,
-    },
-  },
-  "plugins": [
-    "react",
-  ],
   "rules": {
     "jsx-a11y/href-no-hash": "off",
     "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }],
@@ -26,7 +14,6 @@ module.exports = {
     "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
-    "react/jsx-filename-extension": 0,
     "no-unused-vars": ["warn"],
     "no-console": 0,
   },

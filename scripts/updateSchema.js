@@ -1,8 +1,8 @@
-import fs from 'fs';
-import path from 'path';
-import Schema from '../server/graphql/schema';
-import { graphql }  from 'graphql';
-import { introspectionQuery, printSchema } from 'graphql/utilities';
+const fs = require('fs');
+const path = require('path');
+const Schema = require('../server/graphql/schema');
+const { graphql }  = require('graphql');
+const { introspectionQuery, printSchema } = require('graphql/utilities');
 
 // Save JSON of full schema introspection for Babel Relay Plugin to use
 (async () => {
