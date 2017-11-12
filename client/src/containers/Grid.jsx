@@ -35,6 +35,8 @@ export default class Grid extends React.Component {
   static propTypes = {
     modules: PropTypes.array,
     size: PropTypes.object,
+    handlers: PropTypes.object,
+    dynamic: PropTypes.bool,
     viewPortOffset: PropTypes.object,
     onModuleChange: PropTypes.func,
   };
@@ -122,8 +124,6 @@ export default class Grid extends React.Component {
   getTileProps({ id: moduleId, inViewPort }) {
     const { gridViewMode } = this.state;
 
-    console.log(['{ id: moduleId, inViewPort }'], { id: moduleId, inViewPort })
-
     return {
       key: moduleId,
       style: { display: !gridViewMode && !inViewPort ? 'none' : 'block' },
@@ -135,15 +135,17 @@ export default class Grid extends React.Component {
       },
       onMouseLeave: () => {
         if (gridViewMode) {
-         this.setState({ hoveredModuleId: null });
+          this.setState({ hoveredModuleId: null });
         }
-      }
-    }
+      },
+    };
   }
   
   renderGridControls() {
     const { gridViewMode } = this.state;
     const { viewPortOffset } = this.props;
+
+    console.log(['rendering grid controls'])
 
     return [
       <IconButton
@@ -158,7 +160,7 @@ export default class Grid extends React.Component {
         gridSize={DEFAULT_SIZE}
         onDirectionClick={this.onModuleChange}
         viewPortOffset={viewPortOffset}
-      />
+      />,
     ];
   }
 
@@ -194,7 +196,7 @@ export default class Grid extends React.Component {
           width: '25%',
           height: '25%',
           position: 'absolute',
-          zIndex: 9
+          zIndex: 9,
         }}
         onClick={() => this.onZoom(moduleId)}
       />
@@ -212,7 +214,7 @@ export default class Grid extends React.Component {
     const cols = gridViewMode ? size.rows : 1;
     const showGridControls = !gridViewMode && tiles.length > 1;
 
-    console.log(['tiles'], tiles)
+    console.log(['showGridControls'], showGridControls)
 
     return [
       showGridControls && this.renderGridControls(),
@@ -221,16 +223,16 @@ export default class Grid extends React.Component {
         cellHeight={cellHeight}
         cols={cols}
       >
-      {tiles.map(({ Component, id, offset, inViewPort, locked }, key) => (
-        <GridTile {...this.getTileProps({ id, inViewPort })}>
-          {this.renderCloseButton(id, locked)}
-          {this.renderZoomButton(id)}
-          <Module style={{ zoom: gridViewMode ? 1 / size.columns : 1 }}>
-            <Component {...(handlers[id] ? handlers[id]() : {})} />
-          </Module>
-        </GridTile>
-      ))}
-      </GridList>
+        {tiles.map(({ Component, id, offset, inViewPort, locked }, key) => (
+          <GridTile {...this.getTileProps({ id, inViewPort })} key={key}>
+            {this.renderCloseButton(id, locked)}
+            {this.renderZoomButton(id)}
+            <Module style={{ zoom: gridViewMode ? 1 / size.columns : 1 }}>
+              <Component {...(handlers[id] ? handlers[id]() : {})} />
+            </Module>
+          </GridTile>
+        ))}
+      </GridList>,
     ];
   }
 }

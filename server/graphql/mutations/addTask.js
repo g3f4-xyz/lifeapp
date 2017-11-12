@@ -1,7 +1,7 @@
 import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { mutationWithClientMutationId, cursorForObjectInConnection } from 'graphql-relay';
 import { homeType } from '../types';
-import { Task } from '../../models';
+
 import { addTask, getHome, getTasks } from '../../api';
 import { TaskEdge } from '../connections';
 
@@ -51,6 +51,6 @@ export default mutationWithClientMutationId({
   mutateAndGetPayload: async task => {
     console.log(['addTask.mutateAndGetPayload'], task);
 
-    return await addTask(new Task(task));
+    return await addTask(task);
   },
 });

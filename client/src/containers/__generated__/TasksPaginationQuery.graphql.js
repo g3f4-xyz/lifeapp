@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6046c7ca1952e33022cff70b9c663543
+ * @relayHash 87557f6b7c2de844a40e0f339f913513
  */
 
 /* eslint-disable */
@@ -34,11 +34,11 @@ fragment Tasks on Home {
   tasks(first: $count, after: $cursor) {
     edges {
       node {
+        __typename
         id
         title
         priority
         status
-        __typename
       }
       cursor
     }
@@ -180,6 +180,13 @@ const batch /*: ConcreteBatch*/ = {
                             "kind": "ScalarField",
                             "alias": null,
                             "args": null,
+                            "name": "__typename",
+                            "storageKey": null
+                          },
+                          {
+                            "kind": "ScalarField",
+                            "alias": null,
+                            "args": null,
                             "name": "id",
                             "storageKey": null
                           },
@@ -202,13 +209,6 @@ const batch /*: ConcreteBatch*/ = {
                             "alias": null,
                             "args": null,
                             "name": "status",
-                            "storageKey": null
-                          },
-                          {
-                            "kind": "ScalarField",
-                            "alias": null,
-                            "args": null,
-                            "name": "__typename",
                             "storageKey": null
                           }
                         ],
@@ -289,7 +289,7 @@ const batch /*: ConcreteBatch*/ = {
       }
     ]
   },
-  "text": "query TasksPaginationQuery(\n  $count: Int!\n  $cursor: String\n) {\n  app {\n    home {\n      ...Tasks\n      id\n    }\n  }\n}\n\nfragment Tasks on Home {\n  tasks(first: $count, after: $cursor) {\n    edges {\n      node {\n        id\n        title\n        priority\n        status\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n"
+  "text": "query TasksPaginationQuery(\n  $count: Int!\n  $cursor: String\n) {\n  app {\n    home {\n      ...Tasks\n      id\n    }\n  }\n}\n\nfragment Tasks on Home {\n  tasks(first: $count, after: $cursor) {\n    edges {\n      node {\n        __typename\n        id\n        title\n        priority\n        status\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n"
 };
 
 module.exports = batch;

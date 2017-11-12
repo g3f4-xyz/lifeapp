@@ -31,7 +31,7 @@ class Home extends React.Component {
           zoom: 3,
         }}
         onClick={this.props.onAdd}
-      />
+      />,
     ];
   }
 }

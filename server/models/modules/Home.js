@@ -1,9 +1,16 @@
-const Module = require('../Module');
+import mongoose from 'mongoose';
 
-class Home extends Module {
-  constructor({ id, name }) {
-    super({ id, name });
-  }
-}
+const homeModel = mongoose.Schema({
+  id: {
+    type: String,
+    default: 'HOME',
+  },
+  name: {
+    type: String,
+    default: 'Home module',
+  },
+});
 
-module.exports = Home;
+const Home = mongoose.model('Home', homeModel);
+
+export default Home;

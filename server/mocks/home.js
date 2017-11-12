@@ -1,3 +1,3 @@
-import Home from '../models/Home';
+import Home from '../models/modules/Home';
 
 export default new Home({ id: 'HOME', name: 'Home module' });

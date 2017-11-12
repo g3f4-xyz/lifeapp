@@ -18,7 +18,7 @@ const GETTERS = {
 export const idFetcher = async globalId => {
   const { type, id } = fromGlobalId(globalId);
   console.log(['nodeDefinitions.idFetcher'], globalId, { type, id });
-  const node = await GETTERS[type] ? GETTERS[type](id) : null;
+  const node = GETTERS[type] ? await GETTERS[type](id) : null;
 
   if (node) {
     return node;

@@ -9,8 +9,8 @@
     "build:server": "webpack --env production --config webpack.server.js",
     "heroku:build": "rm -rf build && npm run build:server && npm run heroku:build:client",
     "heroku:build:client": "cd client && npm run heroku:build && cd -",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "dev": "BABEL_ENV=server babel-watch server",
     "start": "node --optimize_for_size --max_old_space_size=460 --gc_interval=100 build/server",
     "stats": "webpack --env production --profile --json > stats.json",
@@ -60,6 +60,7 @@
     "graphql": "^0.11.3",
     "graphql-relay": "^0.5.1",
     "immutability-helper": "^2.3.1",
+    "mongoose": "^4.13.1",
     "react-scripts": "1.0.13"
   }
 }

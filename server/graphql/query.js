@@ -1,5 +1,5 @@
 import { GraphQLObjectType } from 'graphql';
-import appType from './entries/app';
+import { appType } from './types';
 import { nodeField } from './nodeDefinitions';
 
 export default new GraphQLObjectType({

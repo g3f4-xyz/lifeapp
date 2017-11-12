@@ -9,23 +9,27 @@ import RightIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
 const styles = {
   right: {
     position: 'absolute',
+    zIndex: 9,
     top: '50%',
     right: 0,
     transform: 'translateY(-50%)',
   },
   left: {
     position: 'absolute',
+    zIndex: 9,
     top: '50%',
     left: 0,
     transform: 'translateY(-50%)',
   },
   up: {
     position: 'absolute',
+    zIndex: 9,
     left: '50%',
     transform: 'translateX(-50%)',
   },
   down: {
     position: 'absolute',
+    zIndex: 9,
     left: '50%',
     transform: 'translateX(-50%)',
     bottom: 0,
