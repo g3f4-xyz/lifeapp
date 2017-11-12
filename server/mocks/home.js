@@ -1,3 +1,3 @@
-import Home from '../models/modules/Home';
+const Home = require('../models/modules/Home');
 
-export default new Home({ id: 'HOME', name: 'Home module' });
+module.exports = new Home({ id: 'HOME', name: 'Home module' });

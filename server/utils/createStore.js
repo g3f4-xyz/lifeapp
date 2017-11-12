@@ -1,7 +1,7 @@
-import {
+const {
   Home,
   Task,
-} from '../models';
+} = require('../models');
 
 const STORE_APPLIES = [
   {
@@ -14,7 +14,7 @@ const STORE_APPLIES = [
   },
 ];
 
-export default data => STORE_APPLIES.reduce((result, { dataKey, apply }) => Object.assign(
+module.exports = data => STORE_APPLIES.reduce((result, { dataKey, apply }) => Object.assign(
   {},
   result,
   { [dataKey]: apply(data[dataKey]) }

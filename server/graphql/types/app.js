@@ -1,10 +1,10 @@
-import { GraphQLObjectType, GraphQLString } from 'graphql';
-import { getHome } from '../../api';
-import homeType from './modules/home';
-import taskType from './task';
-import { idFetcher } from '../nodeDefinitions';
+const { GraphQLObjectType, GraphQLString } = require('graphql');
+const { getHome } = require('../../api');
+const homeType = require('./modules/home');
+const taskType = require('./task');
+const idFetcher = require('../idFetcher');
 
-export default new GraphQLObjectType({
+module.exports = new GraphQLObjectType({
   name: 'App',
   description: 'Application entry point',
   fields: () => ({

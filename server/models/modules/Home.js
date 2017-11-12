@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const homeModel = mongoose.Schema({
   id: {
@@ -12,5 +12,6 @@ const homeModel = mongoose.Schema({
 });
 
 const Home = mongoose.model('Home', homeModel);
+const homeIstance = new Home();
 
-export default Home;
+module.exports = homeIstance;

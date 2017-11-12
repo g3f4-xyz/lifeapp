@@ -38,7 +38,7 @@ class Home extends React.Component {
 
 export default createFragmentContainer(
   Home,
-  graphql.experimental`
+  graphql`
     fragment Home on App {
       home {
         id

@@ -8,7 +8,7 @@ const { nodeInterface } = require('../../nodeDefinitions');
 const { taskConnection } = require('../../connections');
 const { getTasks } = require('../../../api');
 
-export default new GraphQLObjectType({
+module.exports = new GraphQLObjectType({
   name: 'Home',
   description: 'Home module',
   fields: () => ({
