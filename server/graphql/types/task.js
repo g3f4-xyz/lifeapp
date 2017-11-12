@@ -9,7 +9,7 @@ export default new GraphQLObjectType({
   name: 'Task',
   description: 'A task',
   fields: () => ({
-    id: globalIdField('Task'),
+    id: globalIdField('Task', ({ _id }) => _id),
     title: {
       type: GraphQLString,
       description: 'Task title',

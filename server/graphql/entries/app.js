@@ -17,9 +17,7 @@ export default new GraphQLObjectType({
       args: {
         id: { type: GraphQLString },
       },
-      resolve: async (_, { id }) => {
-        return await id ? idFetcher(id) : null;
-      },
+      resolve: async (_, { id }) => await idFetcher(id),
     },
   }),
 });

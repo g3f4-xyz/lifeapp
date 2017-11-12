@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 7ad4129dd8338f5929322dbc1f2b1e27
+ * @relayHash b9e65ad19e4755c0e347f8140a4e63c5
  */
 
 /* eslint-disable */
@@ -21,7 +21,6 @@ export type addTaskMutationVariables = {|
     clientMutationId?: ?string;
   };
 |};
-
 export type addTaskMutationResponse = {|
   +addTask: ?{|
     +clientMutationId: ?string;

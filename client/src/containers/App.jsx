@@ -208,7 +208,7 @@ class App extends Component {
               }
             `}
             variables={{
-              count: 5
+              count: 5,
             }}
             render={({error, props}) => {
               if (error) {
