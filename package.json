@@ -10,7 +10,7 @@
     "lint:fix": "eslint --fix .",
     "dev": "nodemon server",
     "start": "node server",
-    "test": "node setup && react-scripts test --env=jsdom",
+    "test": "echo \"Error: no test specified\" && exit 0",
     "update:mocks": "BABEL_ENV=scripts babel-node ./scripts/updateMocks",
     "update:schema": "BABEL_ENV=scripts babel-node ./scripts/updateSchema"
   },
@@ -27,7 +27,7 @@
   "homepage": "https://github.com/g3f4-xyz/lifeapp#readme",
   "engines": {
     "node": "8.7.0"
-  }
+  },
   "devDependencies": {
     "eslint": "^4.7.0",
     "eslint-config-airbnb": "^15.1.0",
