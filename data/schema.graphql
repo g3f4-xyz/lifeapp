@@ -1,4 +1,5 @@
 input addTaskInput {
+  id: ID!
   title: String!
   priority: String!
   status: String!
@@ -19,6 +20,7 @@ type addTaskPayload {
 type App {
   home: Home
   taskDetails(id: String): Task
+  taskCreate(type: String): Task
 }
 
 # Home module
@@ -83,7 +85,7 @@ type Task implements Node {
   finishDate: String
 
   # Task progress
-  progress: String
+  progress: Int
 
   # Task status
   status: String

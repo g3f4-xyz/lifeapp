@@ -36,6 +36,8 @@ class TaskDetails extends React.Component {
   render() {
     const { title, priority, creationDate, finishDate, progress, status, note } = this.props.taskDetails;
 
+    console.log(['this.props.taskDetails'], this.props.taskDetails)
+
     return (
       <div style={styles.root}>
         <h1>{title}</h1>
@@ -89,34 +91,6 @@ class TaskDetails extends React.Component {
     );
   }
 }
-
-/*export default createRefetchContainer(
-  TaskDetails,
-  graphql.experimental`
-    fragment TaskDetails on App
-    @argumentDefinitions(
-      selectedTaskId: {type: "String", defaultValue: null}
-    ) {
-      taskDetails (id: $selectedTaskId) {
-        id
-        title
-        priority
-        creationDate
-        finishDate
-        progress
-        status
-        note
-      }
-    }
-  `,
-  graphql.experimental`
-    query TaskDetailsRefetchQuery($selectedTaskId: String) {
-      app {
-        ...TaskDetails
-      }
-    }
-  `,
-);*/
 
 export default class DataProvider extends React.Component {
   render() {

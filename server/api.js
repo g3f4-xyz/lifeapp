@@ -1,5 +1,10 @@
 const { Home, Task } = require('./models');
 
+const TASK_TYPES_MAP = {
+  null: Task,
+  undefined: Task,
+};
+
 const addTask = async task => {
   const newTask = new Task(task);
 
@@ -13,10 +18,17 @@ const getTask = async (id) => {
   return task.toObject();
 };
 const getTasks = async () => await Task.find();
+const getEmptyTask = (type) => {
+  const Model = TASK_TYPES_MAP[type];
+  const model = new Model;
+
+  return model.toObject()
+};
 
 module.exports = {
   addTask,
   getHome,
   getTask,
   getTasks,
+  getEmptyTask,
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import { QueryRenderer, graphql } from 'react-relay';
 import PropTypes from 'prop-types';
 import CircularProgress from 'material-ui/CircularProgress';
 import Paper from 'material-ui/Paper';
@@ -27,20 +28,12 @@ const styles = {
 
 class TaskCreate extends React.Component {
   static propTypes = {
-    onAdd: PropTypes.func,
+    onAdded: PropTypes.func,
   };
 
   state = {
     pending: false,
-    task: {
-      title: '',
-      priority: null,
-      creationDate: null,
-      progress: 0,
-      finishDate: null,
-      status: null,
-      note: '',
-    },
+    task: this.props.taskCreate,
   };
 
   updateTask(update) {
@@ -54,14 +47,13 @@ class TaskCreate extends React.Component {
 
   onAdd = () => {
     this.setState({ pending: true });
-    addTask(environment, this.state.task, this.props.parentID, (response, errors) => {
-      this.props.onAdded(response, errors);
-      this.setState({ pending: false });
-    })
+    addTask(environment, this.state.task, this.props.home.id, this.props.onAdded)
   };
 
   render() {
     const { title, priority, creationDate, progress, finishDate, status, note } = this.state.task;
+
+    console.log(['this.props'], this.props)
 
     return (
       <div style={styles.root}>
@@ -129,7 +121,7 @@ class TaskCreate extends React.Component {
              <Label>Creation Date</Label>
             </div>
             <Date
-              value={creationDate}
+              value={new Date(creationDate)}
               hintText="Change creation date"
               onChange={(e, creationDate) => {
                 this.updateTask({ creationDate });
@@ -176,7 +168,7 @@ class TaskCreate extends React.Component {
               <Label>Finish Date</Label>
             </div>
             <Date
-              value={finishDate}
+              value={new Date(finishDate)}
               hintText="Set finish date"
               onChange={(e, finishDate) => {
                 this.updateTask({ finishDate });
@@ -203,4 +195,56 @@ class TaskCreate extends React.Component {
   }
 }
 
-export default TaskCreate;
+export default class DataProvider extends React.Component {
+  render() {
+    console.log(['DataProvider'], this.props)
+    return (
+      <QueryRenderer
+        environment={environment}
+        query={graphql`
+          query TaskCreateQuery($type: String) {
+            app {
+              taskCreate (type: $type) {
+                id
+                title
+                priority
+                creationDate
+                finishDate
+                progress
+                status
+                note
+              },
+              home {
+                id
+              }
+            }
+          }
+        `}
+        variables={{
+          type: this.props.type,
+        }}
+        render={({error, props}) => {
+          if (error) {
+            return <div>{JSON.stringify(error)}</div>;
+          } else if (props) {
+            return <TaskCreate {...props.app} {...this.props} />;
+          }
+          return (
+            <CircularProgress
+              style={{
+                margin: 'auto',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+              }}
+              size={180}
+              thickness={15}
+            />
+          );
+        }}
+      />
+    );
+  }
+}

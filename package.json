@@ -11,8 +11,8 @@
     "dev": "nodemon server",
     "start": "node server",
     "test": "echo \"Error: no test specified\" && exit 0",
-    "update:mocks": "BABEL_ENV=scripts babel-node ./scripts/updateMocks",
-    "update:schema": "BABEL_ENV=scripts babel-node ./scripts/updateSchema"
+    "update:mocks": "node ./scripts/updateMocks",
+    "update:schema": "node ./scripts/updateSchema"
   },
   "keywords": [],
   "author": "G3F4.XYZ",

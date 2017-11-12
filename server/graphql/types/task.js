@@ -1,6 +1,7 @@
 const {
   GraphQLObjectType,
   GraphQLString,
+  GraphQLInt,
 } = require('graphql');
 const { globalIdField } = require('graphql-relay');
 const { nodeInterface } = require('../nodeDefinitions');
@@ -27,7 +28,7 @@ module.exports = new GraphQLObjectType({
       description: 'Task finishDate',
     },
     progress: {
-      type: GraphQLString,
+      type: GraphQLInt,
       description: 'Task progress',
     },
     status: {

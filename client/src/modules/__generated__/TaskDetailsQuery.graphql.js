@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 736217b2fd1d6d2cc1ec005ad030a2d7
+ * @relayHash 947d3dfa8a558b44c00413209099afae
  */
 
 /* eslint-disable */
@@ -17,7 +17,7 @@ export type TaskDetailsQueryResponse = {|
       +priority: ?string;
       +creationDate: ?string;
       +finishDate: ?string;
-      +progress: ?string;
+      +progress: ?number;
       +status: ?string;
       +note: ?string;
     |};

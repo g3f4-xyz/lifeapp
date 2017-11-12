@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 
 const taskModel = mongoose.Schema({
   id: String,
-  title: String,
-  priority: String,
-  creationDate: String,
-  finishDate: String,
-  progress: String,
-  status: String,
-  note: String,
+  title: { type: String, default: '' },
+  priority: { type: String, default: '' },
+  creationDate: { type: String, default: '' },
+  finishDate: { type: String, default: '' },
+  progress: { type: Number, default: 0 },
+  status: { type: String, default: '' },
+  note: { type: String, default: '' },
 });
 
 const Task = mongoose.model('Task', taskModel);

@@ -1,5 +1,5 @@
 const { GraphQLObjectType, GraphQLString } = require('graphql');
-const { getHome } = require('../../api');
+const { getEmptyTask, getHome } = require('../../api');
 const homeType = require('./modules/home');
 const taskType = require('./task');
 const idFetcher = require('../idFetcher');
@@ -10,7 +10,7 @@ module.exports = new GraphQLObjectType({
   fields: () => ({
     home: {
       type: homeType,
-      resolve: async () => await getHome(),
+      resolve: getHome,
     },
     taskDetails: {
       type: taskType,
@@ -18,6 +18,13 @@ module.exports = new GraphQLObjectType({
         id: { type: GraphQLString },
       },
       resolve: async (_, { id }) => await idFetcher(id),
+    },
+    taskCreate: {
+      type: taskType,
+      args: {
+        type: { type: GraphQLString },
+      },
+      resolve: async (_, { type }) => await getEmptyTask(type),
     },
   }),
 });

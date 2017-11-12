@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash b9e65ad19e4755c0e347f8140a4e63c5
+ * @relayHash d8889c8b89356c10f032456bc22fa8be
  */
 
 /* eslint-disable */
@@ -11,6 +11,7 @@
 import type {ConcreteBatch} from 'relay-runtime';
 export type addTaskMutationVariables = {|
   input: {
+    id: string;
     title: string;
     priority: string;
     status: string;
@@ -31,7 +32,7 @@ export type addTaskMutationResponse = {|
         +priority: ?string;
         +creationDate: ?string;
         +finishDate: ?string;
-        +progress: ?string;
+        +progress: ?number;
         +status: ?string;
         +note: ?string;
       |};
