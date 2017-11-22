@@ -2,7 +2,7 @@ const { GraphQLNonNull, GraphQLString, GraphQLID } = require('graphql');
 const { mutationWithClientMutationId, cursorForObjectInConnection } = require('graphql-relay');
 const { homeType } = require('../types');
 
-const { addTask, getHome, getTasks } = require('../../api');
+const { addTask, getHome, getTasks } = require('../../db/api');
 const { TaskEdge } = require('../connections');
 
 module.exports = mutationWithClientMutationId({

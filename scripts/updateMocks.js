@@ -4,7 +4,7 @@ import mocks from '../server/mocks';
 
 fs.writeFileSync(
   // mocks destiny file
-  path.join(__dirname, '../server/mocks/data.json'),
+  path.join(__dirname, '../server/mocks/data.js'),
   // stringifing mocks object to write in JSON file
   JSON.stringify(mocks, null, 2)
 );

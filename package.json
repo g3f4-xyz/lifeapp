@@ -6,13 +6,15 @@
   "scripts": {
     "client:build": "rm -rf build && mkdir build && cd client && npm run build && cp -r build/* ../build && cd -",
     "client:build:heroku": "rm -rf build && mkdir build && cd client && node setup && npm run build:heroku && cp -r build/* ../build && cd -",
+    "dev": "nodemon server",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "dev": "nodemon server",
+    "init:remote:db": "mongo mo1563_lifeapp:Gitara15@85.194.240.29:27017/mo1563_lifeapp scripts/setInitialDBConfiguration.js",
     "start": "node server",
     "test": "echo \"Error: no test specified\" && exit 0",
     "update:mocks": "node ./scripts/updateMocks",
-    "update:schema": "node ./scripts/updateSchema"
+    "update:schema": "node ./scripts/updateSchema",
+    "validate": "npm ls"
   },
   "keywords": [],
   "author": "G3F4.XYZ",
@@ -29,21 +31,31 @@
     "node": "8.7.0"
   },
   "devDependencies": {
-    "eslint": "^4.7.0",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-plugin-import": "^2.7.0",
+    "eslint": "^4.11.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-react": "^7.3.0",
-    "nodemon": "^1.12.1"
+    "eslint-plugin-react": "^7.5.1",
+    "nodemon": "^1.12.1",
+    "precommit-hook": "^3.0.0"
   },
   "dependencies": {
     "cors": "^2.8.4",
-    "express": "^4.15.4",
+    "express": "^4.16.2",
     "express-graphql": "^0.6.11",
+    "express-session": "^1.15.6",
     "faker": "^4.1.0",
-    "graphql": "^0.11.3",
-    "graphql-relay": "^0.5.1",
-    "immutability-helper": "^2.3.1",
-    "mongoose": "^4.13.1"
-  }
+    "graphql": "^0.11.7",
+    "graphql-relay": "^0.5.3",
+    "immutability-helper": "^2.5.0",
+    "mongoose": "^4.13.4",
+    "passport": "^0.4.0",
+    "passport-google-oauth20": "^1.0.0",
+    "serve-static": "^1.13.1"
+  },
+  "pre-commit": [
+    "lint",
+    "validate",
+    "test"
+  ]
 }

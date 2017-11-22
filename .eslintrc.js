@@ -8,7 +8,7 @@ module.exports = {
   "extends": ["eslint:recommended", "plugin:react/recommended"],
   "rules": {
     "jsx-a11y/href-no-hash": "off",
-    "jsx-a11y/anchor-is-valid": ["warn", { "aspects": ["invalidHref"] }],
+    "jsx-a11y/anchor-is-valid": 0,
     "comma-dangle": ["warn", "always-multiline"],
     "indent": ["error", 2],
     "linebreak-style": ["error", "unix"],
@@ -16,5 +16,9 @@ module.exports = {
     "semi": ["error", "always"],
     "no-unused-vars": ["warn"],
     "no-console": 0,
+  },
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2017,
   },
 };

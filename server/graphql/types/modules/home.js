@@ -6,7 +6,7 @@ const {
 } = require('graphql-relay');
 const { nodeInterface } = require('../../nodeDefinitions');
 const { taskConnection } = require('../../connections');
-const { getTasks } = require('../../../api');
+const { getTasks } = require('../../../db/api');
 
 module.exports = new GraphQLObjectType({
   name: 'Home',

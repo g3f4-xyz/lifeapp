@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "proxy": "https://g3f4-lifeapp.herokuapp.com/graphql/",
+  "homepage": "",
   "dependencies": {
     "babel-plugin-relay": "^1.4.1",
     "material-ui": "^0.19.4",

@@ -4,7 +4,7 @@ const {
 const {
   getHome,
   getTask,
-} = require('../api');
+} = require('../db/api');
 
 const GETTERS = {
   Home: getHome,
