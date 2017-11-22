@@ -12,4 +12,4 @@ app.use(GRAPHQL_ROUTE, cors(), graphQLHTTP(() => ({
   schema, pretty: true, graphiql: true,
 })));
 
-app.listen(PORT, () => console.log(`GraphQL server is now running on ${HOST}:${PORT}${GRAPHQL_ROUTE}`));
+app.listen(PORT, () => console.log(`GraphQL server is now running on ${HOST}${GRAPHQL_ROUTE}`));

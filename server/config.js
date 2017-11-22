@@ -1,4 +1,4 @@
-const HOST = process.env.HOST || 'http://localhost';
+const HOST = process.env.HOST || 'http://localhost:30000';
 const PORT = process.env.PORT || 30000;
 const GRAPHQL_ROUTE = '/graphql';
 const PUBLIC_PATH = '/build';

@@ -6,7 +6,7 @@
   "scripts": {
     "client:build": "rm -rf build && mkdir build && cd client && npm run build && cp -r build/* ../build && cd -",
     "client:build:heroku": "rm -rf build && mkdir build && cd client && node setup && npm run build:heroku && cp -r build/* ../build && cd -",
-    "dev": "nodemon server",
+    "dev": "NODE_ENV=development nodemon server",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "init:remote:db": "mongo mo1563_lifeapp:Gitara15@85.194.240.29:27017/mo1563_lifeapp scripts/setInitialDBConfiguration.js",
