@@ -4,15 +4,14 @@
   "description": "Level up with LifeApp",
   "main": "lifeapp",
   "scripts": {
-    "client:build": "rm -rf build && mkdir build && cd client && npm run build && cp -r build/* ../build && cd -",
-    "client:build:heroku": "rm -rf build && mkdir build && cd client && node setup && npm run build:heroku && cp -r build/* ../build && cd -",
+    "client:build": "rm -rf build && mkdir build && cd client && npm run relay && npm run build && cp -r build/* ../build && cd -",
+    "client:build:heroku": "rm -rf build && mkdir build && cd client && node setup && npm run relay && npm run build:heroku && cp -r build/* ../build && cd -",
     "dev": "NODE_ENV=development nodemon server",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "init:remote:db": "mongo mo1563_lifeapp:Gitara15@85.194.240.29:27017/mo1563_lifeapp scripts/setInitialDBConfiguration.js",
-    "start": "node server",
+    "init:db": "mongo scripts/initDatabase.js",
+    "start": "DB=remote node server",
     "test": "echo \"Error: no test specified\" && exit 0",
-    "update:mocks": "node ./scripts/updateMocks",
     "update:schema": "node ./scripts/updateSchema",
     "validate": "npm ls"
   },
@@ -56,6 +55,7 @@
   "pre-commit": [
     "lint",
     "validate",
-    "test"
+    "test",
+    "client:build:heroku"
   ]
 }

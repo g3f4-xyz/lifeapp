@@ -1,44 +1,34 @@
-const { GraphQLNonNull, GraphQLString, GraphQLID } = require('graphql');
+const { GraphQLList, GraphQLString, GraphQLInt, GraphQLFloat, GraphQLID, GraphQLInputObjectType } = require('graphql');
 const { mutationWithClientMutationId, cursorForObjectInConnection } = require('graphql-relay');
-const { homeType } = require('../types');
-
-const { addTask, getHome, getTasks } = require('../../db/api');
-const { TaskEdge } = require('../connections');
+const { TaskListType } = require('../types');
+const { TaskTypeEdge } = require('../connections');
+const { addTask, getTaskList } = require('../../db/api');
 
 module.exports = mutationWithClientMutationId({
   name: 'addTask',
   inputFields: {
-    id: {
-      type: new GraphQLNonNull(GraphQLID),
-    },
-    title: {
-      type: new GraphQLNonNull(GraphQLString),
-    },
-    priority: {
-      type: new GraphQLNonNull(GraphQLString),
-    },
-    status: {
-      type: new GraphQLNonNull(GraphQLString),
-    },
-    creationDate: {
-      type: GraphQLString,
-    },
-    progress: {
-      type: GraphQLString,
-    },
-    finishDate: {
-      type: GraphQLString,
-    },
-    note: {
-      type: GraphQLString,
+    id: { type: GraphQLID },
+    priority: { type: GraphQLInt },
+    status: { type: GraphQLString },
+    title: { type: GraphQLString },
+    additionalFields: {
+      type: new GraphQLList(new GraphQLInputObjectType({
+        name: 'addTaskFieldType',
+        description: 'add task input type',
+        fields: () => ({
+          fieldId: { type: GraphQLString },
+          number: { type: GraphQLFloat },
+          text: { type: GraphQLString },
+        }),
+      })),
     },
   },
   outputFields: {
     newTaskEdge: {
-      type: TaskEdge,
+      type: TaskTypeEdge,
       resolve: async node => {
         console.log(['mutations.addTask.outputFields.newTaskEdge'], node);
-        const tasks = await getTasks();
+        const tasks = await getTaskList();
 
         return {
           node,
@@ -46,9 +36,9 @@ module.exports = mutationWithClientMutationId({
         };
       },
     },
-    home: {
-      type: homeType,
-      resolve: async () => await getHome(),
+    taskList: {
+      type: TaskListType,
+      resolve: () => true,
     },
   },
   mutateAndGetPayload: async task => {

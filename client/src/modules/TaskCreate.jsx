@@ -1,11 +1,10 @@
 import React from 'react';
-import { QueryRenderer, graphql } from 'react-relay';
+import { createRefetchContainer, graphql } from 'react-relay';
 import PropTypes from 'prop-types';
 import CircularProgress from 'material-ui/CircularProgress';
 import Paper from 'material-ui/Paper';
 import AddButton from 'material-ui/svg-icons/navigation/check';
-import { Icon, Label, Input, Date, Select, Slider } from '../components';
-import environment from '../environment';
+import { Icon, Label, Input, Select } from '../components';
 import addTask from '../mutations/addTask';
 
 const styles = {
@@ -33,8 +32,18 @@ class TaskCreate extends React.Component {
 
   state = {
     pending: false,
-    task: this.props.taskCreate,
+    task: null,
   };
+
+  componentWillReceiveProps(nextProps, nextState) {
+    this.setState({
+      task: nextProps.data.taskCreate,
+    });
+  }
+
+  componentDidMount() {
+    this.props.relay.refetch({ type: 'default' });
+  }
 
   updateTask(update) {
     this.setState({
@@ -46,12 +55,30 @@ class TaskCreate extends React.Component {
   }
 
   onAdd = () => {
+    const { data, onAdded } = this.props;
+
     this.setState({ pending: true });
-    addTask(environment, this.state.task, this.props.home.id, this.props.onAdded)
+    addTask(this.props.relay.environment, this.state.task, data.taskList.id, onAdded)
   };
 
   render() {
-    const { title, priority, creationDate, progress, finishDate, status, note } = this.state.task;
+    if (!this.state.task) {
+      return (
+        <CircularProgress
+          style={{
+            margin: 'auto',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+          }}
+          size={180}
+          thickness={15}
+        />
+      );
+    }
+    const { title, priority, status/* , additionalFields */ } = this.state.task;
 
     return (
       <div style={styles.root}>
@@ -102,41 +129,16 @@ class TaskCreate extends React.Component {
             value={priority}
             hintText="Set task priority"
             options={[{
-              value: 'TODO',
+              value: 1,
               text: 'TODO',
             }, {
-              value: 'IN_PROGRESS',
+              value: 2,
               text: 'In progress',
             }]}
             onChange={(e, priority) => {
               this.updateTask({ priority });
             }}
           />
-          </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-             <Label>Creation Date</Label>
-            </div>
-            <Date
-              value={new Date(creationDate)}
-              hintText="Change creation date"
-              onChange={(e, creationDate) => {
-                this.updateTask({ creationDate });
-              }}
-            />
-          </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-              <Label>Progress</Label>
-            </div>
-            <Slider
-              value={progress}
-              onChange={(e, progress) => {
-                this.updateTask({ progress });
-              }}
-            />
           </Paper>
         </div>
         <div style={styles.rightCol}>
@@ -160,88 +162,100 @@ class TaskCreate extends React.Component {
               }}
             />
           </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-              <Label>Finish Date</Label>
-            </div>
-            <Date
-              value={new Date(finishDate)}
-              hintText="Set finish date"
-              onChange={(e, finishDate) => {
-                this.updateTask({ finishDate });
-              }}
-            />
-          </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-              <Label>Note</Label>
-            </div>
-            <Input
-              multiLine
-              value={note}
-              hintText="Add task note"
-              onChange={(e, note) => {
-                this.updateTask({ note });
-              }}
-            />
-          </Paper>
         </div>
       </div>
     );
   }
 }
 
-export default class DataProvider extends React.Component {
-  render() {
-    return (
-      <QueryRenderer
-        environment={environment}
-        query={graphql`
-          query TaskCreateQuery($type: String) {
-            app {
-              taskCreate (type: $type) {
-                id
-                title
-                priority
-                creationDate
-                finishDate
-                progress
-                status
-                note
-              },
-              home {
-                id
+export default createRefetchContainer(
+  TaskCreate,
+  graphql`
+    fragment TaskCreate on AppType 
+    @argumentDefinitions(
+      type: { type: "String", defaultValue: "" },
+    ) 
+    {
+      id
+      taskList {
+        id
+      }
+      taskCreate(type: $type) {
+        id
+        title
+        status
+        priority
+        additionalFields {
+          fieldId
+          format
+          type
+          label
+          value {
+            ... on NumberValueType {
+              number
+            }
+            ... on TextNumberType{
+              text
+            }
+          }
+          info
+          meta {
+            ... on NumberMetaType {
+              required
+              min
+              max
+            }
+            ... on TextMetaType{
+              required
+              minLen
+              maxLen
+            }
+          }
+        }
+      }
+    }
+  `,
+  graphql`
+    query TaskCreateRefetchQuery($type: String) {
+      app {
+        id
+        taskList {
+          id
+        }
+        taskCreate(type: $type) {
+          id
+          title
+          status
+          priority
+          additionalFields {
+            fieldId
+            format
+            type
+            label
+            value {
+              ... on NumberValueType {
+                number
+              }
+              ... on TextNumberType{
+                text
+              }
+            }
+            info
+            meta {
+              ... on NumberMetaType {
+                required
+                min
+                max
+              }
+              ... on TextMetaType{
+                required
+                minLen
+                maxLen
               }
             }
           }
-        `}
-        variables={{
-          type: this.props.type,
-        }}
-        render={({error, props}) => {
-          if (error) {
-            return <div>{JSON.stringify(error)}</div>;
-          } else if (props) {
-            return <TaskCreate {...props.app} {...this.props} />;
-          }
-          return (
-            <CircularProgress
-              style={{
-                margin: 'auto',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0,
-              }}
-              size={180}
-              thickness={15}
-            />
-          );
-        }}
-      />
-    );
-  }
-}
+        }
+      }
+    }
+  `
+);

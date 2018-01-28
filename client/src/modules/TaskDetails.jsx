@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { QueryRenderer, graphql } from 'react-relay';
-import environment from '../environment';
+import { createRefetchContainer, graphql } from 'react-relay';
 import CircularProgress from 'material-ui/CircularProgress';
 import Paper from 'material-ui/Paper';
 import { Icon, Label, Value } from '../components';
@@ -26,116 +25,138 @@ const styles = {
 
 class TaskDetails extends React.Component {
   static propTypes = {
+    data: PropTypes.object,
     selectedTaskId: PropTypes.string,
   };
 
   componentWillReceiveProps(nextProps) {
-    console.log(['componentWillReceiveProps'], nextProps)
+    this.props.relay.refetch({ ids: [nextProps.selectedTaskId] });
+  }
+
+  componentDidMount() {
+    this.props.relay.refetch({ ids: [this.props.selectedTaskId] });
   }
 
   render() {
-    const { title, priority, creationDate, finishDate, progress, status, note } = this.props.taskDetails;
+    if (!this.props.data.detailsList.length) {
+      return (
+        <CircularProgress
+          style={{
+            margin: 'auto',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+          }}
+          size={180}
+          thickness={15}
+        />
+      );
+    }
+    const [{ title, priority, status/* , additionalFields */ } = {}] = this.props.data.detailsList.slice(-1);
 
     return (
       <div style={styles.root}>
         <h1>{title}</h1>
-        <div style={styles.leftCol}>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'eventNote'} />
-              <Label>Priority</Label>
-            </div>
-            <Value>{priority}</Value>
-          </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-             <Label>Creation Date</Label>
-            </div>
-            <Value>{creationDate}</Value>
-          </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-              <Label>Progress</Label>
-            </div>
-            <Value>{progress}</Value>
-          </Paper>
-        </div>
-        <div style={styles.rightCol}>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-             <Label>Status</Label>
-            </div>
-            <Value>{status}</Value>
-          </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-              <Label>Finish Date</Label>
-            </div>
-            <Value>{finishDate}</Value>
-          </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-              <Label>Note</Label>
-            </div>
-            <Value>{note}</Value>
-          </Paper>
-        </div>
+        <Paper style={styles.row}>
+          <div style={{ textAlign: 'center' }}>
+            <Icon type={'eventNote'} />
+            <Label>Priority</Label>
+          </div>
+          <Value>{priority}</Value>
+        </Paper>
+        <Paper style={styles.row}>
+          <div style={{ textAlign: 'center' }}>
+            <Icon type={'diskFull'} />
+            <Label>Status</Label>
+          </div>
+          <Value>{status}</Value>
+        </Paper>
       </div>
     );
   }
 }
 
-export default class DataProvider extends React.Component {
-  render() {
-    return (
-      <QueryRenderer
-        environment={environment}
-        query={graphql`
-          query TaskDetailsQuery($selectedTaskId: String) {
-            app {
-              taskDetails (id: $selectedTaskId) {
-                id
-                title
-                priority
-                creationDate
-                finishDate
-                progress
-                status
-                note
+export default createRefetchContainer(
+  TaskDetails,
+  graphql`
+    fragment TaskDetails on AppType @argumentDefinitions(
+      ids: { type: "[ID]", defaultValue: [] },
+    ) 
+    {
+      detailsList(ids: $ids) {
+        id
+        title
+        status
+        priority
+        additionalFields {
+          fieldId
+          format
+          type
+          label
+          value {
+            ... on NumberValueType {
+              number
+            }
+            ... on TextNumberType{
+              text
+            }
+          }
+          info
+          meta {
+            ... on NumberMetaType {
+              required
+              min
+              max
+            }
+            ... on TextMetaType{
+              required
+              minLen
+              maxLen
+            }
+          }
+        }
+      }
+    }
+  `,
+  graphql`
+    query TaskDetailsRefetchQuery($ids: [ID]) {
+      app {
+        detailsList(ids: $ids) {
+          id
+          title
+          status
+          priority
+          additionalFields {
+            fieldId
+            format
+            type
+            label
+            value {
+              ... on NumberValueType {
+                number
+              }
+              ... on TextNumberType{
+                text
+              }
+            }
+            info
+            meta {
+              ... on NumberMetaType {
+                required
+                min
+                max
+              }
+              ... on TextMetaType{
+                required
+                minLen
+                maxLen
               }
             }
           }
-        `}
-        variables={{
-          selectedTaskId: this.props.selectedTaskId,
-        }}
-        render={({error, props}) => {
-          if (error) {
-            return <div>{JSON.stringify(error)}</div>;
-          } else if (props) {
-            return <TaskDetails {...props.app} />;
-          }
-          return (
-            <CircularProgress
-              style={{
-                margin: 'auto',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0,
-              }}
-              size={180}
-              thickness={15}
-            />
-          );
-        }}
-      />
-    );
-  }
-}
+        }
+      }
+    }
+  `
+);

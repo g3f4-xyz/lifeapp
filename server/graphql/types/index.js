@@ -1,9 +1,11 @@
-const homeType = require('./modules/home');
-const taskType = require('./task');
-const appType = require('./app');
+const AppType = require('./AppType');
+const FieldType = require('./FieldType');
+const TaskType = require('./TaskType');
+const TaskListType = require('./TaskListType');
 
 module.exports = {
-  appType,
-  homeType,
-  taskType,
+  AppType,
+  FieldType,
+  TaskType,
+  TaskListType,
 };

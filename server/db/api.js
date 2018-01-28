@@ -1,34 +1,17 @@
-const { Home, Task } = require('../models/index');
-
-const TASK_TYPES_MAP = {
-  null: Task,
-  undefined: Task,
-};
+const TaskModel = require('../models/TaskModel');
 
 const addTask = async task => {
-  const newTask = new Task(task);
+  const newTask = new TaskModel(task);
 
-  const model = await newTask.save();
-  return model.toObject();
+  return await newTask.save();
 };
-const getHome = () => Home;
-const getTask = async (id) => {
-  const task = await Task.findById(id);
-
-  return task.toObject();
-};
-const getTasks = async () => await Task.find();
-const getEmptyTask = (type) => {
-  const Model = TASK_TYPES_MAP[type];
-  const model = new Model;
-
-  return model.toObject();
-};
+const getTask = async (id) => await TaskModel.findById(id);
+const getTaskList = async () => await TaskModel.find().sort({ _id : -1 });
+const getEmptyTask = () => new TaskModel;
 
 module.exports = {
   addTask,
-  getHome,
   getTask,
-  getTasks,
+  getTaskList,
   getEmptyTask,
 };

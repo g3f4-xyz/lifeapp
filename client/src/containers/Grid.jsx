@@ -35,7 +35,6 @@ export default class Grid extends React.Component {
   static propTypes = {
     modules: PropTypes.array,
     size: PropTypes.object,
-    handlers: PropTypes.object,
     dynamic: PropTypes.bool,
     viewPortOffset: PropTypes.object,
     onModuleChange: PropTypes.func,
@@ -202,7 +201,7 @@ export default class Grid extends React.Component {
   }
 
   render() {
-    const { handlers, dynamic } = this.props;
+    const { dynamic } = this.props;
     const tiles = this.getTiles();
     const size = dynamic ? this.getDynamicSize(tiles.length) : this.props.size || DEFAULT_SIZE;
     const { gridViewMode } = this.state;
@@ -219,13 +218,11 @@ export default class Grid extends React.Component {
         cellHeight={cellHeight}
         cols={cols}
       >
-        {tiles.map(({ Component, id, offset, inViewPort, locked }, key) => (
+        {tiles.map(({ node, id, offset, inViewPort, locked }, key) => (
           <GridTile {...this.getTileProps({ id, inViewPort })} key={key}>
             {this.renderCloseButton(id, locked)}
             {this.renderZoomButton(id)}
-            <Module style={{ zoom: gridViewMode ? 1 / size.columns : 1 }}>
-              <Component {...(handlers[id] ? handlers[id]() : {})} />
-            </Module>
+            <Module style={{ zoom: gridViewMode ? 1 / size.columns : 1 }}>{node}</Module>
           </GridTile>
         ))}
       </GridList>,

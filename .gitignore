@@ -8,14 +8,11 @@ coverage
 
 # production
 # build
-
-stats.json
-
 # misc
 .DS_Store
 .env
 npm-debug.log
 .eslintcache
 .idea/
-graphql.*
+.vscode/
 npm-debug.*

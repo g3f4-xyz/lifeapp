@@ -1,7 +1,6 @@
 const { connectionDefinitions } = require('graphql-relay');
+const TaskType = require('./types/TaskType');
 
-const taskType = require('./types/task');
+const { connectionType: TaskTypeConnection, edgeType: TaskTypeEdge } = connectionDefinitions({ name: 'TaskType', nodeType: TaskType });
 
-const { connectionType: taskConnection, edgeType: TaskEdge } = connectionDefinitions({ name: 'Task', nodeType: taskType });
-
-module.exports = { taskConnection, TaskEdge };
+module.exports = { TaskTypeConnection, TaskTypeEdge };

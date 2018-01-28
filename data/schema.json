@@ -16,11 +16,11 @@
           "fields": [
             {
               "name": "app",
-              "description": null,
+              "description": "Application entry point",
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "App",
+                "name": "AppType",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -61,40 +61,64 @@
         },
         {
           "kind": "OBJECT",
-          "name": "App",
+          "name": "AppType",
           "description": "Application entry point",
           "fields": [
             {
-              "name": "home",
+              "name": "id",
+              "description": "The ID of an object",
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "taskList",
               "description": null,
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "Home",
+                "name": "TaskListType",
                 "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "taskDetails",
+              "name": "detailsList",
               "description": null,
               "args": [
                 {
-                  "name": "id",
+                  "name": "ids",
                   "description": null,
                   "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
+                    "kind": "LIST",
+                    "name": null,
+                    "ofType": {
+                      "kind": "SCALAR",
+                      "name": "ID",
+                      "ofType": null
+                    }
                   },
                   "defaultValue": null
                 }
               ],
               "type": {
-                "kind": "OBJECT",
-                "name": "Task",
-                "ofType": null
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "TaskType",
+                  "ofType": null
+                }
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -116,7 +140,7 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "Task",
+                "name": "TaskType",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -129,9 +153,19 @@
           "possibleTypes": null
         },
         {
+          "kind": "SCALAR",
+          "name": "ID",
+          "description": "The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `\"4\"`) or integer (such as `4`) input value will be accepted as an ID.",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
           "kind": "OBJECT",
-          "name": "Home",
-          "description": "Home module",
+          "name": "TaskListType",
+          "description": "TaskListType module description",
           "fields": [
             {
               "name": "id",
@@ -150,8 +184,8 @@
               "deprecationReason": null
             },
             {
-              "name": "tasks",
-              "description": "User's tasks",
+              "name": "list",
+              "description": "Task list",
               "args": [
                 {
                   "name": "after",
@@ -196,7 +230,7 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "TaskConnection",
+                "name": "TaskTypeConnection",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -242,25 +276,15 @@
           "possibleTypes": [
             {
               "kind": "OBJECT",
-              "name": "Home",
+              "name": "TaskListType",
               "ofType": null
             },
             {
               "kind": "OBJECT",
-              "name": "Task",
+              "name": "TaskType",
               "ofType": null
             }
           ]
-        },
-        {
-          "kind": "SCALAR",
-          "name": "ID",
-          "description": "The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `\"4\"`) or integer (such as `4`) input value will be accepted as an ID.",
-          "fields": null,
-          "inputFields": null,
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
         },
         {
           "kind": "SCALAR",
@@ -284,7 +308,7 @@
         },
         {
           "kind": "OBJECT",
-          "name": "TaskConnection",
+          "name": "TaskTypeConnection",
           "description": "A connection to a list of items.",
           "fields": [
             {
@@ -312,7 +336,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "OBJECT",
-                  "name": "TaskEdge",
+                  "name": "TaskTypeEdge",
                   "ofType": null
                 }
               },
@@ -404,7 +428,7 @@
         },
         {
           "kind": "OBJECT",
-          "name": "TaskEdge",
+          "name": "TaskTypeEdge",
           "description": "An edge in a connection.",
           "fields": [
             {
@@ -413,7 +437,7 @@
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "Task",
+                "name": "TaskType",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -443,8 +467,8 @@
         },
         {
           "kind": "OBJECT",
-          "name": "Task",
-          "description": "A task",
+          "name": "TaskType",
+          "description": "Task type decription",
           "fields": [
             {
               "name": "id",
@@ -464,7 +488,19 @@
             },
             {
               "name": "title",
-              "description": "Task title",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "status",
+              "description": null,
               "args": [],
               "type": {
                 "kind": "SCALAR",
@@ -476,43 +512,7 @@
             },
             {
               "name": "priority",
-              "description": "Task priority",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "creationDate",
-              "description": "Task creationDate",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "finishDate",
-              "description": "Task finishDate",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "progress",
-              "description": "Task progress",
+              "description": null,
               "args": [],
               "type": {
                 "kind": "SCALAR",
@@ -523,25 +523,17 @@
               "deprecationReason": null
             },
             {
-              "name": "status",
-              "description": "Task status",
+              "name": "additionalFields",
+              "description": null,
               "args": [],
               "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "note",
-              "description": "Task note",
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "FieldType",
+                  "ofType": null
+                }
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -555,6 +547,293 @@
               "ofType": null
             }
           ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "FieldType",
+          "description": "Field Type",
+          "fields": [
+            {
+              "name": "fieldId",
+              "description": "fieldId field description",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "format",
+              "description": "format field description",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "type",
+              "description": "type field description",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "label field description",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "value",
+              "description": "value field description",
+              "args": [],
+              "type": {
+                "kind": "UNION",
+                "name": "ValuesUnion",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "info",
+              "description": "info field description",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "meta",
+              "description": "meta field description",
+              "args": [],
+              "type": {
+                "kind": "UNION",
+                "name": "MetasUnion",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "UNION",
+          "name": "ValuesUnion",
+          "description": "Values Union",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": [
+            {
+              "kind": "OBJECT",
+              "name": "NumberValueType",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "TextNumberType",
+              "ofType": null
+            }
+          ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "NumberValueType",
+          "description": null,
+          "fields": [
+            {
+              "name": "number",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "SCALAR",
+          "name": "Float",
+          "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). ",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "TextNumberType",
+          "description": null,
+          "fields": [
+            {
+              "name": "text",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "UNION",
+          "name": "MetasUnion",
+          "description": "Metas Union",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": [
+            {
+              "kind": "OBJECT",
+              "name": "NumberMetaType",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "TextMetaType",
+              "ofType": null
+            }
+          ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "NumberMetaType",
+          "description": "NumberMetaType",
+          "fields": [
+            {
+              "name": "required",
+              "description": "required",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "min",
+              "description": "min",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "max",
+              "description": "max",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "TextMetaType",
+          "description": "TextMetaType",
+          "fields": [
+            {
+              "name": "required",
+              "description": "required",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "minLen",
+              "description": "minLen",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "maxLen",
+              "description": "maxLen",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
           "enumValues": null,
           "possibleTypes": null
         },
@@ -606,27 +885,9 @@
               "name": "id",
               "description": null,
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "ID",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "title",
-              "description": null,
-              "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
               },
               "defaultValue": null
             },
@@ -634,13 +895,9 @@
               "name": "priority",
               "description": null,
               "type": {
-                "kind": "NON_NULL",
-                "name": null,
-                "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
-                  "ofType": null
-                }
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
               },
               "defaultValue": null
             },
@@ -648,58 +905,79 @@
               "name": "status",
               "description": null,
               "type": {
-                "kind": "NON_NULL",
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "title",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "additionalFields",
+              "description": null,
+              "type": {
+                "kind": "LIST",
                 "name": null,
                 "ofType": {
-                  "kind": "SCALAR",
-                  "name": "String",
+                  "kind": "INPUT_OBJECT",
+                  "name": "addTaskFieldType",
                   "ofType": null
                 }
               },
               "defaultValue": null
             },
             {
-              "name": "creationDate",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "progress",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "finishDate",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "note",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
               "name": "clientMutationId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "addTaskFieldType",
+          "description": "add task input type",
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "fieldId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "number",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Float",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "text",
               "description": null,
               "type": {
                 "kind": "SCALAR",
@@ -724,19 +1002,19 @@
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "TaskEdge",
+                "name": "TaskTypeEdge",
                 "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
-              "name": "home",
+              "name": "taskList",
               "description": null,
               "args": [],
               "type": {
                 "kind": "OBJECT",
-                "name": "Home",
+                "name": "TaskListType",
                 "ofType": null
               },
               "isDeprecated": false,

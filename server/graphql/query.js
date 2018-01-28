@@ -1,14 +1,15 @@
 const { GraphQLObjectType } = require('graphql');
-const { appType } = require('./types');
 const { nodeField } = require('./nodeDefinitions');
+const AppType = require('./types/AppType');
 
 module.exports = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
     app: {
-      type: appType,
+      description: 'Application entry point',
+      type: AppType,
       resolve: () => true,
     },
-    node: nodeField,
+    node: nodeField, // #TODO nie działa mimo prawidłowego rozwiązanie globalnego id obiektu oraz pobrania prawidłowo obiektu.
   }),
 });
