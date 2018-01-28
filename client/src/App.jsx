@@ -205,21 +205,12 @@ class App extends Component {
               query AppQuery (
                 $count: Int!
                 $cursor: String
-                # $ids: [ID]
-                # $type: String
               ) {
                 app {
                   taskList {
                     ...TaskList
                   }
-                  # detailsList(ids: $ids) {
-                  #   id
-                  #   ...TaskDetails
-                  # }
                   ...TaskDetails
-                  # taskCreate (type: $type) {
-                  #   ...TaskCreate
-                  # }
                   ...TaskCreate
                 }
               }
@@ -233,8 +224,6 @@ class App extends Component {
               if (error) {
                 return <div>{JSON.stringify(error)}</div>;
               } else if (props) {
-                // console.log(['props'], props)
-
                 return this.renderGrid(props);
               }
               return (

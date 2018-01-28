@@ -54,8 +54,6 @@
   },
   "pre-commit": [
     "lint",
-    "validate",
-    "test",
-    "client:build:heroku"
+    "test"
   ]
 }

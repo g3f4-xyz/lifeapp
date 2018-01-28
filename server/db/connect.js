@@ -3,7 +3,7 @@ const { DB_HOST } = require('../config');
 
 // Use native promises
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/lifeapp', { useMongoClient: true });
+mongoose.connect(DB_HOST, { useMongoClient: true });
 mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
 mongoose.connection.once('open', () => console.log(`MongoDB connected to host: ${DB_HOST}`));
 
