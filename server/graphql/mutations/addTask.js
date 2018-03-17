@@ -1,4 +1,4 @@
-const { GraphQLList, GraphQLString, GraphQLInt, GraphQLFloat, GraphQLID, GraphQLInputObjectType } = require('graphql');
+const { GraphQLList, GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLID, GraphQLInputObjectType } = require('graphql');
 const { mutationWithClientMutationId, cursorForObjectInConnection } = require('graphql-relay');
 const { TaskListType } = require('../types');
 const { TaskTypeEdge } = require('../connections');
@@ -8,17 +8,79 @@ module.exports = mutationWithClientMutationId({
   name: 'addTask',
   inputFields: {
     id: { type: GraphQLID },
-    priority: { type: GraphQLInt },
-    status: { type: GraphQLString },
-    title: { type: GraphQLString },
-    additionalFields: {
+    taskType: { type: GraphQLString },
+    fields: {
       type: new GraphQLList(new GraphQLInputObjectType({
         name: 'addTaskFieldType',
         description: 'add task input type',
         fields: () => ({
-          fieldId: { type: GraphQLString },
-          number: { type: GraphQLFloat },
-          text: { type: GraphQLString },
+          fieldId: {
+            type: GraphQLString,
+          },
+          format: {
+            type: GraphQLString,
+          },
+          order: {
+            type: GraphQLInt,
+          },
+          type: {
+            type: GraphQLString,
+          },
+          label: {
+            type: GraphQLString,
+          },
+          value: {
+            type: new GraphQLInputObjectType({
+              name: 'FieldValueInputType',
+              description: 'FieldValueInputType',
+              fields: () => ({
+                text: {
+                  type: GraphQLString,
+                },
+                number: {
+                  type: GraphQLInt,
+                },
+                id: {
+                  type: GraphQLString,
+                },
+              }),
+            }),
+          },
+          info: {
+            type: GraphQLString,
+          },
+          meta: {
+            type: new GraphQLInputObjectType({
+              name: 'FieldMetaInputType',
+              description: 'FieldMetaInputType',
+              fields: () => ({
+                required: {
+                  type: GraphQLBoolean,
+                },
+                minLen: {
+                  type: GraphQLInt,
+                },
+                maxLen: {
+                  type: GraphQLInt,
+                },
+                options: {
+                  description: 'options',
+                  type: new GraphQLList(new GraphQLInputObjectType({
+                    name: 'ChoiceOptionsInputType',
+                    description: 'Choice options input Type',
+                    fields: () => ({
+                      text: {
+                        type: GraphQLString,
+                      },
+                      value: {
+                        type: GraphQLString,
+                      },
+                    }),
+                  })),
+                },
+              }),
+            }),
+          },
         }),
       })),
     },
@@ -27,7 +89,6 @@ module.exports = mutationWithClientMutationId({
     newTaskEdge: {
       type: TaskTypeEdge,
       resolve: async node => {
-        console.log(['mutations.addTask.outputFields.newTaskEdge'], node);
         const tasks = await getTaskList();
 
         return {
@@ -41,9 +102,5 @@ module.exports = mutationWithClientMutationId({
       resolve: () => true,
     },
   },
-  mutateAndGetPayload: async task => {
-    console.log(['addTask.mutateAndGetPayload'], task);
-
-    return await addTask(task);
-  },
+  mutateAndGetPayload: async task => await addTask(task),
 });

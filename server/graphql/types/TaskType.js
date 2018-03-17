@@ -8,21 +8,17 @@ module.exports = new GraphQLObjectType({
   description: 'Task type decription',
   fields: () => ({
     id: globalIdField('Task', ({ _id }) => _id),
-    title: {
+    taskType: {
       type: GraphQLString,
-      resolve: ({ title }) => title,
+      resolve: ({ taskType }) => taskType,
     },
-    status: {
-      type: GraphQLString,
-      resolve: ({ status }) => status,
-    },
-    priority: {
-      type: GraphQLInt,
-      resolve: ({ priority }) => priority,
-    },
-    additionalFields: {
+    fields: {
       type: new GraphQLList(FieldType),
-      resolve: ({ additionalFields }) => additionalFields,
+      args: {
+        filterByIds: { type: new GraphQLList(GraphQLString) },
+      },
+      resolve: ({ fields }, args) => console.log(['args'], args) ||
+        args && args.filterByIds ? fields.filter(({ fieldId }) => args.filterByIds.includes(fieldId)) : fields,
     },
   }),
   interfaces: [nodeInterface],

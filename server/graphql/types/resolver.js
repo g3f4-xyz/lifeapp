@@ -1,4 +1,4 @@
-const TaskModel = require('../../models/TaskModel');
+const TaskModel = require('../../db/models/TaskModel');
 const { TaskType } = require('../types');
 
 module.exports = obj => {

@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { QueryRenderer, graphql } from 'react-relay'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import shallowequal from 'shallowequal';
 import CircularProgress from 'material-ui/CircularProgress';
 import ErrorBoundary from './containers/ErrorBoundary';
@@ -13,7 +17,7 @@ import TaskList from './modules/TaskList';
 import TaskCreate from './modules/TaskCreate';
 import TaskEdit from './modules/TaskEdit';
 import TaskDetails from './modules/TaskDetails';
-import Templates from './modules/Templates';
+import TaskTypeList from './modules/TaskTypeList';
 import Settings from './modules/Settings';
 
 const MODULES_IDS = {
@@ -22,7 +26,7 @@ const MODULES_IDS = {
   TASK_CREATE: 'TaskCreate',
   TASK_EDIT: 'TaskEdit',
   TASK_DETAILS: 'TaskDetails',
-  TEMPLATES: 'Templates',
+  TASK_TYPE_LIST: 'TaskTypeList',
   SETTINGS: 'Settings',
   ATTACHMENT_PREVIEW: 'AttachmentPreview',
   CUSTOM_TEMPLATE: 'CustomTemplate',
@@ -75,8 +79,8 @@ const MODULES = [
   },
   {
     locked: false,
-    id: MODULES_IDS.TEMPLATES,
-    Component: Templates,
+    id: MODULES_IDS.TASK_TYPE_LIST,
+    Component: TaskTypeList,
     offset: {
       column: 0,
       row: 1,
@@ -115,6 +119,7 @@ class App extends Component {
   state = {
     selectedTaskId: null, // #TODO rozbudować scheme na froncie żeby przechowywała tą informacje
     visited: [MODULES_IDS.TASK_LIST],
+    showGrid: false,
     viewPortOffset: {
       column: 1,
       row: 1,
@@ -127,10 +132,24 @@ class App extends Component {
       onAdd: () => {
         this.onModuleChange({
           column: 0,
-          row: 0,
+          row: 1,
         });
       },
       onDetails: this.onDetails,
+    }),
+    [MODULES_IDS.TASK_TYPE_LIST]: (props) => ({
+      data: props.app.taskTypeList,
+      onAdd: () => {
+        console.log(['onAdd']);
+      },
+      onSelect: (type) => {
+        this.onModuleChange({
+          column: 0,
+          row: 0,
+        }, {
+          type,
+        });
+      },
     }),
     [MODULES_IDS.TASK_DETAILS]: (props) => ({
       selectedTaskId: this.state.selectedTaskId,
@@ -139,6 +158,7 @@ class App extends Component {
     [MODULES_IDS.TASK_CREATE]: (props) => ({
       onAdded: this.onAdded,
       data: props.app,
+      type: this.state.type,
     }),
   };
 
@@ -157,13 +177,15 @@ class App extends Component {
     });
   };
 
-  onModuleChange = viewPortOffset => {
+  onModuleChange = (viewPortOffset, extend = {}) => {
     const { id } = MODULES.find(({ offset }) => shallowequal(viewPortOffset, offset));
     const { visited } = this.state;
 
     this.setState({
       visited: visited.includes(id) ? visited : [...visited, id],
       viewPortOffset,
+      showGrid: false,
+      ...extend
     });
   };
 
@@ -186,6 +208,7 @@ class App extends Component {
       <Grid
         onModuleClose={this.onModuleClose}
         dynamic
+        showGrid={this.state.showGrid}
         modules={modules}
         handlers={this.handlers}
         visited={this.state.visited}
@@ -210,6 +233,9 @@ class App extends Component {
                   taskList {
                     ...TaskList
                   }
+                  taskTypeList {
+                    ...TaskTypeList
+                  }
                   ...TaskDetails
                   ...TaskCreate
                 }
@@ -224,7 +250,20 @@ class App extends Component {
               if (error) {
                 return <div>{JSON.stringify(error)}</div>;
               } else if (props) {
-                return this.renderGrid(props);
+                return (
+                  <div>
+                    <div style={{ position: 'absolute', right: 10, zIndex: 9 }}>
+                      <IconMenu
+                      iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+                      anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+                      targetOrigin={{horizontal: 'right', vertical: 'top'}}
+                    >
+                      <MenuItem disabled={this.state.showGrid || this.state.visited.length === 1} primaryText="Show grid" onClick={(() => this.setState({ showGrid: true }))} />
+                    </IconMenu>
+                  </div>
+                  {this.renderGrid(props)}
+                </div>
+                );
               }
               return (
                 <CircularProgress

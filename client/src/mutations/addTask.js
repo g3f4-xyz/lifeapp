@@ -13,13 +13,11 @@ const mutation = graphql`
       newTaskEdge {
         node {
           id
-          title
-          status
-          priority
-          additionalFields {
+          fields {
             fieldId
             format
             type
+            order
             label
             value {
               ... on NumberValueType {
@@ -27,6 +25,7 @@ const mutation = graphql`
               }
               ... on TextNumberType{
                 text
+                id
               }
             }
             info

@@ -5,7 +5,11 @@ module.exports =  new GraphQLObjectType({
   fields: () => ({
     text: {
       type: GraphQLString,
-      resolve: ({ value: { text } }) => text,
+      resolve: ({ text }) => text,
+    },
+    id: { // tymczasowo do czasu dorobienia type dla ChoiceValueType
+      type: GraphQLString,
+      resolve: ({ id }) => id,
     },
   }),
 });

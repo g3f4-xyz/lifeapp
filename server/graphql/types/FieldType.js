@@ -1,4 +1,4 @@
-const { GraphQLObjectType, GraphQLString } = require('graphql');
+const { GraphQLObjectType, GraphQLString, GraphQLInt } = require('graphql');
 const MetasUnion = require('./metas');
 const ValuesUnion = require('./values');
 
@@ -16,6 +16,11 @@ module.exports = new GraphQLObjectType({
       type: GraphQLString,
       resolve: ({ format }) => format,
     },
+    order: {
+      description: 'order field description',
+      type: GraphQLInt,
+      resolve: ({ order }) => order,
+    },
     type: {
       description: 'type field description',
       type: GraphQLString,
@@ -29,7 +34,7 @@ module.exports = new GraphQLObjectType({
     value: {
       description: 'value field description',
       type: ValuesUnion,
-      resolve: (root) => root,
+      resolve: ({ value }) => value,
     },
     info: {
       description: 'info field description',
@@ -39,7 +44,7 @@ module.exports = new GraphQLObjectType({
     meta: {
       description: 'meta field description',
       type: MetasUnion,
-      resolve: (root) => root,
+      resolve: ({ type, meta }) => ({ type, ...meta }),
     },
   }),
 });

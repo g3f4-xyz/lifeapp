@@ -1,16 +1,19 @@
-# add task input type
+"""add task input type"""
 input addTaskFieldType {
   fieldId: String
-  number: Float
-  text: String
+  format: String
+  order: Int
+  type: String
+  label: String
+  value: FieldValueInputType
+  info: String
+  meta: FieldMetaInputType
 }
 
 input addTaskInput {
   id: ID
-  priority: Int
-  status: String
-  title: String
-  additionalFields: [addTaskFieldType]
+  taskType: String
+  fields: [addTaskFieldType]
   clientMutationId: String
 }
 
@@ -20,61 +23,143 @@ type addTaskPayload {
   clientMutationId: String
 }
 
-# Application entry point
+"""add task`s type input type"""
+input addTaskTypeFieldType {
+  fieldId: String
+  format: String
+  order: Int
+  type: String
+  label: String
+  info: String
+  meta: addTaskTypeMetaFieldType
+  value: addTaskTypeValueFieldType
+}
+
+input addTaskTypeInput {
+  typeId: ID
+  name: String
+  description: String
+  order: Int
+  isCustom: Boolean
+  parentId: String
+  fieldsConfig: [addTaskTypeFieldType]
+  clientMutationId: String
+}
+
+"""add task`s type meta input type"""
+input addTaskTypeMetaFieldType {
+  required: Boolean
+  minLen: Int
+  maxLen: Int
+  min: Float
+  max: Float
+}
+
+type addTaskTypePayload {
+  newTaskTypeEdge: TaskTypeTypeEdge
+  taskTypeList: TaskTypeListType
+  clientMutationId: String
+}
+
+"""add task`s type value input type"""
+input addTaskTypeValueFieldType {
+  number: Int
+  text: String
+  id: String
+}
+
+"""Application entry point"""
 type AppType {
-  # The ID of an object
+  """The ID of an object"""
   id: ID!
   taskList: TaskListType
+  taskTypeList: TaskTypeListType
   detailsList(ids: [ID]): [TaskType]
   taskCreate(type: String): TaskType
 }
 
-# Field Type
+"""Choice options input Type"""
+input ChoiceOptionsInputType {
+  text: String
+  value: String
+}
+
+"""Choice options Type"""
+type ChoiceOptionsType {
+  """text"""
+  text: String
+
+  """value"""
+  value: String
+}
+
+"""FieldMetaInputType"""
+input FieldMetaInputType {
+  required: Boolean
+  minLen: Int
+  maxLen: Int
+
+  """options"""
+  options: [ChoiceOptionsInputType]
+}
+
+"""Field Type"""
 type FieldType {
-  # fieldId field description
+  """fieldId field description"""
   fieldId: String
 
-  # format field description
+  """format field description"""
   format: String
 
-  # type field description
+  """order field description"""
+  order: Int
+
+  """type field description"""
   type: String
 
-  # label field description
+  """label field description"""
   label: String
 
-  # value field description
+  """value field description"""
   value: ValuesUnion
 
-  # info field description
+  """info field description"""
   info: String
 
-  # meta field description
+  """meta field description"""
   meta: MetasUnion
 }
 
-# Metas Union
+"""FieldValueInputType"""
+input FieldValueInputType {
+  text: String
+  number: Int
+  id: String
+}
+
+"""Metas Union"""
 union MetasUnion = NumberMetaType | TextMetaType
 
 type Mutation {
   addTask(input: addTaskInput!): addTaskPayload
+  addTaskType(input: addTaskTypeInput!): addTaskTypePayload
 }
 
-# An object with an ID
+"""An object with an ID"""
 interface Node {
-  # The id of the object.
+  """The id of the object."""
   id: ID!
 }
 
-# NumberMetaType
+"""NumberMetaType"""
 type NumberMetaType {
-  # required
+  """required"""
   required: Boolean
 
-  # min
+  """min"""
   min: Float
 
-  # max
+  """max"""
   max: Float
 }
 
@@ -82,84 +167,126 @@ type NumberValueType {
   number: Float
 }
 
-# Information about pagination in a connection.
+"""Information about pagination in a connection."""
 type PageInfo {
-  # When paginating forwards, are there more items?
+  """When paginating forwards, are there more items?"""
   hasNextPage: Boolean!
 
-  # When paginating backwards, are there more items?
+  """When paginating backwards, are there more items?"""
   hasPreviousPage: Boolean!
 
-  # When paginating backwards, the cursor to continue.
+  """When paginating backwards, the cursor to continue."""
   startCursor: String
 
-  # When paginating forwards, the cursor to continue.
+  """When paginating forwards, the cursor to continue."""
   endCursor: String
 }
 
 type Query {
-  # Application entry point
+  """Application entry point"""
   app: AppType
 
-  # Fetches an object given its ID
+  """Fetches an object given its ID"""
   node(
-    # The ID of an object
+    """The ID of an object"""
     id: ID!
   ): Node
 }
 
-# TaskListType module description
+"""TaskListType module description"""
 type TaskListType implements Node {
-  # The ID of an object
+  """The ID of an object"""
   id: ID!
 
-  # Task list
+  """Task list"""
   list(after: String, first: Int, before: String, last: Int): TaskTypeConnection
 }
 
-# Task type decription
+"""Task type decription"""
 type TaskType implements Node {
-  # The ID of an object
+  """The ID of an object"""
   id: ID!
-  title: String
-  status: String
-  priority: Int
-  additionalFields: [FieldType]
+  taskType: String
+  fields(filterByIds: [String]): [FieldType]
 }
 
-# A connection to a list of items.
+"""A connection to a list of items."""
 type TaskTypeConnection {
-  # Information to aid in pagination.
+  """Information to aid in pagination."""
   pageInfo: PageInfo!
 
-  # A list of edges.
+  """A list of edges."""
   edges: [TaskTypeEdge]
 }
 
-# An edge in a connection.
+"""An edge in a connection."""
 type TaskTypeEdge {
-  # The item at the end of the edge
+  """The item at the end of the edge"""
   node: TaskType
 
-  # A cursor for use in pagination
+  """A cursor for use in pagination"""
   cursor: String!
 }
 
-# TextMetaType
+"""TaskTypeListType module description"""
+type TaskTypeListType implements Node {
+  """The ID of an object"""
+  id: ID!
+
+  """Task`s type list description"""
+  list(after: String, first: Int, before: String, last: Int): TaskTypeTypeConnection
+}
+
+"""Task type decription"""
+type TaskTypeType implements Node {
+  """The ID of an object"""
+  id: ID!
+  typeId: String
+  name: String
+  description: String
+  order: Int
+  isCustom: Boolean
+  parentId: String
+  fieldsConfig: [FieldType]
+}
+
+"""A connection to a list of items."""
+type TaskTypeTypeConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [TaskTypeTypeEdge]
+}
+
+"""An edge in a connection."""
+type TaskTypeTypeEdge {
+  """The item at the end of the edge"""
+  node: TaskTypeType
+
+  """A cursor for use in pagination"""
+  cursor: String!
+}
+
+"""TextMetaType"""
 type TextMetaType {
-  # required
+  """required"""
   required: Boolean
 
-  # minLen
+  """minLen"""
   minLen: Int
 
-  # maxLen
+  """maxLen"""
   maxLen: Int
+
+  """options"""
+  options: [ChoiceOptionsType]
 }
 
 type TextNumberType {
   text: String
+  id: String
 }
 
-# Values Union
+"""Values Union"""
 union ValuesUnion = NumberValueType | TextNumberType

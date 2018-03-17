@@ -3,22 +3,13 @@ import React from 'react';
 import { createRefetchContainer, graphql } from 'react-relay';
 import CircularProgress from 'material-ui/CircularProgress';
 import Paper from 'material-ui/Paper';
+import Create from 'material-ui/svg-icons/content/create';
 import { Icon, Label, Value } from '../components';
 
 const styles = {
-  leftCol: {
-    float: 'left',
-    width: '50%',
-    textAlign: 'left',
-  },
-  rightCol: {
-    float: 'left',
-    width: '50%',
-    textAlign: 'left',
-  },
-  root: {
-  },
   row: {
+    display: 'flex',
+    justifyContent: 'space-between',
     margin: 10,
   },
 };
@@ -38,42 +29,45 @@ class TaskDetails extends React.Component {
   }
 
   render() {
-    if (!this.props.data.detailsList.length) {
+    if (this.props.data && this.props.data.detailsList && this.props.data.detailsList.length > 0) {
+      const [{ taskType, fields }] = this.props.data.detailsList;
+
       return (
-        <CircularProgress
-          style={{
-            margin: 'auto',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
-          }}
-          size={180}
-          thickness={15}
-        />
+        <div style={styles.root}>
+          <h1>{taskType}</h1>
+        {fields
+          .map(item => item) // propsy są immutable, sortowanie modyfikuje oryginalną tablicę
+          .sort((a, b) => a.order - b.order)
+          .map(({ fieldId, label, type, meta: { options }, value }) => console.log(['options'], options) || (
+          <div key={fieldId}>
+            <Paper style={styles.row}>
+              <div style={{ padding: 10, width: 200, textAlign: 'left' }}>
+                <Create />
+                <Label style={{ padding: 10 }}>{label}</Label>
+              </div>
+              <div style={{ width: '80%', textAlign: 'right' }}>
+                <div style={{ padding: 20 }}>{value.text || value.number || value.id}</div>
+              </div>
+            </Paper>
+          </div>
+        ))}
+        </div>
       );
     }
-    const [{ title, priority, status/* , additionalFields */ } = {}] = this.props.data.detailsList.slice(-1);
 
     return (
-      <div style={styles.root}>
-        <h1>{title}</h1>
-        <Paper style={styles.row}>
-          <div style={{ textAlign: 'center' }}>
-            <Icon type={'eventNote'} />
-            <Label>Priority</Label>
-          </div>
-          <Value>{priority}</Value>
-        </Paper>
-        <Paper style={styles.row}>
-          <div style={{ textAlign: 'center' }}>
-            <Icon type={'diskFull'} />
-            <Label>Status</Label>
-          </div>
-          <Value>{status}</Value>
-        </Paper>
-      </div>
+      <CircularProgress
+        style={{
+          margin: 'auto',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+        }}
+        size={180}
+        thickness={15}
+      />
     );
   }
 }
@@ -87,10 +81,8 @@ export default createRefetchContainer(
     {
       detailsList(ids: $ids) {
         id
-        title
-        status
-        priority
-        additionalFields {
+        taskType
+        fields {
           fieldId
           format
           type
@@ -101,6 +93,7 @@ export default createRefetchContainer(
             }
             ... on TextNumberType{
               text
+              id
             }
           }
           info
@@ -125,10 +118,8 @@ export default createRefetchContainer(
       app {
         detailsList(ids: $ids) {
           id
-          title
-          status
-          priority
-          additionalFields {
+          taskType
+          fields {
             fieldId
             format
             type
@@ -139,6 +130,7 @@ export default createRefetchContainer(
               }
               ... on TextNumberType{
                 text
+                id
               }
             }
             info

@@ -1,26 +1,19 @@
 import React from 'react';
 import { createRefetchContainer, graphql } from 'react-relay';
 import PropTypes from 'prop-types';
+import update from 'immutability-helper';
 import CircularProgress from 'material-ui/CircularProgress';
+import DatePicker from 'material-ui/DatePicker';
 import Paper from 'material-ui/Paper';
 import AddButton from 'material-ui/svg-icons/navigation/check';
 import { Icon, Label, Input, Select } from '../components';
+import Create from 'material-ui/svg-icons/content/create';
 import addTask from '../mutations/addTask';
 
 const styles = {
-  leftCol: {
-    float: 'left',
-    width: '50%',
-    textAlign: 'left',
-  },
-  rightCol: {
-    float: 'left',
-    width: '50%',
-    textAlign: 'left',
-  },
-  root: {
-  },
   row: {
+    display: 'flex',
+    justifyContent: 'space-between',
     margin: 10,
   },
 };
@@ -28,6 +21,7 @@ const styles = {
 class TaskCreate extends React.Component {
   static propTypes = {
     onAdded: PropTypes.func,
+    type: PropTypes.string,
   };
 
   state = {
@@ -42,7 +36,7 @@ class TaskCreate extends React.Component {
   }
 
   componentDidMount() {
-    this.props.relay.refetch({ type: 'default' });
+    this.props.relay.refetch({ type: this.props.type });
   }
 
   updateTask(update) {
@@ -78,7 +72,22 @@ class TaskCreate extends React.Component {
         />
       );
     }
-    const { title, priority, status/* , additionalFields */ } = this.state.task;
+    const { taskType, fields } = this.state.task;
+    const updateFieldValue = (fieldId, value) => {
+      const fieldIndex = this.state.task.fields.findIndex(field => field.fieldId === fieldId);
+
+      this.setState(update(this.state, {
+        task: {
+          fields: {
+            [fieldIndex]: {
+              value: {
+                $set: value
+              }
+            }
+          }
+        }
+      }));
+    };
 
     return (
       <div style={styles.root}>
@@ -107,62 +116,59 @@ class TaskCreate extends React.Component {
             onClick={this.onAdd}
           />
         )}
-
-        <Input
-          multiLine
-          hintText="Enter title of new task"
-          value={title}
-          style={{
-            fontSize: '32px',
-          }}
-          onChange={(e, title) => {
-            this.updateTask({ title });
-          }}
-        />
-        <div style={styles.leftCol}>
+      {fields
+        .map(item => item) // propsy są immutable, sortowanie modyfikuje oryginalną tablicę
+        .sort((a, b) => a.order - b.order)
+        .map(({ fieldId, label, type, meta: { options }, value, info }) => console.log(['options'], options) || (
+        <div key={fieldId}>
           <Paper style={styles.row}>
-          <div style={{ textAlign: 'center' }}>
-            <Icon type={'eventNote'} />
-            <Label>Priority</Label>
-          </div>
-          <Select
-            value={priority}
-            hintText="Set task priority"
-            options={[{
-              value: 1,
-              text: 'TODO',
-            }, {
-              value: 2,
-              text: 'In progress',
-            }]}
-            onChange={(e, priority) => {
-              this.updateTask({ priority });
-            }}
-          />
-          </Paper>
-        </div>
-        <div style={styles.rightCol}>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-             <Label>Status</Label>
+            <div style={{ padding: 10, width: 200, textAlign: 'left' }}>
+              <Create />
+              <Label style={{ padding: 10 }}>{label}</Label>
             </div>
-            <Select
-              value={status}
-              hintText="Set task priority"
-              options={[{
-                value: 'NORMAL',
-                text: 'Normal',
-              }, {
-                value: 'URGENT',
-                text: 'Urgent',
-              }]}
-              onChange={(e, status) => {
-                this.updateTask({ status });
+            <div style={{ paddingRight: 20, width: '80%' }}>
+          {({
+            CHOICE: (
+              <Select
+                style={{ width: '80%' }}
+                value={value.id}
+                info={info}
+                options={options || []}
+                onChange={(e, id) => {
+                  console.log(['onChange.value'], { id });
+                  updateFieldValue(fieldId, { id });
+                }}
+              />
+            ),
+            DATE: (
+              <DatePicker
+                textFieldStyle={{ width: '80%' }}
+                autoOk
+                value={value.id}
+                hintText={info}
+                options={options || []}
+                onChange={(e, id) => {
+                  console.log(['onChange.value'], { id });
+                  updateFieldValue(fieldId, { id });
+                }}
+              />
+            ),
+          })[type] || (
+            <Input
+              style={{ width: '80%' }}
+              multiLine
+              hintText={info}
+              value={value.text || value.number}
+              onChange={(e, value) => {
+                console.log(['onChange.value'], value);
+                updateFieldValue(fieldId, { text: value });
               }}
             />
+          )}
+            </div>
           </Paper>
         </div>
+      ))}
       </div>
     );
   }
@@ -182,20 +188,20 @@ export default createRefetchContainer(
       }
       taskCreate(type: $type) {
         id
-        title
-        status
-        priority
-        additionalFields {
+        taskType
+        fields {
           fieldId
           format
+          order
           type
           label
           value {
             ... on NumberValueType {
               number
             }
-            ... on TextNumberType{
+            ... on TextNumberType {
               text
+              id
             }
           }
           info
@@ -205,10 +211,14 @@ export default createRefetchContainer(
               min
               max
             }
-            ... on TextMetaType{
+            ... on  TextMetaType {
               required
               minLen
               maxLen
+              options {
+                text
+                value
+              }
             }
           }
         }
@@ -224,12 +234,11 @@ export default createRefetchContainer(
         }
         taskCreate(type: $type) {
           id
-          title
-          status
-          priority
-          additionalFields {
+          taskType
+          fields {
             fieldId
             format
+            order
             type
             label
             value {
@@ -238,6 +247,7 @@ export default createRefetchContainer(
               }
               ... on TextNumberType{
                 text
+                id # tymczasowo do czasu dorobienia type dla ChoiceValueType
               }
             }
             info
@@ -251,6 +261,10 @@ export default createRefetchContainer(
                 required
                 minLen
                 maxLen
+                options {
+                  text
+                  value
+                }
               }
             }
           }

@@ -3,6 +3,7 @@ const { globalIdField } = require('graphql-relay');
 const { getEmptyTask } = require('../../db/api');
 const TaskType = require('./TaskType');
 const TaskListType = require('./TaskListType');
+const TaskTypeListType = require('./TaskTypeListType');
 const idFetcher = require('../idFetcher');
 
 module.exports = new GraphQLObjectType({
@@ -12,6 +13,10 @@ module.exports = new GraphQLObjectType({
     id: globalIdField('App'),
     taskList: {
       type: TaskListType,
+      resolve: () => true,
+    },
+    taskTypeList: {
+      type: TaskTypeListType,
       resolve: () => true,
     },
     detailsList: {
@@ -26,7 +31,7 @@ module.exports = new GraphQLObjectType({
       args: {
         type: { type: GraphQLString },
       },
-      resolve: async (_, { type }) => type ? await getEmptyTask(type) : null,
+      resolve: async (_, args) => await getEmptyTask(args),
     },
   }),
 });

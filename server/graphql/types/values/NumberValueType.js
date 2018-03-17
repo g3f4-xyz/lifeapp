@@ -5,7 +5,7 @@ module.exports = new GraphQLObjectType({
   fields: () => ({
     number: {
       type: GraphQLFloat,
-      resolve: ({ value: { number } }) => number,
+      resolve: ({ number }) => number,
     },
   }),
 });

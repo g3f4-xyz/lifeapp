@@ -7,17 +7,17 @@ module.exports = new GraphQLObjectType({
     required: {
       description: 'required',
       type: GraphQLBoolean,
-      resolve: ({ meta: { required } }) => required,
+      resolve: ({ required }) => required,
     },
     min: {
       description: 'min',
       type: GraphQLFloat,
-      resolve: ({ meta: { min } }) => min,
+      resolve: ({ min }) => min,
     },
     max: {
       description: 'max',
       type: GraphQLFloat,
-      resolve: ({ meta: { max } }) => max,
+      resolve: ({ max }) => max,
     },
   }),
 });
