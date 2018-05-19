@@ -8,17 +8,40 @@ const mutation = graphql`
     $input: addTaskInput!
   ) {
     addTask(input: $input) {
-      clientMutationId
+      # Aktualnie serwer zwraca null przez co za pewne nie działa jakiś mechanizm relay
+      clientMutationId 
       newTaskEdge {
         node {
           id
-          title
-          priority
-          creationDate
-          finishDate
-          progress
-          status
-          note
+          fields {
+            fieldId
+            format
+            type
+            order
+            label
+            value {
+              ... on NumberValueType {
+                number
+              }
+              ... on TextNumberType{
+                text
+                id
+              }
+            }
+            info
+            meta {
+              ... on NumberMetaType {
+                required
+                min
+                max
+              }
+              ... on TextMetaType{
+                required
+                minLen
+                maxLen
+              }
+            }
+          }
         }
       }
     }
@@ -32,7 +55,7 @@ export default (environment, input, parentID, onCompleted, onError) => {
       parentID,
       type: 'RANGE_ADD',
       connectionInfo: [{
-        key: 'Tasks_tasks',
+        key: 'TaskList_list',
         rangeBehavior: 'prepend',
       }],
       edgeName: 'newTaskEdge',

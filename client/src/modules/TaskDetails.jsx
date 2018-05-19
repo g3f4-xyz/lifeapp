@@ -1,169 +1,154 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { QueryRenderer, graphql } from 'react-relay';
-import environment from '../environment';
+import { createRefetchContainer, graphql } from 'react-relay';
 import CircularProgress from 'material-ui/CircularProgress';
 import Paper from 'material-ui/Paper';
+import Create from 'material-ui/svg-icons/content/create';
 import { Icon, Label, Value } from '../components';
 
 const styles = {
-  leftCol: {
-    float: 'left',
-    width: '50%',
-    textAlign: 'left',
-  },
-  rightCol: {
-    float: 'left',
-    width: '50%',
-    textAlign: 'left',
-  },
-  root: {
-  },
   row: {
+    display: 'flex',
+    justifyContent: 'space-between',
     margin: 10,
   },
 };
 
 class TaskDetails extends React.Component {
   static propTypes = {
+    data: PropTypes.object,
     selectedTaskId: PropTypes.string,
   };
 
   componentWillReceiveProps(nextProps) {
-    console.log(['componentWillReceiveProps'], nextProps)
+    this.props.relay.refetch({ ids: [nextProps.selectedTaskId] });
+  }
+
+  componentDidMount() {
+    this.props.relay.refetch({ ids: [this.props.selectedTaskId] });
   }
 
   render() {
-    const { title, priority, creationDate, finishDate, progress, status, note } = this.props.taskDetails;
+    if (this.props.data && this.props.data.detailsList && this.props.data.detailsList.length > 0) {
+      const [{ taskType, fields }] = this.props.data.detailsList;
+
+      return (
+        <div style={styles.root}>
+          <h1>{taskType}</h1>
+        {fields
+          .map(item => item) // propsy są immutable, sortowanie modyfikuje oryginalną tablicę
+          .sort((a, b) => a.order - b.order)
+          .map(({ fieldId, label, type, meta: { options }, value }) => console.log(['options'], options) || (
+          <div key={fieldId}>
+            <Paper style={styles.row}>
+              <div style={{ padding: 10, width: 200, textAlign: 'left' }}>
+                <Create />
+                <Label style={{ padding: 10 }}>{label}</Label>
+              </div>
+              <div style={{ width: '80%', textAlign: 'right' }}>
+                <div style={{ padding: 20 }}>{value.text || value.number || value.id}</div>
+              </div>
+            </Paper>
+          </div>
+        ))}
+        </div>
+      );
+    }
 
     return (
-      <div style={styles.root}>
-        <h1>{title}</h1>
-        <div style={styles.leftCol}>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'eventNote'} />
-              <Label>Priority</Label>
-            </div>
-            <Value>{priority}</Value>
-          </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-             <Label>Creation Date</Label>
-            </div>
-            <Value>{creationDate}</Value>
-          </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-              <Label>Progress</Label>
-            </div>
-            <Value>{progress}</Value>
-          </Paper>
-        </div>
-        <div style={styles.rightCol}>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-             <Label>Status</Label>
-            </div>
-            <Value>{status}</Value>
-          </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-              <Label>Finish Date</Label>
-            </div>
-            <Value>{finishDate}</Value>
-          </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-              <Label>Note</Label>
-            </div>
-            <Value>{note}</Value>
-          </Paper>
-        </div>
-      </div>
-    );
-  }
-}
-
-/*export default createRefetchContainer(
-  TaskDetails,
-  graphql.experimental`
-    fragment TaskDetails on App
-    @argumentDefinitions(
-      selectedTaskId: {type: "String", defaultValue: null}
-    ) {
-      taskDetails (id: $selectedTaskId) {
-        id
-        title
-        priority
-        creationDate
-        finishDate
-        progress
-        status
-        note
-      }
-    }
-  `,
-  graphql.experimental`
-    query TaskDetailsRefetchQuery($selectedTaskId: String) {
-      app {
-        ...TaskDetails
-      }
-    }
-  `,
-);*/
-
-export default class DataProvider extends React.Component {
-  render() {
-    return (
-      <QueryRenderer
-        environment={environment}
-        query={graphql`
-          query TaskDetailsQuery($selectedTaskId: String) {
-            app {
-              taskDetails (id: $selectedTaskId) {
-                id
-                title
-                priority
-                creationDate
-                finishDate
-                progress
-                status
-                note
-              }
-            }
-          }
-        `}
-        variables={{
-          selectedTaskId: this.props.selectedTaskId,
+      <CircularProgress
+        style={{
+          margin: 'auto',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
         }}
-        render={({error, props}) => {
-          if (error) {
-            return <div>{JSON.stringify(error)}</div>;
-          } else if (props) {
-            return <TaskDetails {...props.app} />;
-          }
-          return (
-            <CircularProgress
-              style={{
-                margin: 'auto',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 0,
-              }}
-              size={180}
-              thickness={15}
-            />
-          );
-        }}
+        size={180}
+        thickness={15}
       />
     );
   }
 }
+
+export default createRefetchContainer(
+  TaskDetails,
+  graphql`
+    fragment TaskDetails on AppType @argumentDefinitions(
+      ids: { type: "[ID]", defaultValue: [] },
+    ) 
+    {
+      detailsList(ids: $ids) {
+        id
+        taskType
+        fields {
+          fieldId
+          format
+          type
+          label
+          value {
+            ... on NumberValueType {
+              number
+            }
+            ... on TextNumberType{
+              text
+              id
+            }
+          }
+          info
+          meta {
+            ... on NumberMetaType {
+              required
+              min
+              max
+            }
+            ... on TextMetaType{
+              required
+              minLen
+              maxLen
+            }
+          }
+        }
+      }
+    }
+  `,
+  graphql`
+    query TaskDetailsRefetchQuery($ids: [ID]) {
+      app {
+        detailsList(ids: $ids) {
+          id
+          taskType
+          fields {
+            fieldId
+            format
+            type
+            label
+            value {
+              ... on NumberValueType {
+                number
+              }
+              ... on TextNumberType{
+                text
+                id
+              }
+            }
+            info
+            meta {
+              ... on NumberMetaType {
+                required
+                min
+                max
+              }
+              ... on TextMetaType{
+                required
+                minLen
+                maxLen
+              }
+            }
+          }
+        }
+      }
+    }
+  `
+);

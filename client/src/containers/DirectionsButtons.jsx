@@ -73,23 +73,22 @@ export default class DirectionsButtons extends React.Component {
   });
 
   render() {
-    return (
-      <div>
+    return [
       <Snackbar
+        key="DirectionsButtons:Snackbar"
         open={this.state.isSnackbarOpen}
         message={`viewPort offset: ${JSON.stringify(this.props.viewPortOffset)}`}
         autoHideDuration={1000}
         onRequestClose={this.handleSnackbarClose}
-      />
-      {Object.keys(DIRECTIONS).map(key => (
+      />,
+      Object.keys(DIRECTIONS).map(key => (
         <DirectionButton
           key={DIRECTIONS[key]}
           display={this.isDirectionAble(DIRECTIONS[key])}
           direction={DIRECTIONS[key]}
           onClick={this.handleDirectionChange}
         />
-      ))}
-      </div>
-    );
+      ))
+    ];
   }
 }

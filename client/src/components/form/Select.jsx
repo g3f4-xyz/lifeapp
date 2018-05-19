@@ -12,6 +12,7 @@ const style = {
 class Select extends React.Component {
   static propTypes = {
     value: PropTypes.string,
+    info: PropTypes.string,
     options: PropTypes.array,
     onChange: PropTypes.func,
   };
@@ -28,6 +29,7 @@ class Select extends React.Component {
         style={{ ...style, ...this.props.style }}
         onChange={this.onChange}
         value={this.props.value}
+        floatingLabelText={this.props.info}
       >
         {this.props.options.map(({ value, text }, key) => (
           <MenuItem

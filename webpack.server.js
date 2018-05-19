@@ -1,30 +1,30 @@
 const path = require('path');
-const webpack = require('webpack');
+// const webpack = require('webpack');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
-  entry: "./server", // string | object | array
+  entry: './server', // string | object | array
   // Here the application starts executing
   // and webpack starts bundling
 
   output: {
     // options related to how webpack emits results
 
-    path: path.resolve(__dirname, "build"), // string
+    path: path.resolve(__dirname, 'build'), // string
     // the target directory for all output files
     // must be an absolute path (use the Node.js path module)
 
-    filename: "server.js", // string
+    filename: 'server.js', // string
     // the filename template for entry chunks
 
-    publicPath: "/assets/", // string
+    publicPath: '/assets/', // string
     // the url to the output directory resolved relative to the HTML page
 
-    library: "Server", // string,
+    library: 'Server', // string,
     // the name of the exported library
 
-    libraryTarget: "umd", // universal module definition
+    libraryTarget: 'umd', // universal module definition
     // the type of the exported library
 
     /* Advanced output configuration (click to show) */
@@ -37,13 +37,13 @@ module.exports = {
       // rules for modules (configure loaders, parser options, etc.)
       {
         test: /\.json$/,
-        loader: 'json-loader'
+        loader: 'json-loader',
       },
 
       {
         test: /\.jsx?$/,
         include: [
-          path.resolve(__dirname, "server")
+          path.resolve(__dirname, 'server'),
         ],
         exclude: [
           // path.resolve(__dirname, "app/demo-files")
@@ -63,13 +63,13 @@ module.exports = {
         // enforce: "post",
         // flags to apply these rules, even if they are overridden (advanced option)
 
-        loader: "babel-loader",
+        loader: 'babel-loader',
         // the loader which should be applied, it'll be resolved relative to the context
         // -loader suffix is no longer optional in webpack2 for clarity reasons
         // see webpack 1 upgrade guide
 
         options: {
-          presets: ["es2015"]
+          presets: ['es2015'],
         },
         // options for the loader
       },
@@ -78,14 +78,14 @@ module.exports = {
         // test: /\.html$/,
         //
         // use: [
-          // apply multiple loaders and options
-          // "htmllint-loader",
-          // {
-          //   loader: "html-loader",
-          //   options: {
-          //     /* ... */
-          //   }
-          // }
+        // apply multiple loaders and options
+        // "htmllint-loader",
+        // {
+        //   loader: "html-loader",
+        //   options: {
+        //     /* ... */
+        //   }
+        // }
         // ]
       },
 
@@ -114,12 +114,12 @@ module.exports = {
     // (does not apply to resolving to loaders)
 
     modules: [
-      "node_modules",
-      path.resolve(__dirname, "server")
+      'node_modules',
+      path.resolve(__dirname, 'server'),
     ],
     // directories where to look for modules
 
-    extensions: [".js", ".json", ".jsx", ".css"],
+    extensions: ['.js', '.json', '.jsx', '.css'],
     // extensions that are used
 
     alias: {
@@ -146,18 +146,18 @@ module.exports = {
   //   maxEntrypointSize: 4000000, // int (in bytes)
   //   assetFilter: function(assetFilename) {
   //     Function predicate that provides asset filenames
-      // return assetFilename.endsWith('.css') || assetFilename.endsWith('.js');
-    // }
+  // return assetFilename.endsWith('.css') || assetFilename.endsWith('.js');
+  // }
   // },
 
   node: {
     console: false,
     fs: 'empty',
     net: 'empty',
-    tls: 'empty'
+    tls: 'empty',
   },
 
-  devtool: "source-map", // enum
+  devtool: 'source-map', // enum
   // enhance debugging by adding meta info for the browser devtools
   // source-map most detailed at the expense of build speed.
 
@@ -166,14 +166,14 @@ module.exports = {
   // the entry and module.rules.loader option
   //   is resolved relative to this directory
 
-  target: "node", // enum
+  target: 'node', // enum
   // the environment in which the bundle should run
   // changes chunk loading behavior and available modules
 
   externals: [nodeExternals()/*"react", /^@angular\//*/],
   // Don't follow/bundle these modules, but request them at runtime from the environment
 
-  stats: "detailed",
+  stats: 'detailed',
   // lets you precisely control what bundle information gets displayed
 
   // devServer: {

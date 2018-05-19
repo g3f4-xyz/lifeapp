@@ -5,7 +5,7 @@ import {
   Store,
 } from 'relay-runtime';
 
-const HOST = process.env.GRAPHQL_HOST || 'http://localhost:30000/graphql';
+const HOST = process.env.REACT_APP_GRAPHQL_HOST || 'http://localhost:30000/graphql';
 
 function fetchQuery(operation, variables) {
   return fetch(HOST, {

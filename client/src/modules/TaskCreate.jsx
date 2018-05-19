@@ -1,47 +1,43 @@
 import React from 'react';
+import { createRefetchContainer, graphql } from 'react-relay';
 import PropTypes from 'prop-types';
+import update from 'immutability-helper';
 import CircularProgress from 'material-ui/CircularProgress';
+import DatePicker from 'material-ui/DatePicker';
 import Paper from 'material-ui/Paper';
 import AddButton from 'material-ui/svg-icons/navigation/check';
-import { Icon, Label, Input, Date, Select, Slider } from '../components';
-import environment from '../environment';
+import { Icon, Label, Input, Select } from '../components';
+import Create from 'material-ui/svg-icons/content/create';
 import addTask from '../mutations/addTask';
 
 const styles = {
-  leftCol: {
-    float: 'left',
-    width: '50%',
-    textAlign: 'left',
-  },
-  rightCol: {
-    float: 'left',
-    width: '50%',
-    textAlign: 'left',
-  },
-  root: {
-  },
   row: {
+    display: 'flex',
+    justifyContent: 'space-between',
     margin: 10,
   },
 };
 
 class TaskCreate extends React.Component {
   static propTypes = {
-    onAdd: PropTypes.func,
+    onAdded: PropTypes.func,
+    type: PropTypes.string,
   };
 
   state = {
     pending: false,
-    task: {
-      title: '',
-      priority: null,
-      creationDate: null,
-      progress: 0,
-      finishDate: null,
-      status: null,
-      note: '',
-    },
+    task: null,
   };
+
+  componentWillReceiveProps(nextProps, nextState) {
+    this.setState({
+      task: nextProps.data.taskCreate,
+    });
+  }
+
+  componentDidMount() {
+    this.props.relay.refetch({ type: this.props.type });
+  }
 
   updateTask(update) {
     this.setState({
@@ -53,15 +49,45 @@ class TaskCreate extends React.Component {
   }
 
   onAdd = () => {
+    const { data, onAdded } = this.props;
+
     this.setState({ pending: true });
-    addTask(environment, this.state.task, this.props.parentID, (response, errors) => {
-      this.props.onAdded(response, errors);
-      this.setState({ pending: false });
-    })
+    addTask(this.props.relay.environment, this.state.task, data.taskList.id, onAdded)
   };
 
   render() {
-    const { title, priority, creationDate, progress, finishDate, status, note } = this.state.task;
+    if (!this.state.task) {
+      return (
+        <CircularProgress
+          style={{
+            margin: 'auto',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+          }}
+          size={180}
+          thickness={15}
+        />
+      );
+    }
+    const { taskType, fields } = this.state.task;
+    const updateFieldValue = (fieldId, value) => {
+      const fieldIndex = this.state.task.fields.findIndex(field => field.fieldId === fieldId);
+
+      this.setState(update(this.state, {
+        task: {
+          fields: {
+            [fieldIndex]: {
+              value: {
+                $set: value
+              }
+            }
+          }
+        }
+      }));
+    };
 
     return (
       <div style={styles.root}>
@@ -90,117 +116,160 @@ class TaskCreate extends React.Component {
             onClick={this.onAdd}
           />
         )}
-
-        <Input
-          multiLine
-          hintText="Enter title of new task"
-          value={title}
-          style={{
-            fontSize: '32px',
-          }}
-          onChange={(e, title) => {
-            this.updateTask({ title });
-          }}
-        />
-        <div style={styles.leftCol}>
+      {fields
+        .map(item => item) // propsy są immutable, sortowanie modyfikuje oryginalną tablicę
+        .sort((a, b) => a.order - b.order)
+        .map(({ fieldId, label, type, meta: { options }, value, info }) => console.log(['options'], options) || (
+        <div key={fieldId}>
           <Paper style={styles.row}>
-          <div style={{ textAlign: 'center' }}>
-            <Icon type={'eventNote'} />
-            <Label>Priority</Label>
-          </div>
-          <Select
-            value={priority}
-            hintText="Set task priority"
-            options={[{
-              value: 'TODO',
-              text: 'TODO',
-            }, {
-              value: 'IN_PROGRESS',
-              text: 'In progress',
-            }]}
-            onChange={(e, priority) => {
-              this.updateTask({ priority });
-            }}
-          />
-          </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-             <Label>Creation Date</Label>
+            <div style={{ padding: 10, width: 200, textAlign: 'left' }}>
+              <Create />
+              <Label style={{ padding: 10 }}>{label}</Label>
             </div>
-            <Date
-              value={creationDate}
-              hintText="Change creation date"
-              onChange={(e, creationDate) => {
-                this.updateTask({ creationDate });
-              }}
-            />
-          </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-              <Label>Progress</Label>
-            </div>
-            <Slider
-              value={progress}
-              onChange={(e, progress) => {
-                this.updateTask({ progress });
-              }}
-            />
-          </Paper>
-        </div>
-        <div style={styles.rightCol}>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-             <Label>Status</Label>
-            </div>
-            <Select
-              value={status}
-              hintText="Set task priority"
-              options={[{
-                value: 'NORMAL',
-                text: 'Normal',
-              }, {
-                value: 'URGENT',
-                text: 'Urgent',
-              }]}
-              onChange={(e, status) => {
-                this.updateTask({ status });
-              }}
-            />
-          </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-              <Label>Finish Date</Label>
-            </div>
-            <Date
-              value={finishDate}
-              hintText="Set finish date"
-              onChange={(e, finishDate) => {
-                this.updateTask({ finishDate });
-              }}
-            />
-          </Paper>
-          <Paper style={styles.row}>
-            <div style={{ textAlign: 'center' }}>
-              <Icon type={'diskFull'} />
-              <Label>Note</Label>
-            </div>
+            <div style={{ paddingRight: 20, width: '80%' }}>
+          {({
+            CHOICE: (
+              <Select
+                style={{ width: '80%' }}
+                value={value.id}
+                info={info}
+                options={options || []}
+                onChange={(e, id) => {
+                  console.log(['onChange.value'], { id });
+                  updateFieldValue(fieldId, { id });
+                }}
+              />
+            ),
+            DATE: (
+              <DatePicker
+                textFieldStyle={{ width: '80%' }}
+                autoOk
+                value={value.id}
+                hintText={info}
+                options={options || []}
+                onChange={(e, id) => {
+                  console.log(['onChange.value'], { id });
+                  updateFieldValue(fieldId, { id });
+                }}
+              />
+            ),
+          })[type] || (
             <Input
+              style={{ width: '80%' }}
               multiLine
-              value={note}
-              hintText="Add task note"
-              onChange={(e, note) => {
-                this.updateTask({ note });
+              hintText={info}
+              value={value.text || value.number}
+              onChange={(e, value) => {
+                console.log(['onChange.value'], value);
+                updateFieldValue(fieldId, { text: value });
               }}
             />
+          )}
+            </div>
           </Paper>
         </div>
+      ))}
       </div>
     );
   }
 }
 
-export default TaskCreate;
+export default createRefetchContainer(
+  TaskCreate,
+  graphql`
+    fragment TaskCreate on AppType 
+    @argumentDefinitions(
+      type: { type: "String", defaultValue: "" },
+    ) 
+    {
+      id
+      taskList {
+        id
+      }
+      taskCreate(type: $type) {
+        id
+        taskType
+        fields {
+          fieldId
+          format
+          order
+          type
+          label
+          value {
+            ... on NumberValueType {
+              number
+            }
+            ... on TextNumberType {
+              text
+              id
+            }
+          }
+          info
+          meta {
+            ... on NumberMetaType {
+              required
+              min
+              max
+            }
+            ... on  TextMetaType {
+              required
+              minLen
+              maxLen
+              options {
+                text
+                value
+              }
+            }
+          }
+        }
+      }
+    }
+  `,
+  graphql`
+    query TaskCreateRefetchQuery($type: String) {
+      app {
+        id
+        taskList {
+          id
+        }
+        taskCreate(type: $type) {
+          id
+          taskType
+          fields {
+            fieldId
+            format
+            order
+            type
+            label
+            value {
+              ... on NumberValueType {
+                number
+              }
+              ... on TextNumberType{
+                text
+                id # tymczasowo do czasu dorobienia type dla ChoiceValueType
+              }
+            }
+            info
+            meta {
+              ... on NumberMetaType {
+                required
+                min
+                max
+              }
+              ... on TextMetaType{
+                required
+                minLen
+                maxLen
+                options {
+                  text
+                  value
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `
+);

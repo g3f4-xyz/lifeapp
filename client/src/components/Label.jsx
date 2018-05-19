@@ -8,11 +8,12 @@ const style = {
 export default class Label extends React.Component {
   static propTypes = {
     children: PropTypes.node,
+    style: PropTypes.object,
   };
 
   render() {
     return (
-      <div style={style}>{this.props.children}</div>
+      <div style={{ ...style, ...this.props.style }}>{this.props.children}</div>
     );
   }
 }

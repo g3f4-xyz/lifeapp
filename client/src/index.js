@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './containers/App';
-import registerServiceWorker from './registerServiceWorker';
+import App from './App';
+// import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(<App />, document.getElementById('root'));
-registerServiceWorker();
+// #TODO ogarnąć jak się z tego korzysta i dopiero odkomentować
+// #TODO pamiętać o błędzie jaki to powodowało z routingiem
+// registerServiceWorker();

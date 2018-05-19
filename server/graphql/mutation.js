@@ -1,9 +1,11 @@
-import { GraphQLObjectType } from 'graphql';
-import addTask from './mutations/addTask';
+const { GraphQLObjectType } = require('graphql');
+const addTask = require('./mutations/addTask');
+const addTaskType = require('./mutations/addTaskType');
 
-export default new GraphQLObjectType({
+module.exports = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     addTask,
+    addTaskType,
   }),
 });
