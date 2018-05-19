@@ -31,27 +31,27 @@
     "node": "8.7.0"
   },
   "devDependencies": {
-    "eslint": "^4.11.0",
+    "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-react": "^7.5.1",
-    "nodemon": "^1.12.1",
+    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.8.2",
+    "nodemon": "^1.17.4",
     "precommit-hook": "^3.0.0"
   },
   "dependencies": {
     "cors": "^2.8.4",
-    "express": "^4.16.2",
-    "express-graphql": "^0.6.11",
+    "express": "^4.16.3",
+    "express-graphql": "^0.6.12",
     "express-session": "^1.15.6",
     "faker": "^4.1.0",
-    "graphql": "^0.13.1",
-    "graphql-relay": "^0.5.3",
-    "immutability-helper": "^2.5.0",
-    "mongoose": "^5.0.10",
+    "graphql": "^0.13.2",
+    "graphql-relay": "^0.5.5",
+    "immutability-helper": "^2.7.0",
+    "mongoose": "^5.1.1",
     "passport": "^0.4.0",
     "passport-google-oauth20": "^1.0.0",
-    "serve-static": "^1.13.1"
+    "serve-static": "^1.13.2"
   },
   "pre-commit": [
     "lint",
