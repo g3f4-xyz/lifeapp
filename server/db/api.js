@@ -1,6 +1,7 @@
 const UserModel = require('../db/models/UserModel');
 const TaskModel = require('../db/models/TaskModel');
 const TaskTypeModel = require('../db/models/TaskTypeModel');
+const { fromGlobalId } = require('graphql-relay');
 
 const addUser = async ({ id, displayName }) => {
   console.log(['addUser'], { id, displayName });
@@ -11,10 +12,27 @@ const addUser = async ({ id, displayName }) => {
 const getUser = async (id) => await UserModel.findOne({ id });
 const getUsers = async () => await UserModel.find();
 const addTask = async task => {
-  console.log(['addTask'], task);
+  console.log(['api:addTask'], task);
   const newTask = new TaskModel(task);
 
   return await newTask.save();
+};
+const editTask = async task => {
+  try {
+    const { id } = await fromGlobalId(task.id);
+    const { fields } = task;
+    console.log(['api:editTask:fields'], fields);
+    const updatedTask = await TaskModel.findByIdAndUpdate(id, { fields });
+    console.log(['api:editTask:updatedTask:fields'], updatedTask.fields);
+
+    return task;
+    // return updatedTask;
+  }
+
+  catch (e) {
+    console.error(['api:editTask:e'], e);
+    return e;
+  }
 };
 const addTaskType = async taskType => {
   const newTaskType = new TaskTypeModel(taskType);
@@ -59,6 +77,7 @@ module.exports = {
   addUser,
   addTask,
   addTaskType,
+  editTask,
   getUser,
   getUsers,
   getTask,

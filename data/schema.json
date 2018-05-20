@@ -1272,6 +1272,33 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
+            },
+            {
+              "name": "editTask",
+              "description": null,
+              "args": [
+                {
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "editTaskInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "editTaskPayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "inputFields": null,
@@ -1313,7 +1340,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "addTaskFieldType",
+                  "name": "editTaskInputType",
                   "ofType": null
                 }
               },
@@ -1336,8 +1363,8 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "addTaskFieldType",
-          "description": "add task input type",
+          "name": "editTaskInputType",
+          "description": "edit task input type",
           "fields": null,
           "inputFields": [
             {
@@ -1570,18 +1597,6 @@
               "deprecationReason": null
             },
             {
-              "name": "taskList",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "TaskListType",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "clientMutationId",
               "description": null,
               "args": [],
@@ -1673,7 +1688,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "addTaskTypeFieldType",
+                  "name": "taskTypeFieldsConfigInputType",
                   "ofType": null
                 }
               },
@@ -1696,8 +1711,8 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "addTaskTypeFieldType",
-          "description": "add task`s type input type",
+          "name": "taskTypeFieldsConfigInputType",
+          "description": "add task type fields config input type",
           "fields": null,
           "inputFields": [
             {
@@ -1765,7 +1780,7 @@
               "description": null,
               "type": {
                 "kind": "INPUT_OBJECT",
-                "name": "addTaskTypeMetaFieldType",
+                "name": "fieldsConfigMetaInputType",
                 "ofType": null
               },
               "defaultValue": null
@@ -1787,7 +1802,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "addTaskTypeMetaFieldType",
+          "name": "fieldsConfigMetaInputType",
           "description": "add task`s type meta input type",
           "fields": null,
           "inputFields": [
@@ -1911,6 +1926,96 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "TaskTypeListType",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "editTaskInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "taskType",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "fields",
+              "description": null,
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "INPUT_OBJECT",
+                  "name": "editTaskInputType",
+                  "ofType": null
+                }
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "editTaskPayload",
+          "description": null,
+          "fields": [
+            {
+              "name": "newTaskEdge",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "TaskTypeEdge",
                 "ofType": null
               },
               "isDeprecated": false,

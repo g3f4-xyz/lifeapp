@@ -1,38 +1,13 @@
-"""add task input type"""
-input addTaskFieldType {
-  fieldId: String
-  format: String
-  order: Int
-  type: String
-  label: String
-  value: FieldValueInputType
-  info: String
-  meta: FieldMetaInputType
-}
-
 input addTaskInput {
   id: ID
   taskType: String
-  fields: [addTaskFieldType]
+  fields: [editTaskInputType]
   clientMutationId: String
 }
 
 type addTaskPayload {
   newTaskEdge: TaskTypeEdge
-  taskList: TaskListType
   clientMutationId: String
-}
-
-"""add task`s type input type"""
-input addTaskTypeFieldType {
-  fieldId: String
-  format: String
-  order: Int
-  type: String
-  label: String
-  info: String
-  meta: addTaskTypeMetaFieldType
-  value: addTaskTypeValueFieldType
 }
 
 input addTaskTypeInput {
@@ -42,17 +17,8 @@ input addTaskTypeInput {
   order: Int
   isCustom: Boolean
   parentId: String
-  fieldsConfig: [addTaskTypeFieldType]
+  fieldsConfig: [taskTypeFieldsConfigInputType]
   clientMutationId: String
-}
-
-"""add task`s type meta input type"""
-input addTaskTypeMetaFieldType {
-  required: Boolean
-  minLen: Int
-  maxLen: Int
-  min: Float
-  max: Float
 }
 
 type addTaskTypePayload {
@@ -93,6 +59,30 @@ type ChoiceOptionsType {
   value: String
 }
 
+input editTaskInput {
+  id: ID
+  taskType: String
+  fields: [editTaskInputType]
+  clientMutationId: String
+}
+
+"""edit task input type"""
+input editTaskInputType {
+  fieldId: String
+  format: String
+  order: Int
+  type: String
+  label: String
+  value: FieldValueInputType
+  info: String
+  meta: FieldMetaInputType
+}
+
+type editTaskPayload {
+  newTaskEdge: TaskTypeEdge
+  clientMutationId: String
+}
+
 """FieldMetaInputType"""
 input FieldMetaInputType {
   required: Boolean
@@ -101,6 +91,15 @@ input FieldMetaInputType {
 
   """options"""
   options: [ChoiceOptionsInputType]
+}
+
+"""add task`s type meta input type"""
+input fieldsConfigMetaInputType {
+  required: Boolean
+  minLen: Int
+  maxLen: Int
+  min: Float
+  max: Float
 }
 
 """Field Type"""
@@ -143,6 +142,7 @@ union MetasUnion = NumberMetaType | TextMetaType
 type Mutation {
   addTask(input: addTaskInput!): addTaskPayload
   addTaskType(input: addTaskTypeInput!): addTaskTypePayload
+  editTask(input: editTaskInput!): editTaskPayload
 }
 
 """An object with an ID"""
@@ -226,6 +226,18 @@ type TaskTypeEdge {
 
   """A cursor for use in pagination"""
   cursor: String!
+}
+
+"""add task type fields config input type"""
+input taskTypeFieldsConfigInputType {
+  fieldId: String
+  format: String
+  order: Int
+  type: String
+  label: String
+  info: String
+  meta: fieldsConfigMetaInputType
+  value: addTaskTypeValueFieldType
 }
 
 """TaskTypeListType module description"""

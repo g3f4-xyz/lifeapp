@@ -12,6 +12,8 @@ import IconButton from 'material-ui/IconButton';
 import ActionHome from 'material-ui/svg-icons/action/home';
 import Alarm from 'material-ui/svg-icons/action/alarm';
 import { red500, greenA200 } from 'material-ui/styles/colors';
+import environment from "../environment";
+import editTaskMutation from "../mutations/editTask";
 
 const PAGE_SIZE = 5;
 const styles = {
@@ -50,10 +52,11 @@ class Task extends React.Component {
     expanded: PropTypes.boolean,
     onToggle: PropTypes.func,
     onDetails: PropTypes.func,
+    onEdit: PropTypes.func,
   };
 
   render() {
-    const { expanded, data, onToggle, onDetails } = this.props;
+    const { expanded, data, onToggle, onDetails, onEdit } = this.props;
     const { id, taskType, fields } = data;
     const { title, priority, status, additionalFields } = fields.reduce((result, field) => {
       if (field.fieldId === 'TITLE') {
@@ -128,8 +131,8 @@ class Task extends React.Component {
           </CardHeader>
           <CardText expandable={true} style={styles.taskWrapper}>
             <div style={{ width: '100%' }}>
-              <FlatButton label="Show" onClick={() => onDetails(id)}/>
-              <FlatButton label="Edit" />
+              <FlatButton label="Show" onClick={() => onDetails(id)} />
+              <FlatButton label="Edit" onClick={() => onEdit(data)} />
               <FlatButton label="Delete" />
             </div>
           {additionalFields.map((field, key) => (
@@ -161,13 +164,14 @@ class List extends React.Component {
   };
 
   render() {
-    const { list, onDetails } = this.props;
+    const { list, onDetails, onEdit } = this.props;
 
     return list.map(data =>
       <Task
         key={data.id}
         expanded={this.state.expanded[data.id]}
         data={data}
+        onEdit={onEdit}
         onDetails={onDetails}
         onToggle={this.onToggle}
       />
@@ -180,6 +184,7 @@ class TaskList extends React.Component {
     data: PropTypes.object,
     onMore: PropTypes.func,
     onDetails: PropTypes.func,
+    onEdit: PropTypes.func,
   };
 
   onMore = () => {
@@ -195,7 +200,7 @@ class TaskList extends React.Component {
   };
 
   render() {
-    const { data, onAdd, onDetails } = this.props;
+    const { data, onAdd, onDetails, onEdit } = this.props;
     const { list: { edges, pageInfo } }  = data || { list: { edges: [], pageInfo: {} } };
 
     return [
@@ -203,6 +208,7 @@ class TaskList extends React.Component {
         key="TaskList:List"
         list={edges.map(({ node }) => node)}
         onDetails={onDetails}
+        onEdit={onEdit}
       />,
       <FlatButton
         key="Home:FlatButton"

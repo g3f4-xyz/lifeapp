@@ -15,8 +15,8 @@ module.exports = mutationWithClientMutationId({
     parentId: { type: GraphQLString },
     fieldsConfig: {
       type: new GraphQLList(new GraphQLInputObjectType({
-        name: 'addTaskTypeFieldType',
-        description: 'add task`s type input type',
+        name: 'taskTypeFieldsConfigInputType',
+        description: 'add task type fields config input type',
         fields: () => ({
           fieldId: { type: GraphQLString },
           format: { type: GraphQLString },
@@ -25,7 +25,7 @@ module.exports = mutationWithClientMutationId({
           label: { type: GraphQLString },
           info: { type: GraphQLString },
           meta: { type: new GraphQLInputObjectType({
-            name: 'addTaskTypeMetaFieldType',
+            name: 'fieldsConfigMetaInputType',
             description: 'add task`s type meta input type',
             fields: () => ({
               required: { type: GraphQLBoolean },
