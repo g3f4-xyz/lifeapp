@@ -16,7 +16,8 @@ router.get('/auth/google', passport.authenticate('google', {
   scope: [
     'https://www.googleapis.com/auth/plus.login',
   ],
-  name: 'liferouter-local',
+  prompt : 'select_account',
+  name: 'lifeapp-local',
 }));
 router.get('/auth/google/logged', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/auth' }));
 router.get('/auth', (req, res) => {
