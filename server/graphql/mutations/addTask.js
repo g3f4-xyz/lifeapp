@@ -1,6 +1,6 @@
 const { GraphQLList, GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLID, GraphQLInputObjectType } = require('graphql');
 const { mutationWithClientMutationId, cursorForObjectInConnection } = require('graphql-relay');
-const { TaskListType } = require('../types');
+const { TaskListType } = require('../types'); // dlaczego wywalenie tej zależności psuje aplikację
 const { TaskTypeEdge } = require('../connections');
 const { addTask, getTaskList } = require('../../db/api');
 
@@ -88,19 +88,17 @@ module.exports = mutationWithClientMutationId({
   outputFields: {
     newTaskEdge: {
       type: TaskTypeEdge,
-      resolve: async node => {
-        const tasks = await getTaskList();
+      resolve: async task => {
+        const tasks = await getTaskList({ ownerId: task.ownerId });
 
         return {
-          node,
-          cursor: cursorForObjectInConnection(tasks, node),
+          node: task,
+          cursor: cursorForObjectInConnection(tasks, task),
         };
       },
     },
-    taskList: {
-      type: TaskListType,
-      resolve: () => true,
-    },
   },
-  mutateAndGetPayload: async task => await addTask(task),
+  mutateAndGetPayload: async (task, { user }) => {
+    return await addTask({ ...task, ownerId: user.id });
+  },
 });

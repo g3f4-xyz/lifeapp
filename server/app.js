@@ -35,13 +35,12 @@ app.set('port', (process.env.PORT || PORT));
 // set GraphQL
 app.use(GRAPHQL_ROUTE, (req, res, next) => {
   console.log(['GRAPHQL:req.isAuthenticated()'], req.isAuthenticated());
-  console.log(['GRAPHQL:req.cookies'], req.cookies);
+  console.log(['GRAPHQL:req.session.id'], req.session && req.session.id);
   console.log(['GRAPHQL:req.session'], req.session);
   console.log(['GRAPHQL:req.user'], req.user);
-  console.log(['GRAPHQL:req.session.id'], req.session && req.session.id);
   next();
-}, cors(), graphQLHTTP(request => ({
-  schema, pretty: true, graphiql: true, rootValue: { session: request.session },
+}, cors(), graphQLHTTP(req => ({
+  schema, pretty: true, graphiql: true, rootValue: { user: req.user },
 })));
 
 // start server

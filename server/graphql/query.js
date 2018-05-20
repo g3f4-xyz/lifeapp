@@ -8,7 +8,7 @@ module.exports = new GraphQLObjectType({
     app: {
       description: 'Application entry point',
       type: AppType,
-      resolve: () => true,
+      resolve: ({ user }) => user,
     },
     node: nodeField, // #TODO nie działa mimo prawidłowego rozwiązanie globalnego id obiektu oraz pobrania prawidłowo obiektu.
   }),

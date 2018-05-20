@@ -15,7 +15,7 @@ import { red500, greenA200 } from 'material-ui/styles/colors';
 
 const PAGE_SIZE = 5;
 const styles = {
-  taskWrapper: { 
+  taskWrapper: {
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'center'
@@ -29,7 +29,7 @@ class Field extends React.Component {
 
   render() {
     const { value, fieldId, format, order, type, label, info } = this.props.data;
-    
+
     return (
       <Paper zDepth={1} style={{ width: 300, padding: 10, margin: 10 }}>
         <div style={{
@@ -96,7 +96,7 @@ class Task extends React.Component {
             showExpandableButton={true}
           >
             <IconButton
-              style={{ 
+              style={{
                 margin: 'auto',
                 position: 'absolute',
                 top: 0,
@@ -106,12 +106,12 @@ class Task extends React.Component {
               tooltip={`${priority && priority.label}: ${priority && priority.value.id}`}
               touch={true}
             >
-              <Alarm 
+              <Alarm
                 color={red500}
               />
             </IconButton>
-            <IconButton 
-              style={{ 
+            <IconButton
+              style={{
                 margin: 'auto',
                 position: 'absolute',
                 top: 0,
@@ -121,7 +121,7 @@ class Task extends React.Component {
               tooltip={`${status && status.label}: ${status && status.value.id}`}
               touch={true}
             >
-              <ActionHome 
+              <ActionHome
                 color={greenA200}
               />
             </IconButton>
@@ -163,7 +163,7 @@ class List extends React.Component {
   render() {
     const { list, onDetails } = this.props;
 
-    return list.map(data => 
+    return list.map(data =>
       <Task
         key={data.id}
         expanded={this.state.expanded[data.id]}
@@ -195,7 +195,8 @@ class TaskList extends React.Component {
   };
 
   render() {
-    const { data: { list: { edges, pageInfo: { hasNextPage } } }, onAdd, onDetails } = this.props;
+    const { data, onAdd, onDetails } = this.props;
+    const { list: { edges, pageInfo } }  = data || { list: { edges: [], pageInfo: {} } };
 
     return [
       <List
@@ -216,7 +217,7 @@ class TaskList extends React.Component {
         }}
         onClick={onAdd}
       />,
-      hasNextPage && (this.props.relay.hasMore() && !this.props.relay.isLoading() ? (
+      pageInfo.hasNextPage && (this.props.relay.hasMore() && !this.props.relay.isLoading() ? (
         <FlatButton
           key="TaskList:FlatButton"
           icon={<More />}

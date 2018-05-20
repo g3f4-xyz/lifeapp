@@ -13,7 +13,7 @@ module.exports = new GraphQLObjectType({
     id: globalIdField('App'),
     taskList: {
       type: TaskListType,
-      resolve: () => true,
+      resolve: ({ id }) => ({ id }),
     },
     taskTypeList: {
       type: TaskTypeListType,

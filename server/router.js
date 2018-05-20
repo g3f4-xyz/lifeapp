@@ -21,7 +21,7 @@ router.get('/auth/google', passport.authenticate('google', {
 }));
 router.get('/auth/google/logged', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/auth' }));
 router.get('/auth', (req, res) => {
-  res.sendFile(process.cwd() + PUBLIC_PATH + '/login.html');
+  res.sendFile(process.cwd() + '/server/login.html');
 });
 router.get('/logout', (req, res) => {
   req.logout();

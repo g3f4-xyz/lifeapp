@@ -4,8 +4,8 @@
   "description": "Level up with LifeApp",
   "main": "lifeapp",
   "scripts": {
-    "client:build": "rm -rf build && mkdir build && cd client && npm run relay && npm run build && cp -r build/* ../build && cd -",
-    "client:build:heroku": "rm -rf build && mkdir build && cd client && node setup && npm run relay && npm run build:heroku && cp -r build/* ../build && cd -",
+    "client:build": "rm -rf build && mkdir build && cd client && npm run relay && npm run build && mv build/index.html build/app.html && cp -r build/* ../build && cd -",
+    "client:build:heroku": "rm -rf build && mkdir build && cd client && node setup && npm run relay && npm run build:heroku && mv build/index.html build/app.html && cp -r build/* ../build && cd -",
     "dev": "NODE_ENV=development nodemon server",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",

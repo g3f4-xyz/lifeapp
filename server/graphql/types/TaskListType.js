@@ -13,8 +13,8 @@ module.exports = new GraphQLObjectType({
       type: TaskTypeConnection,
       description: 'Task list',
       args: connectionArgs,
-      resolve: async (_, args) => {
-        const list = await getTaskList();
+      resolve: async ({ id }, args) => {
+        const list = await getTaskList({ ownerId: id });
 
         return connectionFromArray(list, args);
       },

@@ -2,15 +2,16 @@ const UserModel = require('../db/models/UserModel');
 const TaskModel = require('../db/models/TaskModel');
 const TaskTypeModel = require('../db/models/TaskTypeModel');
 
-const addUser = async ({ id, displayName, tasks = [] }) => {
+const addUser = async ({ id, displayName }) => {
   console.log(['addUser'], { id, displayName });
-  const newUser = new UserModel({ id, displayName, tasks });
+  const newUser = new UserModel({ id, displayName });
 
   return await newUser.save();
 };
 const getUser = async (id) => await UserModel.findOne({ id });
 const getUsers = async () => await UserModel.find();
 const addTask = async task => {
+  console.log(['addTask'], task);
   const newTask = new TaskModel(task);
 
   return await newTask.save();
@@ -26,7 +27,7 @@ const getTaskType = async (id) => {
 
   return model;
 };
-const getTaskList = async () => await TaskModel.find().sort({ _id : -1 });
+const getTaskList = async ({ ownerId }) => await TaskModel.find({ ownerId }).sort({ _id : -1 });
 const getTaskTypeList = async () => await TaskTypeModel.find().sort({ _id : -1 });
 const getEmptyTask = async ({ type }) => {
   if (!type) {

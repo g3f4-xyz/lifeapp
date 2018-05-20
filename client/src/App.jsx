@@ -128,7 +128,7 @@ class App extends Component {
 
   handlers = {
     [MODULES_IDS.TASK_LIST]: (props) => ({
-      data: props.app.taskList,
+      data: props.app && props.app.taskList,
       onAdd: () => {
         this.onModuleChange({
           column: 0,
@@ -138,7 +138,7 @@ class App extends Component {
       onDetails: this.onDetails,
     }),
     [MODULES_IDS.TASK_TYPE_LIST]: (props) => ({
-      data: props.app.taskTypeList,
+      data: props.app && props.app.taskTypeList,
       onAdd: () => {
         console.log(['onAdd']);
       },
