@@ -4,10 +4,10 @@ const DB_HOST = process.env.DB === 'remote' ? 'mongodb://mo1563_lifeapp:Gitara15
 const GRAPHQL_ROUTE = '/graphql';
 const PUBLIC_PATH = '/build';
 const SESSION = {
-  secret: 'keyboard cat',
+  secret: '#PNW&(RX#MIP&#7i',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true },
+  // cookie: { secure: true },
 };
 
 module.exports = {

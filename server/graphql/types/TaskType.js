@@ -17,7 +17,7 @@ module.exports = new GraphQLObjectType({
       args: {
         filterByIds: { type: new GraphQLList(GraphQLString) },
       },
-      resolve: ({ fields }, args) => console.log(['args'], args) ||
+      resolve: ({ fields }, args) =>
         args && args.filterByIds ? fields.filter(({ fieldId }) => args.filterByIds.includes(fieldId)) : fields,
     },
   }),

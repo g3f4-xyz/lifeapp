@@ -9,6 +9,7 @@ const HOST = process.env.REACT_APP_GRAPHQL_HOST || 'http://localhost:30000/graph
 
 function fetchQuery(operation, variables) {
   return fetch(HOST, {
+    credentials: 'same-origin',
     method: 'POST',
     headers: {
       'Accept': 'application/json',

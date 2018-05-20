@@ -1,6 +1,6 @@
 {
   "name": "lifeapp",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Level up with LifeApp",
   "main": "lifeapp",
   "scripts": {
@@ -49,6 +49,7 @@
     "graphql-relay": "^0.5.5",
     "immutability-helper": "^2.7.0",
     "mongoose": "^5.1.1",
+    "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-google-oauth20": "^1.0.0",
     "serve-static": "^1.13.2"

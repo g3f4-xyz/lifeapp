@@ -1,6 +1,15 @@
+const UserModel = require('../db/models/UserModel');
 const TaskModel = require('../db/models/TaskModel');
 const TaskTypeModel = require('../db/models/TaskTypeModel');
 
+const addUser = async ({ id, displayName, tasks = [] }) => {
+  console.log(['addUser'], { id, displayName });
+  const newUser = new UserModel({ id, displayName, tasks });
+
+  return await newUser.save();
+};
+const getUser = async (id) => await UserModel.findOne({ id });
+const getUsers = async () => await UserModel.find();
 const addTask = async task => {
   const newTask = new TaskModel(task);
 
@@ -46,8 +55,11 @@ const getEmptyTask = async ({ type }) => {
 };
 
 module.exports = {
+  addUser,
   addTask,
   addTaskType,
+  getUser,
+  getUsers,
   getTask,
   getTaskType,
   getTaskList,

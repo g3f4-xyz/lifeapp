@@ -16,8 +16,6 @@ module.exports = new GraphQLObjectType({
       resolve: async (_, args) => {
         const list = await getTaskTypeList();
 
-        console.log(['getTaskTypeList'], list);
-
         return connectionFromArray(list, args);
       },
     },
