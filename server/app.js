@@ -7,7 +7,7 @@ const session = require('express-session');
 
 const router = require('./router');
 const schema = require('./graphql/schema');
-const { GRAPHQL_ROUTE, HOST, PORT, PUBLIC_PATH, SESSION } = require('./config');
+const { DEMO_USER, GRAPHQL_ROUTE, HOST, PORT, PUBLIC_PATH, SESSION } = require('./config');
 
 // create server
 const app = express();
@@ -40,7 +40,7 @@ app.use(GRAPHQL_ROUTE, (req, res, next) => {
   console.log(['GRAPHQL:req.user'], req.user);
   next();
 }, cors(), graphQLHTTP(req => ({
-  schema, pretty: true, graphiql: true, rootValue: { user: req.user },
+  schema, pretty: true, graphiql: true, rootValue: { user: req.user || DEMO_USER },
 })));
 
 // start server

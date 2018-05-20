@@ -22,6 +22,9 @@ router.get('/auth/google/logged', passport.authenticate('google', { successRedir
 router.get('/auth', (req, res) => {
   res.sendFile(process.cwd() + '/server/login.html');
 });
+router.get('/demo', (req, res) => {
+  res.sendFile(process.cwd() + PUBLIC_PATH + '/app.html');
+});
 router.get('/logout', (req, res) => {
   req.logout();
   res.sendFile(process.cwd() + '/server/logout.html');

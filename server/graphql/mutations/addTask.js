@@ -2,6 +2,7 @@ const { GraphQLList, GraphQLString, GraphQLInt, GraphQLBoolean, GraphQLID, Graph
 const { mutationWithClientMutationId, cursorForObjectInConnection } = require('graphql-relay');
 const { TaskListType } = require('../types'); // dlaczego wywalenie tej zależności psuje aplikację
 const { TaskTypeEdge } = require('../connections');
+const { DEMO_USER } = require('../../config');
 const { addTask, getTaskList } = require('../../db/api');
 
 module.exports = mutationWithClientMutationId({
@@ -98,7 +99,7 @@ module.exports = mutationWithClientMutationId({
       },
     },
   },
-  mutateAndGetPayload: async (task, { user }) => {
+  mutateAndGetPayload: async (task, { user = DEMO_USER }) => {
     return await addTask({ ...task, ownerId: user.id });
   },
 });

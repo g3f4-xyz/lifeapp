@@ -17,6 +17,7 @@ dbHook.tasks.insert([
   {
     id: "123",
     taskType: "TODO",
+    ownerId: "1234567890",
     fields: [
       {
         fieldId: "TITLE",
@@ -80,7 +81,7 @@ dbHook.tasks.insert([
         value: {
           id: "IN_PROGRESS",
         },
-      }, 
+      },
       {
         fieldId: "DESCRIPTION",
         format: "TEXT",
@@ -102,6 +103,7 @@ dbHook.tasks.insert([
   {
     id: "1234",
     taskType: "TODO",
+    ownerId: "1234567890",
     fields: [
       {
         fieldId: "TITLE",
@@ -165,7 +167,7 @@ dbHook.tasks.insert([
         value: {
           id: "DONE",
         },
-      }, 
+      },
       {
         fieldId: "DESCRIPTION",
         format: "TEXT",
