@@ -258,6 +258,7 @@ class App extends Component {
                       anchorOrigin={{horizontal: 'right', vertical: 'top'}}
                       targetOrigin={{horizontal: 'right', vertical: 'top'}}
                     >
+                      <MenuItem primaryText="Logout" onClick={(() => window.location.replace('logout'))} />
                       <MenuItem disabled={this.state.showGrid || this.state.visited.length === 1} primaryText="Show grid" onClick={(() => this.setState({ showGrid: true }))} />
                     </IconMenu>
                   </div>

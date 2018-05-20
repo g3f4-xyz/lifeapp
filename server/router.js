@@ -3,7 +3,6 @@ const passport = require('passport');
 const { PUBLIC_PATH } =  require('./config');
 
 const router = express.Router();
-// Get Homepage
 router.get('/', (req, res) => {
   if (req.isAuthenticated()) {
     res.sendFile(process.cwd() + PUBLIC_PATH + '/app.html');
@@ -25,7 +24,7 @@ router.get('/auth', (req, res) => {
 });
 router.get('/logout', (req, res) => {
   req.logout();
-  res.send('wylogowano');
+  res.sendFile(process.cwd() + '/server/logout.html');
 });
 
 module.exports = router;

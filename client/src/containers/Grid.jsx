@@ -137,7 +137,6 @@ export default class Grid extends React.Component {
   }
 
   renderGridControls() {
-    const { gridViewMode } = this.state;
     const { viewPortOffset } = this.props;
 
     return [
