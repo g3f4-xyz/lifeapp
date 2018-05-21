@@ -27,7 +27,7 @@ router.get('/demo', (req, res) => {
 });
 router.get('/logout', (req, res) => {
   req.logout();
-  res.sendFile(process.cwd() + '/server/logout.html');
+  res.redirect('/');
 });
 
 module.exports = router;
