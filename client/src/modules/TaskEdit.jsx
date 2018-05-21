@@ -40,16 +40,15 @@ export default class TaskEdit extends React.Component {
   onSave = async () => {
     const { id, fields } = this.state.task;
     console.log(['TaskEdit:onSave'], this.state.task);
+    this.props.onEdited();
 
     try {
       await editTaskMutation({ id, fields });
-      this.props.onEdited();
     }
 
     catch (error) {
       console.error(['TaskEdit:onSave:error'], error);
     }
-
   };
 
   render() {

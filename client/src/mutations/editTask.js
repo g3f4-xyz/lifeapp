@@ -65,6 +65,7 @@ export default editedTask => new Promise((resolve, reject) => {
       onCompleted: resolve,
       onError: reject,
       optimisticUpdater: proxyStore => {
+        console.log(['optimisticUpdater']);
         const fieldsRecords = proxyStore.get(editedTask.id).getLinkedRecords('fields');
 
         fieldsRecords.forEach(record => {
