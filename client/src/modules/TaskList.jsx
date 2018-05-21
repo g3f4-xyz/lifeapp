@@ -5,15 +5,12 @@ import CircularProgress from 'material-ui/CircularProgress';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import Paper from 'material-ui/Paper';
 import FlatButton from 'material-ui/FlatButton';
-import FontIcon from 'material-ui/FontIcon';
 import More from 'material-ui/svg-icons/navigation/more-horiz';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import IconButton from 'material-ui/IconButton';
 import ActionHome from 'material-ui/svg-icons/action/home';
 import Alarm from 'material-ui/svg-icons/action/alarm';
 import { red500, greenA200 } from 'material-ui/styles/colors';
-import environment from "../environment";
-import editTaskMutation from "../mutations/editTask";
 
 const PAGE_SIZE = 5;
 const styles = {
@@ -30,7 +27,7 @@ class Field extends React.Component {
   };
 
   render() {
-    const { value, fieldId, format, order, type, label, info } = this.props.data;
+    const { value, label /*, fieldId, format, order, type, info */ } = this.props.data;
 
     return (
       <Paper zDepth={1} style={{ width: 300, padding: 10, margin: 10 }}>
@@ -49,7 +46,7 @@ class Field extends React.Component {
 class Task extends React.Component {
   static propTypes = {
     data: PropTypes.object,
-    expanded: PropTypes.boolean,
+    expanded: PropTypes.bool,
     onToggle: PropTypes.func,
     onDetails: PropTypes.func,
     onEdit: PropTypes.func,
@@ -57,7 +54,7 @@ class Task extends React.Component {
 
   render() {
     const { expanded, data, onToggle, onDetails, onEdit } = this.props;
-    const { id, taskType, fields } = data;
+    const { id, /* taskType, */fields } = data;
     const { title, priority, status, additionalFields } = fields.reduce((result, field) => {
       if (field.fieldId === 'TITLE') {
         return {

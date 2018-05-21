@@ -6,7 +6,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 import DatePicker from 'material-ui/DatePicker';
 import Paper from 'material-ui/Paper';
 import AddButton from 'material-ui/svg-icons/navigation/check';
-import { Icon, Label, Input, Select } from '../components';
+import { Label, Input, Select } from '../components';
 import Create from 'material-ui/svg-icons/content/create';
 import addTask from '../mutations/addTask';
 
@@ -29,7 +29,7 @@ class TaskCreate extends React.Component {
     task: null,
   };
 
-  componentWillReceiveProps(nextProps, nextState) {
+  componentWillReceiveProps(nextProps) {
     this.setState({
       task: nextProps.data.taskCreate,
     });
@@ -72,7 +72,7 @@ class TaskCreate extends React.Component {
         />
       );
     }
-    const { taskType, fields } = this.state.task;
+    const { /* taskType, */fields } = this.state.task;
     const updateFieldValue = (fieldId, value) => {
       const fieldIndex = this.state.task.fields.findIndex(field => field.fieldId === fieldId);
 

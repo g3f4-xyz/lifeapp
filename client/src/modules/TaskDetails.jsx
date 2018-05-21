@@ -4,7 +4,7 @@ import { createRefetchContainer, graphql } from 'react-relay';
 import CircularProgress from 'material-ui/CircularProgress';
 import Paper from 'material-ui/Paper';
 import Create from 'material-ui/svg-icons/content/create';
-import { Icon, Label, Value } from '../components';
+import { Label } from '../components';
 
 const styles = {
   row: {

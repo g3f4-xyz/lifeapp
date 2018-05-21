@@ -19,7 +19,6 @@ import TaskEdit from './modules/TaskEdit';
 import TaskDetails from './modules/TaskDetails';
 import TaskTypeList from './modules/TaskTypeList';
 import Settings from './modules/Settings';
-import editTaskMutation from "./mutations/editTask";
 
 const MODULES_IDS = {
   TASK_LIST: 'TaskList',

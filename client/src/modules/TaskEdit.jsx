@@ -22,7 +22,6 @@ export default class TaskCreate extends React.Component {
     onEdited: PropTypes.func,
     data: PropTypes.object,
     parentId: PropTypes.string,
-    environment: PropTypes.object,
   };
 
   state = {
@@ -41,7 +40,7 @@ export default class TaskCreate extends React.Component {
   onSave = () => {
     const { id, fields } = this.state.task;
     console.log(['TaskCreate:onSave'], this.state.task);
-    editTaskMutation(this.props.environment, { id, fields }, this.props.parentId, (...args) => {
+    editTaskMutation({ id, fields }, this.props.parentId, (...args) => {
       console.log(['TaskCreate:onSave:success.args'], args);
       this.props.onEdited();
 
