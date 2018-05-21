@@ -17,7 +17,7 @@ const styles = {
   },
 };
 
-export default class TaskCreate extends React.Component {
+export default class TaskEdit extends React.Component {
   static propTypes = {
     onEdited: PropTypes.func,
     data: PropTypes.object,
@@ -37,16 +37,19 @@ export default class TaskCreate extends React.Component {
     })
   }
 
-  onSave = () => {
+  onSave = async () => {
     const { id, fields } = this.state.task;
-    console.log(['TaskCreate:onSave'], this.state.task);
-    editTaskMutation({ id, fields }, this.props.parentId, (...args) => {
-      console.log(['TaskCreate:onSave:success.args'], args);
-      this.props.onEdited();
+    console.log(['TaskEdit:onSave'], this.state.task);
 
-    }, (...args) => {
-      console.log(['TaskCreate:onSave:fail.args'], args)
-    })
+    try {
+      await editTaskMutation({ id, fields });
+      this.props.onEdited();
+    }
+
+    catch (error) {
+      console.error(['TaskEdit:onSave:error'], error);
+    }
+
   };
 
   render() {
@@ -113,7 +116,7 @@ export default class TaskCreate extends React.Component {
         {fields
           .map(item => item) // propsy są immutable, sortowanie modyfikuje oryginalną tablicę
           .sort((a, b) => a.order - b.order)
-          .map(({ fieldId, label, type, meta: { options }, value, info }) => console.log(['options'], options) || (
+          .map(({ fieldId, label, type, meta: { options }, value, info }) => (
             <div key={fieldId}>
               <Paper style={styles.row}>
                 <div style={{ padding: 10, width: 200, textAlign: 'left' }}>
@@ -138,7 +141,7 @@ export default class TaskCreate extends React.Component {
                       <DatePicker
                         textFieldStyle={{ width: '80%' }}
                         autoOk
-                        value={value.id}
+                        value={value}
                         hintText={info}
                         options={options || []}
                         onChange={(e, id) => {

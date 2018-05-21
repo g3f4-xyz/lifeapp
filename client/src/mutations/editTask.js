@@ -2,6 +2,11 @@ import {
   commitMutation,
   graphql,
 } from 'react-relay';
+import environment from '../environment';
+
+const updateValueRecord = (record, value, key) => {
+  record.getLinkedRecord('value').setValue(value, key);
+};
 
 const mutation = graphql`
   mutation editTaskMutation(
@@ -48,22 +53,55 @@ const mutation = graphql`
   }
 `;
 
-export default (environment, input, parentID, onCompleted, onError) => {
-  const variables = { input };
+export default editedTask => new Promise((resolve, reject) => {
+  const variables = { input: editedTask };
+  console.log(['mutation:editTask:variables'], variables);
 
   commitMutation(
     environment,
     {
       mutation,
       variables,
-      onCompleted,
-      onError,
-      // updater: store => {
-      //   const payload = store.getRootField('editTask');
-      //   const linkedRecord = payload.getLinkedRecord('newTaskEdge');
-      //   const listRecord = store.get(parentID);
-      //   const tasksRecords = listRecord.getLinkedRecords('edges') || [];
-      // },
+      onCompleted: resolve,
+      onError: reject,
+      optimisticUpdater: proxyStore => {
+        const fieldsRecords = proxyStore.get(editedTask.id).getLinkedRecords('fields');
+
+        fieldsRecords.forEach(record => {
+          const format = record.getValue('format');
+          const fieldId = record.getValue('fieldId');
+          const { id, text } = editedTask.fields.find((field) => fieldId === field.fieldId).value;
+
+          if (['ELIXIR'].includes(format)) {
+            updateValueRecord(record, text, 'text');
+          } else
+          if (['CHOICE'].includes(format)) {
+            updateValueRecord(record, id, 'id');
+          }
+        });
+      },
+      updater: proxyStore => {
+        console.log(['updater']);
+        const fieldsRecords = proxyStore.get(editedTask.id).getLinkedRecords('fields');
+        const mutationRootRecord = proxyStore.getRootField('editTask');
+        const mutatedFieldsRecords = mutationRootRecord
+          .getLinkedRecord('newTaskEdge')
+          .getLinkedRecord('node')
+          .getLinkedRecords('fields');
+
+        fieldsRecords.forEach(record => {
+          const format = record.getValue('format');
+          const fieldId = record.getValue('fieldId');
+          const mutatedValue = mutatedFieldsRecords.find(record => record.getValue('fieldId') === fieldId).getLinkedRecord('value');
+
+          if (['ELIXIR'].includes(format)) {
+            updateValueRecord(record, mutatedValue.getValue('text'), 'text');
+          } else
+          if (['CHOICE'].includes(format)) {
+            updateValueRecord(record, mutatedValue.getValue('id'), 'id');
+          }
+        });
+      },
     },
   );
-};
+});
