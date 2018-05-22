@@ -6,10 +6,8 @@ import { GridList, GridTile } from 'material-ui/GridList';
 import Module from './Module';
 import DirectionsButtons from './DirectionsButtons';
 import PaperForGridTile from '../components/PaperForGridTile';
-import IconButton from 'material-ui/IconButton';
 import FlatButton from 'material-ui/FlatButton';
 import ClearIcon from 'material-ui/svg-icons/content/clear';
-import ViewModuleIcon from 'material-ui/svg-icons/action/view-module';
 import ZoomIcon from 'material-ui/svg-icons/maps/zoom-out-map';
 
 const DEFAULT_SIZE = {

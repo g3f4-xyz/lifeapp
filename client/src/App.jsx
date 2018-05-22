@@ -136,6 +136,7 @@ class App extends Component {
         });
       },
       onDetails: this.onDetails,
+      onEdit: this.onEdit,
     }),
     [MODULES_IDS.TASK_TYPE_LIST]: (props) => ({
       data: props.app && props.app.taskTypeList,
@@ -160,6 +161,12 @@ class App extends Component {
       data: props.app,
       type: this.state.type,
     }),
+    [MODULES_IDS.TASK_EDIT]: (props) => ({
+      data: this.state.editTaskData,
+      onEdited: this.onEdited,
+      environment,
+      parentId: props.app.taskList.id,
+    }),
   };
 
   onAdded = () => {
@@ -173,6 +180,24 @@ class App extends Component {
     this.setState({ selectedTaskId });
     this.onModuleChange({
       column: 2,
+      row: 1,
+    });
+  };
+
+  onEdit = editTaskData => {
+    console.log(['App:onEdit'], editTaskData);
+    this.setState({ editTaskData });
+    this.onModuleChange({
+      column: 2,
+      row: 0,
+    });
+  };
+
+  onEdited = () => {
+    console.log(['App:onEdited']);
+    this.setState({ editTaskData: null });
+    this.onModuleChange({
+      column: 1,
       row: 1,
     });
   };
@@ -231,6 +256,7 @@ class App extends Component {
               ) {
                 app {
                   taskList {
+                   id
                     ...TaskList
                   }
                   taskTypeList {

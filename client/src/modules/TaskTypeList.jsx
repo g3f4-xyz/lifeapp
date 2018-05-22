@@ -1,12 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { createPaginationContainer, graphql } from 'react-relay';
-import CircularProgress from 'material-ui/CircularProgress';
-import { GridList, GridTile } from 'material-ui/GridList';
-import Icon from 'material-ui/svg-icons/action/settings';
-import IconButton from 'material-ui/IconButton';
-import { Paper } from 'material-ui';
-import Subheader from 'material-ui/Subheader';
 import FlatButton from 'material-ui/FlatButton';
 import AddCircle from 'material-ui/svg-icons/content/add-circle';
 import InfoOutline from 'material-ui/svg-icons/action/info-outline';
@@ -36,7 +30,7 @@ class TaskType extends React.Component {
     this.setState({
       info: !this.state.info,
     });
-  }
+  };
 
   render() {
     const { data, onSelect } = this.props;
@@ -44,7 +38,7 @@ class TaskType extends React.Component {
 
     return (
       <div
-        style={{ 
+        style={{
           width: 250,
           height: 250,
         }}
