@@ -119,7 +119,7 @@ class TaskCreate extends React.Component {
       {fields
         .map(item => item) // propsy są immutable, sortowanie modyfikuje oryginalną tablicę
         .sort((a, b) => a.order - b.order)
-        .map(({ fieldId, label, type, meta: { options }, value, info }) => console.log(['options'], options) || (
+        .map(({ fieldId, label, type, meta: { options }, value, info }) => (
         <div key={fieldId}>
           <Paper style={styles.row}>
             <div style={{ padding: 10, width: 200, textAlign: 'left' }}>
@@ -144,7 +144,7 @@ class TaskCreate extends React.Component {
               <DatePicker
                 textFieldStyle={{ width: '80%' }}
                 autoOk
-                value={value.id}
+                value={value}
                 hintText={info}
                 options={options || []}
                 onChange={(e, id) => {
@@ -160,7 +160,6 @@ class TaskCreate extends React.Component {
               hintText={info}
               value={value.text || value.number}
               onChange={(e, value) => {
-                console.log(['onChange.value'], value);
                 updateFieldValue(fieldId, { text: value });
               }}
             />

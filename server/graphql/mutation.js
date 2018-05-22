@@ -2,6 +2,7 @@ const { GraphQLObjectType } = require('graphql');
 const addTask = require('./mutations/addTask');
 const addTaskType = require('./mutations/addTaskType');
 const editTask = require('./mutations/editTask');
+const deleteTask = require('./mutations/deleteTask');
 
 module.exports = new GraphQLObjectType({
   name: 'Mutation',
@@ -9,5 +10,6 @@ module.exports = new GraphQLObjectType({
     addTask,
     addTaskType,
     editTask,
+    deleteTask,
   }),
 });

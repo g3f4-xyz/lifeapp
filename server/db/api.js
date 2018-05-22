@@ -10,7 +10,7 @@ const addUser = async ({ id, displayName }) => {
   return await newUser.save();
 };
 const getUser = async (id) => await UserModel.findOne({ id });
-const getUsers = async () => await UserModel.find();
+// const getUsers = async () => await UserModel.find();
 const addTask = async task => {
   console.log(['api:addTask'], task);
   const newTask = new TaskModel(task);
@@ -25,8 +25,7 @@ const editTask = async task => {
     const updatedTask = await TaskModel.findByIdAndUpdate(id, { fields });
     console.log(['api:editTask:updatedTask:fields'], updatedTask.fields);
 
-    return task;
-    // return updatedTask;
+    return updatedTask;
   }
 
   catch (e) {
@@ -38,6 +37,24 @@ const addTaskType = async taskType => {
   const newTaskType = new TaskTypeModel(taskType);
 
   return await newTaskType.save();
+};
+const deleteTask = async (hashId) => {
+  console.log(['api:deleteTask:hashId'], hashId);
+  try {
+    const { id } = await fromGlobalId(hashId);
+    console.log(['api:deleteTask:id'], id);
+    const task = await getTask(id);
+    console.log(['api:deleteTask:task'], task);
+
+    await task.remove();
+
+    return hashId;
+  }
+
+  catch (error) {
+    console.error(['api:deleteTask:error'], error);
+    return error;
+  }
 };
 const getTask = async (id) => await TaskModel.findById(id);
 const getTaskType = async (id) => {
@@ -77,11 +94,12 @@ module.exports = {
   addUser,
   addTask,
   addTaskType,
+  deleteTask,
   editTask,
   getUser,
-  getUsers,
+  // getUsers,
   getTask,
-  getTaskType,
+  // getTaskType,
   getTaskList,
   getTaskTypeList,
   getEmptyTask,

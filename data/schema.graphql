@@ -59,6 +59,16 @@ type ChoiceOptionsType {
   value: String
 }
 
+input deleteTaskInput {
+  id: ID
+  clientMutationId: String
+}
+
+type deleteTaskPayload {
+  deletedTaskId: String
+  clientMutationId: String
+}
+
 input editTaskInput {
   id: ID
   taskType: String
@@ -143,6 +153,7 @@ type Mutation {
   addTask(input: addTaskInput!): addTaskPayload
   addTaskType(input: addTaskTypeInput!): addTaskTypePayload
   editTask(input: editTaskInput!): editTaskPayload
+  deleteTask(input: deleteTaskInput!): deleteTaskPayload
 }
 
 """An object with an ID"""

@@ -11,6 +11,7 @@ import IconButton from 'material-ui/IconButton';
 import ActionHome from 'material-ui/svg-icons/action/home';
 import Alarm from 'material-ui/svg-icons/action/alarm';
 import { red500, greenA200 } from 'material-ui/styles/colors';
+import onDeleteMutation from '../mutations/deleteTask';
 
 const PAGE_SIZE = 5;
 const styles = {
@@ -48,12 +49,13 @@ class Task extends React.Component {
     data: PropTypes.object,
     expanded: PropTypes.bool,
     onToggle: PropTypes.func,
+    onDelete: PropTypes.func,
     onDetails: PropTypes.func,
     onEdit: PropTypes.func,
   };
 
   render() {
-    const { expanded, data, onToggle, onDetails, onEdit } = this.props;
+    const { expanded, data, onToggle, onDelete, onDetails, onEdit } = this.props;
     const { id, /* taskType, */fields } = data;
     const { title, priority, status, additionalFields } = fields.reduce((result, field) => {
       if (field.fieldId === 'TITLE') {
@@ -130,7 +132,7 @@ class Task extends React.Component {
             <div style={{ width: '100%' }}>
               <FlatButton label="Show" onClick={() => onDetails(id)} />
               <FlatButton label="Edit" onClick={() => onEdit(data)} />
-              <FlatButton label="Delete" />
+              <FlatButton label="Delete" onClick={() => onDelete(id)} />
             </div>
           {additionalFields.map((field, key) => (
             <Field key={key} data={field} />
@@ -145,7 +147,9 @@ class Task extends React.Component {
 class List extends React.Component {
   static propTypes = {
     list: PropTypes.array,
+    onDelete: PropTypes.func,
     onDetails: PropTypes.func,
+    onEdit: PropTypes.func,
   };
 
   state = {
@@ -161,15 +165,16 @@ class List extends React.Component {
   };
 
   render() {
-    const { list, onDetails, onEdit } = this.props;
+    const { list, onDelete, onDetails, onEdit } = this.props;
 
     return list.map(data =>
       <Task
         key={data.id}
         expanded={this.state.expanded[data.id]}
         data={data}
-        onEdit={onEdit}
+        onDelete={onDelete}
         onDetails={onDetails}
+        onEdit={onEdit}
         onToggle={this.onToggle}
       />
     );
@@ -196,6 +201,11 @@ class TaskList extends React.Component {
     this.forceUpdate(); // initializing loadMore doesn't invoke rendering DOM. To change moreIcon to loader we need to render page
   };
 
+  onDelete = id => {
+    console.log(['onDelete'], id);
+    onDeleteMutation({ id, parentId: this.props.data.id });
+  };
+
   render() {
     const { data, onAdd, onDetails, onEdit } = this.props;
     const { list: { edges, pageInfo } }  = data || { list: { edges: [], pageInfo: {} } };
@@ -206,6 +216,7 @@ class TaskList extends React.Component {
         list={edges.map(({ node }) => node)}
         onDetails={onDetails}
         onEdit={onEdit}
+        onDelete={this.onDelete}
       />,
       <FlatButton
         key="Home:FlatButton"
