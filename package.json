@@ -13,6 +13,7 @@
     "init:db:remote": "mongo --eval \"var DB_NAME='mo1563_lifeapp'\" --port 27017 -u mo1563_lifeapp -p Gitara15 --host 85.194.240.29 mo1563_lifeapp scripts/initDatabase.js",
     "start": "DB=remote node server",
     "test": "echo \"Error: no test specified\" && exit 0",
+    "build:login": "babel-node ./scripts/buildLogin.js",
     "update:schema": "node ./scripts/updateSchema",
     "validate": "npm ls"
   },
@@ -31,11 +32,16 @@
     "node": "8.7.0"
   },
   "devDependencies": {
+    "@material-ui/core": "^1.0.0",
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "babel-preset-react": "^6.24.1",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.8.2",
+    "material-ui": "^1.0.0-beta.47",
     "nodemon": "^1.17.4",
     "precommit-hook": "^3.0.0"
   },
@@ -52,6 +58,10 @@
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
     "passport-google-oauth20": "^1.0.0",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "react-jss": "^8.4.0",
+    "save-dev": "^2.0.0",
     "serve-static": "^1.13.2"
   },
   "pre-commit": [
