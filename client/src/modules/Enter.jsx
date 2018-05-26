@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from 'material-ui/svg-icons/action/fingerprint';
+import Icon from '@material-ui/icons/Fingerprint';
 
 const styles = {
   icon: {

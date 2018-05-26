@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import EventNote from 'material-ui/svg-icons/notification/event-note';
-import DiskFull from 'material-ui/svg-icons/content/create';
-import Create from 'material-ui/svg-icons/content/create';
-import Traffic from 'material-ui/svg-icons/maps/traffic';
-import DoNotDisturb from 'material-ui/svg-icons/notification/do-not-disturb';
+import EventNote from '@material-ui/icons/EventNote';
+import DiskFull from '@material-ui/icons/Create';
+import Create from '@material-ui/icons/Create';
+import Traffic from '@material-ui/icons/Traffic';
+import DoNotDisturb from '@material-ui/icons/DoNotDisturb';
 
 const ICONS = {
   eventNote: EventNote,

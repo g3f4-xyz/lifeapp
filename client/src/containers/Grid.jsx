@@ -2,13 +2,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import shallowequal from 'shallowequal';
-import { GridList, GridTile } from 'material-ui/GridList';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
 import Module from './Module';
 import DirectionsButtons from './DirectionsButtons';
-import PaperForGridTile from '../components/PaperForGridTile';
-import FlatButton from 'material-ui/FlatButton';
-import ClearIcon from 'material-ui/svg-icons/content/clear';
-import ZoomIcon from 'material-ui/svg-icons/maps/zoom-out-map';
+import IconButton from '@material-ui/core/IconButton';
+import ClearIcon from '@material-ui/icons/Clear';
+import ZoomIcon from '@material-ui/icons/ZoomOutMap';
 
 const DEFAULT_SIZE = {
   columns: 3,
@@ -29,9 +31,17 @@ const sortModules = (current, next) => {
   return currentColumn > nextColumn ;
 };
 
-export default class Grid extends React.Component {
+const styles = theme => ({
+  gridList: {
+    width: '100%',
+    height: '100%',
+  },
+});
+
+class Grid extends React.Component {
   static propTypes = {
-    modules: PropTypes.array,
+    classes: PropTypes.object.isRequired,
+    modules: PropTypes.array.isRequired,
     size: PropTypes.object,
     dynamic: PropTypes.bool,
     showGrid: PropTypes.bool,
@@ -120,7 +130,7 @@ export default class Grid extends React.Component {
     return {
       key: moduleId,
       style: { display: !this.props.showGrid && !inViewPort ? 'none' : 'block' },
-      containerElement: <PaperForGridTile zDepth={3} />,
+      component: Paper,
       onMouseEnter: () => {
         if (this.props.showGrid) {
           this.setState({ hoveredModuleId: moduleId });
@@ -148,20 +158,23 @@ export default class Grid extends React.Component {
   }
 
   renderCloseButton(moduleId, locked) {
+    const { hoveredModuleId } = this.state;
+
     return this.props.showGrid && !locked && (
-      <FlatButton
-        icon={<ClearIcon />}
+      <IconButton
         style={{
+          display: this.props.showGrid && moduleId === hoveredModuleId ? 'block' : 'none',
           minWidth: 40,
           opacity: 0.5,
           position: 'absolute',
           top: 10,
           right: 10,
-          zoom: 2,
           zIndex: 9,
         }}
         onClick={() => this.onModuleClose(moduleId)}
-      />
+      >
+        <ClearIcon />
+      </IconButton>
     );
   }
 
@@ -169,23 +182,23 @@ export default class Grid extends React.Component {
     const { hoveredModuleId } = this.state;
 
     return (
-      <ZoomIcon
+      <IconButton
         style={{
           display: this.props.showGrid && moduleId === hoveredModuleId ? 'block' : 'none',
           bottom: 0,
           right: 0,
-          width: '25%',
-          height: '25%',
           position: 'absolute',
           zIndex: 9,
         }}
         onClick={() => this.onZoom(moduleId)}
-      />
+      >
+        <ZoomIcon />
+      </IconButton>
     );
   }
 
   render() {
-    const { dynamic, showGrid } = this.props;
+    const { classes, dynamic, showGrid } = this.props;
     const tiles = this.getTiles();
     const size = dynamic ? this.getDynamicSize(tiles.length) : this.props.size || DEFAULT_SIZE;
     const cellHeight = showGrid ?
@@ -198,16 +211,19 @@ export default class Grid extends React.Component {
         key="Grid:GridList"
         cellHeight={cellHeight}
         cols={cols}
+        className={classes.gridList}
       >
         {tiles.map(({ node, id, offset, inViewPort, locked }, key) => (
-          <GridTile {...this.getTileProps({ id, inViewPort })} key={key}>
+          <GridListTile {...this.getTileProps({ id, inViewPort })} key={key}>
             {this.renderCloseButton(id, locked)}
             {this.renderZoomButton(id)}
             {!showGrid && this.renderGridControls()}
             <Module style={{ zoom: showGrid ? 1 / size.columns : 1 }}>{node}</Module>
-          </GridTile>
+          </GridListTile>
         ))}
       </GridList>,
     ];
   }
 }
+
+export default withStyles(styles)(Grid);

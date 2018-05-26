@@ -2,13 +2,10 @@ import React from 'react';
 import { createRefetchContainer, graphql } from 'react-relay';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
-import CircularProgress from 'material-ui/CircularProgress';
-import DatePicker from 'material-ui/DatePicker';
-import Paper from 'material-ui/Paper';
-import AddButton from 'material-ui/svg-icons/navigation/check';
-import { Label, Input, Select } from '../components';
-import Create from 'material-ui/svg-icons/content/create';
+import AddButton from '@material-ui/icons/Check';
 import addTask from '../mutations/addTask';
+import Loader from '../components/Loader';
+import Fields from '../components/Fields';
 
 const styles = {
   row: {
@@ -58,18 +55,7 @@ class TaskCreate extends React.Component {
   render() {
     if (!this.state.task) {
       return (
-        <CircularProgress
-          style={{
-            margin: 'auto',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            bottom: 0,
-            right: 0,
-          }}
-          size={180}
-          thickness={15}
-        />
+        <Loader />
       );
     }
     const { /* taskType, */fields } = this.state.task;
@@ -92,16 +78,7 @@ class TaskCreate extends React.Component {
     return (
       <div style={styles.root}>
         {this.state.pending ? (
-          <CircularProgress
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              right: 0,
-              zoom: 2,
-              margin: 20,
-            }}
-            size={60} thickness={6}
-          />
+          <Loader />
         ) : (
           <AddButton
             style={{
@@ -116,58 +93,7 @@ class TaskCreate extends React.Component {
             onClick={this.onAdd}
           />
         )}
-      {fields
-        .map(item => item) // propsy są immutable, sortowanie modyfikuje oryginalną tablicę
-        .sort((a, b) => a.order - b.order)
-        .map(({ fieldId, label, type, meta: { options }, value, info }) => (
-        <div key={fieldId}>
-          <Paper style={styles.row}>
-            <div style={{ padding: 10, width: 200, textAlign: 'left' }}>
-              <Create />
-              <Label style={{ padding: 10 }}>{label}</Label>
-            </div>
-            <div style={{ paddingRight: 20, width: '80%' }}>
-          {({
-            CHOICE: (
-              <Select
-                style={{ width: '80%' }}
-                value={value.id}
-                info={info}
-                options={options || []}
-                onChange={(e, id) => {
-                  console.log(['onChange.value'], { id });
-                  updateFieldValue(fieldId, { id });
-                }}
-              />
-            ),
-            DATE: (
-              <DatePicker
-                textFieldStyle={{ width: '80%' }}
-                autoOk
-                value={value}
-                hintText={info}
-                options={options || []}
-                onChange={(e, id) => {
-                  console.log(['onChange.value'], { id });
-                  updateFieldValue(fieldId, { id });
-                }}
-              />
-            ),
-          })[type] || (
-            <Input
-              style={{ width: '80%' }}
-              multiLine
-              hintText={info}
-              value={value.text || value.number}
-              onChange={(e, value) => {
-                updateFieldValue(fieldId, { text: value });
-              }}
-            />
-          )}
-            </div>
-          </Paper>
-        </div>
-      ))}
+      <Fields fields={fields} onFieldChange={updateFieldValue} />
       </div>
     );
   }

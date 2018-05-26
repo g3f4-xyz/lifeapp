@@ -1,20 +1,36 @@
 import React from 'react';
-import DatePicker from 'material-ui/DatePicker';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 
-const style = {
-  width: '90%',
-  marginLeft: '5%',
-  marginRight: '5%',
-};
+const styles = theme => ({
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 200,
+  },
+});
 
 class Date extends React.Component {
-  static propTypes = DatePicker.propTypes;
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
 
   render() {
+    const { classes, ...props } = this.props;
+
     return (
-      <DatePicker {...{...this.props, style: { ...style, ...this.props.style } } }/>
+      <TextField
+        id="date"
+        type="date"
+        className={classes.textField}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        {...props}
+      />
     )
   }
 }
 
-export default Date;
+export default withStyles(styles)(Date);

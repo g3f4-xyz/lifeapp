@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from 'material-ui/svg-icons/editor/attach-file';
+import Icon from '@material-ui/icons/AttachFile';
 
 const styles = {
   icon: {

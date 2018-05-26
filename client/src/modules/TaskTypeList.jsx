@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { createPaginationContainer, graphql } from 'react-relay';
-import FlatButton from 'material-ui/FlatButton';
-import AddCircle from 'material-ui/svg-icons/content/add-circle';
-import InfoOutline from 'material-ui/svg-icons/action/info-outline';
-import SettingsIcon from 'material-ui/svg-icons/action/settings';
+import IconButton from '@material-ui/core/IconButton';
+import AddCircle from '@material-ui/icons/AddCircle';
+import InfoOutline from '@material-ui/icons/InfoOutline';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 const styles = {
   root: {
@@ -41,6 +41,7 @@ class TaskType extends React.Component {
         style={{
           width: 250,
           height: 250,
+          margin: 20,
         }}
       >
         <div style={{
@@ -71,28 +72,28 @@ class TaskType extends React.Component {
           display: 'flex',
           justifyContent: 'space-between',
         }}>
-          <FlatButton
-            key="TaskTypeList:List:FlatButton:Info"
-            icon={<InfoOutline style={{
-              height: 36,
-              width: 36,
-            }}/>}
+          <IconButton
+            key="TaskTypeList:List:IconButton:Info"
             style={{
               color: '#505ae8',
+              height: 72,
+              width: 72,
             }}
             onClick={this.onInfo}
-          />
-          <FlatButton
-            key="TaskTypeList:List:FlatButton:Add"
-            icon={<AddCircle style={{
-              height: 36,
-              width: 36,
-            }}/>}
+          >
+            <InfoOutline style={{ fontSize: 72 }}/>
+          </IconButton>
+          <IconButton
+            key="TaskTypeList:List:IconButton:Add"
             style={{
               color: '#8BC34A',
+              height: 72,
+              width: 72,
             }}
             onClick={() => onSelect(typeId)}
-          />
+          >
+            <AddCircle style={{ fontSize: 72 }}/>
+          </IconButton>
         </div>
       </div>
     );

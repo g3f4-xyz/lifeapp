@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Snackbar from 'material-ui/Snackbar';
+import Snackbar from '@material-ui/core/Snackbar';
 import DirectionButton from '../components/DirectionButton';
 
 const DIRECTIONS = {
@@ -18,7 +18,7 @@ export default class DirectionsButtons extends React.Component {
   };
 
   state = {
-    isSnackbarOpen: false,
+    open: false,
   };
 
   isDirectionAble = (direction) => {
@@ -65,21 +65,24 @@ export default class DirectionsButtons extends React.Component {
       column: calculateColumns(direction),
       row: calculateRows(direction),
     });
-    this.setState({ isSnackbarOpen: true });
+    this.setState({ open: true });
   };
 
-  handleSnackbarClose = () => this.setState({
-    isSnackbarOpen: false,
+  handleClose = () => this.setState({
+    open: false,
   });
 
   render() {
     return [
       <Snackbar
         key="DirectionsButtons:Snackbar"
-        open={this.state.isSnackbarOpen}
-        message={`viewPort offset: ${JSON.stringify(this.props.viewPortOffset)}`}
+        open={this.state.open}
         autoHideDuration={1000}
-        onRequestClose={this.handleSnackbarClose}
+        onClose={this.handleClose}
+        ContentProps={{
+          'aria-describedby': 'message-id',
+        }}
+        message={<span id="message-id">{`viewPort offset: ${JSON.stringify(this.props.viewPortOffset)}`}</span>}
       />,
       Object.keys(DIRECTIONS).map(key => (
         <DirectionButton

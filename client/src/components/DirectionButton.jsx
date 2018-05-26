@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import IconButton from 'material-ui/IconButton';
-import UpIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
-import DownIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
-import LeftIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-left';
-import RightIcon from 'material-ui/svg-icons/hardware/keyboard-arrow-right';
+import IconButton from '@material-ui/core/IconButton';
+import UpIcon from '@material-ui/icons/KeyboardArrowUp';
+import DownIcon from '@material-ui/icons/KeyboardArrowDown';
+import LeftIcon from '@material-ui/icons/KeyboardArrowLeft';
+import RightIcon from '@material-ui/icons/KeyboardArrowRight';
 
 const styles = {
   right: {
@@ -42,7 +42,7 @@ const ICONS = {
   down: <DownIcon />,
 };
 
-export default class DirectionButton extends React.Component {
+export default class DirectionIconButton extends React.Component {
   static propTypes = {
     direction: PropTypes.string,
     display: PropTypes.bool,
@@ -71,7 +71,7 @@ export default class DirectionButton extends React.Component {
       <IconButton
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}
-        style={{ ...styles[direction], zoom: 2, opacity: visible ? 1 : 0.1 }}
+        style={{ ...styles[direction], opacity: visible ? 1 : 0.1 }}
         onClick={this.onClick}
       >
         {ICONS[direction]}

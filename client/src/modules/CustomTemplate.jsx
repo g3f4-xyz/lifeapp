@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from 'material-ui/svg-icons/action/date-range';
+import Icon from '@material-ui/icons/DateRange';
 
 const styles = {
   icon: {

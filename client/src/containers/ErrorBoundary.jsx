@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import BugReportIcon from 'material-ui/svg-icons/action/bug-report';
+import BugReportIcon from '@material-ui/icons/BugReport';
 
 const styles = {
   header: {

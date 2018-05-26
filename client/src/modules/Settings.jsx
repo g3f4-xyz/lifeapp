@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from 'material-ui/svg-icons/action/settings';
+import Icon from '@material-ui/icons/Settings';
 
 const styles = {
   icon: {

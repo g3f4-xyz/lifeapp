@@ -1,13 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-
-const style = {
-  width: '90%',
-  marginLeft: '5%',
-  marginRight: '5%',
-};
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import SelectField from '@material-ui/core/Select';
 
 class Select extends React.Component {
   static propTypes = {
@@ -17,28 +12,27 @@ class Select extends React.Component {
     onChange: PropTypes.func,
   };
 
-  onChange = (e, index) => {
-    if (this.props.onChange) {
-      this.props.onChange(e, this.props.options[index].value);
-    }
-  };
-
   render() {
+    const { info, id, label, ...props } = this.props;
+
     return (
-      <SelectField
-        style={{ ...style, ...this.props.style }}
-        onChange={this.onChange}
-        value={this.props.value}
-        floatingLabelText={this.props.info}
-      >
-        {this.props.options.map(({ value, text }, key) => (
-          <MenuItem
-            key={key}
-            value={value}
-            primaryText={text}
-          />
-        ))}
-      </SelectField>
+      <Fragment>
+        <InputLabel htmlFor={id}>{label}</InputLabel>
+        <SelectField
+          {...props}
+          inputProps={{
+            name: info,
+            id,
+          }}
+        >
+          {this.props.options.map(({ value, text }, key) => (
+            <MenuItem
+              key={key}
+              value={value}
+            >{text}</MenuItem>
+          ))}
+        </SelectField>
+      </Fragment>
     )
   }
 }

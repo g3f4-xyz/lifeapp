@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { createRefetchContainer, graphql } from 'react-relay';
-import CircularProgress from 'material-ui/CircularProgress';
-import Paper from 'material-ui/Paper';
-import Create from 'material-ui/svg-icons/content/create';
+import Paper from '@material-ui/core/Paper';
+import Create from '@material-ui/icons/Create';
 import { Label } from '../components';
+import Loader from '../components/Loader';
 
 const styles = {
   row: {
@@ -29,8 +29,16 @@ class TaskDetails extends React.Component {
   }
 
   render() {
-    if (this.props.data && this.props.data.detailsList && this.props.data.detailsList.length > 0) {
-      const [{ taskType, fields }] = this.props.data.detailsList;
+    if (this.props.data && this.props.data.detailsList) {
+      const [task] = this.props.data.detailsList;
+
+      if (!task) {
+        return (
+          <div>Back to list and select task</div>
+        );
+      }
+
+      const { taskType, fields } = task;
 
       return (
         <div style={styles.root}>
@@ -56,18 +64,7 @@ class TaskDetails extends React.Component {
     }
 
     return (
-      <CircularProgress
-        style={{
-          margin: 'auto',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-        }}
-        size={180}
-        thickness={15}
-      />
+      <Loader />
     );
   }
 }

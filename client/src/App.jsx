@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import { QueryRenderer, graphql } from 'react-relay'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import IconMenu from 'material-ui/IconMenu';
-import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import shallowequal from 'shallowequal';
-import CircularProgress from 'material-ui/CircularProgress';
 import ErrorBoundary from './containers/ErrorBoundary';
 import Grid from './containers/Grid';
 import environment from './environment';
+import Menu from './components/Menu';
+import Loader from './components/Loader';
 import AttachmentPreview from './modules/AttachmentPreview';
 import CustomTemplate from './modules/CustomTemplate';
 import Enter from './modules/Enter';
@@ -245,71 +241,68 @@ class App extends Component {
 
   render() {
     return (
-      <MuiThemeProvider>
-        <ErrorBoundary>
-          <QueryRenderer
-            environment={environment}
-            query={graphql`
-              query AppQuery (
-                $count: Int!
-                $cursor: String
-              ) {
-                app {
-                  taskList {
-                   id
-                    ...TaskList
-                  }
-                  taskTypeList {
-                    ...TaskTypeList
-                  }
-                  ...TaskDetails
-                  ...TaskCreate
+      <ErrorBoundary>
+        <QueryRenderer
+          environment={environment}
+          query={graphql`
+            query AppQuery (
+              $count: Int!
+              $cursor: String
+            ) {
+              app {
+                taskList {
+                 id
+                  ...TaskList
                 }
+                taskTypeList {
+                  ...TaskTypeList
+                }
+                ...TaskDetails
+                ...TaskCreate
               }
-            `}
-            variables={{
-              count: 2,
-              type: null,
-              ids: []
-            }}
-            render={({error, props}) => {
-              if (error) {
-                return <div>{JSON.stringify(error)}</div>;
-              } else if (props) {
-                return (
-                  <div>
-                    <div style={{ position: 'absolute', right: 10, zIndex: 9 }}>
-                      <IconMenu
-                      iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-                      anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-                      targetOrigin={{horizontal: 'right', vertical: 'top'}}
-                    >
-                      <MenuItem primaryText="Logout" onClick={(() => window.location.replace('logout'))} />
-                      <MenuItem disabled={this.state.showGrid || this.state.visited.length === 1} primaryText="Show grid" onClick={(() => this.setState({ showGrid: true }))} />
-                    </IconMenu>
-                  </div>
-                  {this.renderGrid(props)}
-                </div>
-                );
-              }
+            }
+          `}
+          variables={{
+            count: 2,
+            type: null,
+            ids: []
+          }}
+          render={({error, props}) => {
+            if (error) {
+              return <div>{JSON.stringify(error)}</div>;
+            } else if (props) {
               return (
-                <CircularProgress
-                  style={{
-                    margin: 'auto',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                  }}
-                  size={180}
-                  thickness={15}
-                />
+                <div>
+                  <div style={{ position: 'absolute', right: 10, zIndex: 9 }}>
+                    <Menu
+                      options={[{
+                        label: 'Log out',
+                        action: () => window.location.replace('logout'),
+                      }, {
+                        label: 'Show grid',
+                        action: () => this.setState({ showGrid: true }),
+                        disabled: this.state.showGrid || this.state.visited.length === 1,
+                      }]}
+                    />
+                    {/*<Menu*/}
+                    {/*iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}*/}
+                    {/*anchorOrigin={{horizontal: 'right', vertical: 'top'}}*/}
+                    {/*targetOrigin={{horizontal: 'right', vertical: 'top'}}*/}
+                  {/*>*/}
+                    {/*<MenuItem primaryText="Logout" onClick={(() => window.location.replace('logout'))} />*/}
+                    {/*<MenuItem disabled={this.state.showGrid || this.state.visited.length === 1} primaryText="Show grid" onClick={(() => this.setState({ showGrid: true }))} />*/}
+                  {/*</Menu>*/}
+                </div>
+                {this.renderGrid(props)}
+              </div>
               );
-            }}
-          />
-          </ErrorBoundary>
-      </MuiThemeProvider>
+            }
+            return (
+              <Loader />
+            );
+          }}
+        />
+        </ErrorBoundary>
     );
   }
 }
