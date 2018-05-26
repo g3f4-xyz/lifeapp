@@ -55,6 +55,7 @@ export default class TaskEdit extends React.Component {
         <Loader />
       );
     }
+    console.log(['this.state.task'], this.state.task)
     const { fields } = this.state.task;
     const updateFieldValue = (fieldId, value) => {
       const fieldIndex = this.state.task.fields.findIndex(field => field.fieldId === fieldId);

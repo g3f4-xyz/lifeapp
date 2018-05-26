@@ -1,135 +1,71 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { QueryRenderer, graphql } from 'react-relay'
-import shallowequal from 'shallowequal';
 import ErrorBoundary from './containers/ErrorBoundary';
-import Grid from './containers/Grid';
+import ResponsiveGrid from './containers/ResponsiveGrid';
 import environment from './environment';
 import Menu from './components/Menu';
 import Loader from './components/Loader';
-import AttachmentPreview from './modules/AttachmentPreview';
-import CustomTemplate from './modules/CustomTemplate';
-import Enter from './modules/Enter';
 import TaskList from './modules/TaskList';
 import TaskCreate from './modules/TaskCreate';
 import TaskEdit from './modules/TaskEdit';
 import TaskDetails from './modules/TaskDetails';
 import TaskTypeList from './modules/TaskTypeList';
-import Settings from './modules/Settings';
+
+const originalLayouts = getFromLS('layouts') || {};
+
+function getFromLS(key) {
+  let ls = {};
+  if (global.localStorage) {
+    try {
+      ls = JSON.parse(global.localStorage.getItem('rgl-8')) || {};
+    } catch (e) {
+      /*Ignore*/
+    }
+  }
+  return ls[key];
+}
+
+function saveToLS(key, value) {
+  if (global.localStorage) {
+    global.localStorage.setItem(
+      'rgl-8',
+      JSON.stringify({
+        [key]: value
+      })
+    );
+  }
+}
 
 const MODULES_IDS = {
   TASK_LIST: 'TaskList',
-  ENTER: 'Enter',
   TASK_CREATE: 'TaskCreate',
   TASK_EDIT: 'TaskEdit',
   TASK_DETAILS: 'TaskDetails',
   TASK_TYPE_LIST: 'TaskTypeList',
-  SETTINGS: 'Settings',
-  ATTACHMENT_PREVIEW: 'AttachmentPreview',
-  CUSTOM_TEMPLATE: 'CustomTemplate',
 };
-const MODULES = [
-  {
-    locked: true,
-    id: MODULES_IDS.TASK_LIST,
-    Component: TaskList,
-    offset: {
-      column: 1,
-      row: 1,
-    },
-  },
-  {
-    locked: false,
-    id: MODULES_IDS.ENTER,
-    Component: Enter,
-    offset: {
-      column: 1,
-      row: 0,
-    },
-  },
-  {
-    locked: false,
-    id: MODULES_IDS.TASK_CREATE,
-    Component: TaskCreate,
-    offset: {
-      column: 0,
-      row: 0,
-    },
-  },
-  {
-    locked: false,
-    id: MODULES_IDS.TASK_EDIT,
-    Component: TaskEdit,
-    offset: {
-      column: 2,
-      row: 0,
-    },
-  },
-  {
-    locked: false,
-    id: MODULES_IDS.TASK_DETAILS,
-    Component: TaskDetails,
-    offset: {
-      column: 2,
-      row: 1,
-    },
-  },
-  {
-    locked: false,
-    id: MODULES_IDS.TASK_TYPE_LIST,
-    Component: TaskTypeList,
-    offset: {
-      column: 0,
-      row: 1,
-    },
-  },
-  {
-    locked: false,
-    id: MODULES_IDS.SETTINGS,
-    Component: Settings,
-    offset: {
-      column: 1,
-      row: 2,
-    },
-  },
-  {
-    locked: false,
-    id: MODULES_IDS.ATTACHMENT_PREVIEW,
-    Component: AttachmentPreview,
-    offset: {
-      column: 2,
-      row: 2,
-    },
-  },
-  {
-    locked: false,
-    id: MODULES_IDS.CUSTOM_TEMPLATE,
-    Component: CustomTemplate,
-    offset: {
-      column: 0,
-      row: 2,
-    },
-  },
-];
+
+const MODULES_COMPONENTS = {
+  [MODULES_IDS.TASK_LIST]: TaskList,
+  [MODULES_IDS.TASK_TYPE_LIST]: TaskTypeList,
+  [MODULES_IDS.TASK_CREATE]: TaskCreate,
+  [MODULES_IDS.TASK_EDIT]: TaskEdit,
+  [MODULES_IDS.TASK_DETAILS]: TaskDetails,
+};
 
 class App extends Component {
   state = {
     selectedTaskId: null, // #TODO rozbudować scheme na froncie żeby przechowywała tą informacje
     visited: [MODULES_IDS.TASK_LIST],
-    showGrid: false,
-    viewPortOffset: {
-      column: 1,
-      row: 1,
-    },
+    activeModuleId: MODULES_IDS.TASK_LIST,
+    layouts: JSON.parse(JSON.stringify(originalLayouts)),
+    gridView: false,
   };
 
   handlers = {
     [MODULES_IDS.TASK_LIST]: (props) => ({
       data: props.app && props.app.taskList,
       onAdd: () => {
-        this.onModuleChange({
-          column: 0,
-          row: 1,
-        });
+        this.onModuleChange(MODULES_IDS.TASK_TYPE_LIST);
       },
       onDetails: this.onDetails,
       onEdit: this.onEdit,
@@ -140,10 +76,7 @@ class App extends Component {
         console.log(['onAdd']);
       },
       onSelect: (type) => {
-        this.onModuleChange({
-          column: 0,
-          row: 0,
-        }, {
+        this.onModuleChange(MODULES_IDS.TASK_CREATE, {
           type,
         });
       },
@@ -165,78 +98,134 @@ class App extends Component {
     }),
   };
 
+  moduleHandler(moduleId, props) {
+    console.log(['moduleHandler'], moduleId);
+    const handler = this.handlers[moduleId];
+
+    if (handler) {
+      return handler(props);
+    }
+
+    console.error(`No module handler provider for module ${moduleId}`);
+  }
+
   onAdded = () => {
-    this.onModuleChange({
-      column: 1,
-      row: 1,
-    });
+    this.onModuleChange(MODULES_IDS.TASK_LIST);
   };
 
   onDetails = selectedTaskId => {
     this.setState({ selectedTaskId });
-    this.onModuleChange({
-      column: 2,
-      row: 1,
-    });
+    if (this.state.gridView) {
+      this.setState({
+        visited: this.state.visited.includes(MODULES_IDS.TASK_DETAILS)
+          ? this.state.visited
+          : [...this.state.visited, MODULES_IDS.TASK_DETAILS]
+      })
+    } else {
+      this.onModuleChange(MODULES_IDS.TASK_DETAILS);
+    }
   };
 
   onEdit = editTaskData => {
     console.log(['App:onEdit'], editTaskData);
     this.setState({ editTaskData });
-    this.onModuleChange({
-      column: 2,
-      row: 0,
-    });
+    this.onModuleChange(MODULES_IDS.TASK_EDIT);
   };
 
   onEdited = () => {
     console.log(['App:onEdited']);
     this.setState({ editTaskData: null });
-    this.onModuleChange({
-      column: 1,
-      row: 1,
-    });
+    this.onModuleChange(MODULES_IDS.TASK_LIST);
   };
 
-  onModuleChange = (viewPortOffset, extend = {}) => {
-    const { id } = MODULES.find(({ offset }) => shallowequal(viewPortOffset, offset));
+  onModuleChange = (moduleId, extend = {}) => {
     const { visited } = this.state;
 
     this.setState({
-      visited: visited.includes(id) ? visited : [...visited, id],
-      viewPortOffset,
-      showGrid: false,
+      activeModuleId: moduleId,
+      visited: visited.includes(moduleId) ? visited : [...visited, moduleId],
+      gridView: false,
       ...extend
     });
   };
 
   onModuleClose = moduleId => {
+    const { activeModuleId, visited } = this.state;
+
     this.setState({
-      visited: this.state.visited.filter(id => id !== moduleId)
+      activeModuleId: activeModuleId === moduleId ? MODULES_IDS.TASK_LIST : activeModuleId,
+      visited: visited.filter(id => id !== moduleId)
     });
   };
 
-  renderGrid(props) {
-    const modules = MODULES.map(({ id, Component, offset, inViewPort, locked }) => ({
-      id,
-      offset,
-      inViewPort,
-      locked,
-      node: <Component {...(this.handlers[id] ? this.handlers[id](props) : {})} />,
-    }));
+  resetGrid= () => {
+    this.setState({ layouts: {} });
+  };
+
+  onLayoutChange = (layout, layouts) => {
+    saveToLS('layouts', layouts);
+    this.setState({ layouts });
+  };
+
+  toggleGridView = () => {
+    this.setState({ gridView: !this.state.gridView })
+  };
+
+  renderMenu() {
+    return (
+      <div style={{ position: 'absolute', right: 10, zIndex: 9 }}>
+        <Menu
+          options={[{
+            label: 'Log out',
+            action: () => window.location.replace('logout'),
+          }, {
+            label: 'Show grid',
+            action: this.toggleGridView,
+            disabled: this.state.visited.length === 1,
+          }, {
+            label: 'Reset grid',
+            action: this.resetGrid,
+            visible: this.state.gridView,
+          }]}
+        />
+      </div>
+    );
+  }
+
+  renderModule(moduleId, props) {
+    const { activeModuleId } = this.state;
+    const Component = MODULES_COMPONENTS[activeModuleId];
 
     return (
-      <Grid
-        onModuleClose={this.onModuleClose}
-        dynamic
-        showGrid={this.state.showGrid}
-        modules={modules}
-        handlers={this.handlers}
-        visited={this.state.visited}
-        viewPortOffset={this.state.viewPortOffset}
-        onModuleChange={this.onModuleChange}
-      />
+      <Component moduleId={activeModuleId} key={activeModuleId} {...this.moduleHandler(activeModuleId, props)} />
     );
+  }
+
+  renderResponsiveGrid(props) {
+    const { layouts, visited } = this.state;
+    const modules = visited.map(moduleId => ({ moduleId, Component: MODULES_COMPONENTS[moduleId] }));
+
+    return (
+      <ResponsiveGrid
+        layouts={layouts}
+        onModuleClose={this.onModuleClose}
+        onModuleChange={this.onModuleChange}
+        onLayoutChange={this.onLayoutChange}
+      >
+        {modules.map(({ moduleId, Component }) => (
+          <Component moduleId={moduleId} key={moduleId} {...this.moduleHandler(moduleId, props)} />
+        ))}
+      </ResponsiveGrid>
+    );
+  }
+
+  renderApplication(props) {
+    return (
+      <Fragment>
+        {this.renderMenu()}
+        {this.state.gridView ? this.renderResponsiveGrid(props) : this.renderModule(MODULES_IDS.TASK_LIST, props)}
+      </Fragment>
+    )
   }
 
   render() {
@@ -271,31 +260,7 @@ class App extends Component {
             if (error) {
               return <div>{JSON.stringify(error)}</div>;
             } else if (props) {
-              return (
-                <div>
-                  <div style={{ position: 'absolute', right: 10, zIndex: 9 }}>
-                    <Menu
-                      options={[{
-                        label: 'Log out',
-                        action: () => window.location.replace('logout'),
-                      }, {
-                        label: 'Show grid',
-                        action: () => this.setState({ showGrid: true }),
-                        disabled: this.state.showGrid || this.state.visited.length === 1,
-                      }]}
-                    />
-                    {/*<Menu*/}
-                    {/*iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}*/}
-                    {/*anchorOrigin={{horizontal: 'right', vertical: 'top'}}*/}
-                    {/*targetOrigin={{horizontal: 'right', vertical: 'top'}}*/}
-                  {/*>*/}
-                    {/*<MenuItem primaryText="Logout" onClick={(() => window.location.replace('logout'))} />*/}
-                    {/*<MenuItem disabled={this.state.showGrid || this.state.visited.length === 1} primaryText="Show grid" onClick={(() => this.setState({ showGrid: true }))} />*/}
-                  {/*</Menu>*/}
-                </div>
-                {this.renderGrid(props)}
-              </div>
-              );
+              return this.renderApplication(props);
             }
             return (
               <Loader />

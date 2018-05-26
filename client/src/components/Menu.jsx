@@ -37,7 +37,7 @@ class Menu extends React.Component {
           open={Boolean(anchorEl)}
           onClose={this.handleClose}
         >
-          {options.map(({ label, action, disabled }, key) => (
+          {options.filter(({ visible = true }) => visible).map(({ label, action, disabled }, key) => (
             <MenuItem key={key} disabled={disabled} onClick={action}>
               {label}
             </MenuItem>

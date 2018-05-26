@@ -1,6 +1,6 @@
 {
   "name": "boilerplate",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "proxy": "https://g3f4-lifeapp.herokuapp.com/graphql/",
   "homepage": "",
@@ -12,9 +12,9 @@
     "prop-types": "^15.6.1",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
+    "react-grid-layout": "^0.16.6",
     "react-relay": "^1.6.0",
-    "relay-runtime": "^1.6.0",
-    "shallowequal": "^1.0.2"
+    "relay-runtime": "^1.6.0"
   },
   "scripts": {
     "build": "node setup && react-scripts build",

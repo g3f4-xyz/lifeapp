@@ -15,7 +15,7 @@ const styles = {
   },
 };
 
-class TaskCreate extends React.Component {
+class TaskCreate extends React.PureComponent {
   static propTypes = {
     onAdded: PropTypes.func,
     type: PropTypes.string,

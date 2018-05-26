@@ -75,6 +75,8 @@ class TaskList extends React.Component {
     const { data, onAdd, onDetails, onEdit } = this.props;
     const { list: { edges, pageInfo } }  = data || { list: { edges: [], pageInfo: {} } };
 
+    console.log(['TaskList:render'], this.props);
+
     return (
       <Fragment>
         <List

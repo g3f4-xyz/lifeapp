@@ -17,13 +17,15 @@ import red from '@material-ui/core/colors/red';
 import green from '@material-ui/core/colors/green';
 
 const styles = theme => ({
-  taskWrapper: {
+  actions: {
     display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'center'
   },
-  actions: {
+  fields: {
     display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center'
   },
   expand: {
     transform: 'rotate(0deg)',
@@ -152,15 +154,17 @@ class Task extends React.Component {
             timeout="auto"
             unmountOnExit
           >
-            <CardContent className={classes.taskWrapper}>
-              <div style={{ width: '100%' }}>
+            <CardContent>
+              <div className={classes.actions}>
                 <Button onClick={() => onDetails(id)}>Show</Button>
                 <Button onClick={() => onEdit(data)}>Edit</Button>
                 <Button onClick={() => onDelete(id)}>Delete</Button>
               </div>
+              <div className={classes.fields}>
               {additionalFields.map((field, key) => (
                 <Field key={key} data={field} />
               ))}
+              </div>
             </CardContent>
           </Collapse>
         </Card>
