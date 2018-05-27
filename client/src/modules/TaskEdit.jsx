@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import AddButton from '@material-ui/icons/Check';
-import Loader from "../components/Loader";
-import editTaskMutation from "../mutations/editTask";
+import Loader from '../components/Loader';
+import editTaskMutation from '../mutations/editTask';
 import Fields from '../components/Fields';
 
 const styles = {
@@ -55,7 +55,7 @@ export default class TaskEdit extends React.Component {
         <Loader />
       );
     }
-    console.log(['this.state.task'], this.state.task)
+
     const { fields } = this.state.task;
     const updateFieldValue = (fieldId, value) => {
       const fieldIndex = this.state.task.fields.findIndex(field => field.fieldId === fieldId);

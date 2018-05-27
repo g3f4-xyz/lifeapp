@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
-import { Input, Select } from '../components';
-import DatePicker from '../components/DatePicker';
+import { withStyles } from '@material-ui/core/styles';
+import { DatePicker, Input, Select } from './form';
 
 const styles = {
   row: {
@@ -13,21 +13,22 @@ const styles = {
   },
 };
 
-export default class Fields extends React.Component {
+class Fields extends React.Component {
   static propTypes = {
+    classes: PropTypes.object,
     onFieldChange: PropTypes.func,
     fields: PropTypes.array,
   };
 
   render() {
-    const { fields, onFieldChange } = this.props;
+    const { classes, fields, onFieldChange } = this.props;
 
     return fields
       .map(item => item) // propsy są immutable, sortowanie modyfikuje oryginalną tablicę
       .sort((a, b) => a.order - b.order)
       .map(({ fieldId, label, type, meta: { options }, value, info }) => (
         <div key={fieldId}>
-          <Paper style={styles.row}>
+          <Paper className={classes.row}>
             <div style={{ width: '100%' }}>
               {({
                 CHOICE: (
@@ -74,3 +75,5 @@ export default class Fields extends React.Component {
       ));
   }
 }
+
+export default withStyles(styles)(Fields);
