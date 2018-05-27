@@ -3,6 +3,7 @@ const addTask = require('./mutations/addTask');
 const addTaskType = require('./mutations/addTaskType');
 const editTask = require('./mutations/editTask');
 const deleteTask = require('./mutations/deleteTask');
+const scheduleNotification = require('./mutations/scheduleNotification');
 
 module.exports = new GraphQLObjectType({
   name: 'Mutation',
@@ -11,5 +12,6 @@ module.exports = new GraphQLObjectType({
     addTaskType,
     editTask,
     deleteTask,
+    scheduleNotification,
   }),
 });
