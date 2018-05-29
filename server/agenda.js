@@ -24,5 +24,5 @@ process.on('SIGTERM', graceful);
 process.on('SIGINT' , graceful);
 
 module.exports = {
-  schedule: (when, job, data) => agenda.schedule(when, job, data),
+  schedule: (when, job, data, callback) => agenda.schedule(when, job, data, callback),
 };

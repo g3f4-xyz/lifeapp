@@ -1,5 +1,5 @@
 {
-  "name": "boilerplate",
+  "name": "lifeapp-client",
   "version": "0.7.0",
   "private": true,
   "proxy": "https://g3f4-lifeapp.herokuapp.com/graphql/",
@@ -17,8 +17,8 @@
     "relay-runtime": "^1.6.0"
   },
   "scripts": {
-    "build": "node setup && react-scripts build",
-    "build:heroku": "node setup && REACT_APP_GRAPHQL_HOST=https://g3f4-lifeapp.herokuapp.com/graphql react-scripts build",
+    "build": "node setup && react-scripts build && cp public/worker.js ../build/",
+    "build:heroku": "node setup && REACT_APP_GRAPHQL_HOST=https://g3f4-lifeapp.herokuapp.com/graphql react-scripts build && cp public/worker.js ../build/",
     "test": "node setup && react-scripts test --env=jsdom",
     "start": "node setup && react-scripts start",
     "eject": "react-scripts eject",
