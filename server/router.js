@@ -1,33 +1,30 @@
 const express = require('express');
-const passport = require('passport');
-const { PUBLIC_PATH } =  require('./config');
+const cors = require('cors');
+const { HTML_PATHS, ROUTES } =  require('./config');
+const authRouter = require('./middlewares/authRouter');
+const notifications = require('./middlewares/notifications');
+const graphql = require('./middlewares/graphql');
 
 const router = express.Router();
-router.get('/', (req, res) => {
+
+router.get(ROUTES.ROOT, (req, res) => {
   if (req.isAuthenticated()) {
-    res.sendFile(process.cwd() + PUBLIC_PATH + '/app.html');
+    res.sendFile(HTML_PATHS.APP);
   } else {
-    res.redirect('/auth');
+    res.redirect(ROUTES.AUTH);
   }
 });
-
-router.get('/auth/google', passport.authenticate('google', {
-  scope: [
-    'https://www.googleapis.com/auth/plus.login',
-  ],
-  prompt : 'select_account',
-  name: 'lifeapp-local',
-}));
-router.get('/auth/google/logged', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/auth' }));
-router.get('/auth', (req, res) => {
-  res.sendFile(process.cwd() + '/server/login.html');
+router.get(ROUTES.DEMO, (req, res) => {
+  res.sendFile(HTML_PATHS.APP);
 });
-router.get('/demo', (req, res) => {
-  res.sendFile(process.cwd() + PUBLIC_PATH + '/app.html');
-});
-router.get('/logout', (req, res) => {
+router.get(ROUTES.LOGOUT, (req, res) => {
   req.logout();
-  res.redirect('/');
+  res.redirect(ROUTES.ROOT);
 });
+router.get(ROUTES.AUTH, (req, res) => res.sendFile(HTML_PATHS.LOGIN));
+
+router.use(ROUTES.AUTH, authRouter);
+router.use(ROUTES.GRAPHQL, cors(), graphql);
+router.use(ROUTES.NOTIFICATIONS, notifications);
 
 module.exports = router;
