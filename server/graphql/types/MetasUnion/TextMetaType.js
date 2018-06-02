@@ -2,7 +2,7 @@ const { GraphQLObjectType, GraphQLString, GraphQLBoolean, GraphQLInt, GraphQLLis
 
 module.exports = new GraphQLObjectType({
   name: 'TextMetaType',
-  description: 'TextMetaType',
+  description: 'text meta type',
   fields: () => ({
     required: {
       description: 'required',

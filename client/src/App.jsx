@@ -5,13 +5,24 @@ import ResponsiveGrid from './containers/ResponsiveGrid';
 import environment from './environment';
 import Menu from './components/Menu';
 import Loader from './components/Loader';
-import TaskList from './modules/TaskList';
-import TaskCreate from './modules/TaskCreate';
-import TaskEdit from './modules/TaskEdit';
-import TaskDetails from './modules/TaskDetails';
-import TaskTypeList from './modules/TaskTypeList';
+import Task from './modules/Task/Task';
+import TaskList from './modules/TaskList/TaskList';
+import TaskTypeList from './modules/TaskTypeList/TaskTypeList';
 
 const originalLayouts = getFromLS('layouts') || {};
+
+const MODULES_IDS = {
+  TASK: 'task',
+  TASK_LIST: 'taskList',
+  TASK_TYPE_LIST: 'taskTypeList',
+};
+
+const MODULES_COMPONENTS = {
+  [MODULES_IDS.TASK]: Task,
+  [MODULES_IDS.TASK_LIST]: TaskList,
+  [MODULES_IDS.TASK_TYPE_LIST]: TaskTypeList,
+};
+const APP_MODULES_IDS = [MODULES_IDS.TASK_LIST, MODULES_IDS.TASK_TYPE_LIST];
 
 function getFromLS(key) {
   let ls = {};
@@ -36,126 +47,144 @@ function saveToLS(key, value) {
   }
 }
 
-const MODULES_IDS = {
-  TASK_LIST: 'TaskList',
-  TASK_CREATE: 'TaskCreate',
-  TASK_EDIT: 'TaskEdit',
-  TASK_DETAILS: 'TaskDetails',
-  TASK_TYPE_LIST: 'TaskTypeList',
-};
-
-const MODULES_COMPONENTS = {
-  [MODULES_IDS.TASK_LIST]: TaskList,
-  [MODULES_IDS.TASK_TYPE_LIST]: TaskTypeList,
-  [MODULES_IDS.TASK_CREATE]: TaskCreate,
-  [MODULES_IDS.TASK_EDIT]: TaskEdit,
-  [MODULES_IDS.TASK_DETAILS]: TaskDetails,
-};
-
 class App extends Component {
   state = {
-    selectedTaskId: null, // #TODO rozbudować scheme na froncie żeby przechowywała tą informacje
-    visited: [MODULES_IDS.TASK_LIST],
-    activeModuleId: MODULES_IDS.TASK_LIST,
+    activeModuleId: null,
+    openedTasksData: [],
+    appOpenedModules: [MODULES_IDS.TASK_LIST],
     layouts: JSON.parse(JSON.stringify(originalLayouts)),
-    gridView: false,
+    gridView: true,
   };
 
   handlers = {
-    [MODULES_IDS.TASK_LIST]: (props) => ({
-      data: props.app && props.app.taskList,
+    [MODULES_IDS.TASK]: ({ editMode, ...data }) => ({
+      moduleId: data.id,
+      editMode,
+      data,
+      onSave: taskId => {
+        console.log(['handlers:task:onSave']);
+
+        this.setState(({ openedTasksData }) => ({
+          openedTasksData: openedTasksData.filter(({ id }) => id === data.id),
+        }));
+        this.onModuleChange(MODULES_IDS.TASK_LIST);
+        this.closeModule(taskId);
+      },
+    }),
+    [MODULES_IDS.TASK_LIST]: (data) => ({
+      moduleId: MODULES_IDS.TASK_LIST,
+      data,
       onAdd: () => {
+        console.log(['handlers:taskList:onAdd']);
+
         this.onModuleChange(MODULES_IDS.TASK_TYPE_LIST);
       },
-      onDetails: this.onDetails,
-      onEdit: this.onEdit,
-    }),
-    [MODULES_IDS.TASK_TYPE_LIST]: (props) => ({
-      data: props.app && props.app.taskTypeList,
-      onAdd: () => {
-        console.log(['onAdd']);
+      onDetails: (taskData) => {
+        console.log(['handlers:taskList:onDetails'], taskData);
+
+        this.setState({
+          openedTasksData: [
+            ...this.state.openedTasksData,
+            {
+              ...taskData,
+              editMode: false,
+            }
+          ]
+        });
+        if (!this.state.gridView) {
+          this.onModuleChange(taskData.id);
+        }
       },
-      onSelect: (type) => {
-        this.onModuleChange(MODULES_IDS.TASK_CREATE, {
-          type,
+      onEdit: (taskData) => {
+        console.log(['handlers:taskList:onEdit'], taskData);
+        const { openedTasksData } = this.state;
+
+        this.setState({
+          activeModuleId: taskData.id,
+          gridView: false,
+          openedTasksData: [
+            ...openedTasksData,
+            {
+              ...taskData,
+              editMode: true,
+            }
+          ]
         });
       },
     }),
-    [MODULES_IDS.TASK_DETAILS]: (props) => ({
-      selectedTaskId: this.state.selectedTaskId,
-      data: props.app, // #TODO dodać wyświetlanie wielu szczegółów. Wymaga przebudowy Grida. Do tego czasu wyświetamy tylko ostatni z listy.
-    }),
-    [MODULES_IDS.TASK_CREATE]: (props) => ({
-      onAdded: this.onAdded,
-      data: props.app,
-      type: this.state.type,
-    }),
-    [MODULES_IDS.TASK_EDIT]: (props) => ({
-      data: this.state.editTaskData,
-      onEdited: this.onEdited,
-      environment,
-      parentId: props.app.taskList.id,
+    [MODULES_IDS.TASK_TYPE_LIST]: data => ({
+      moduleId: MODULES_IDS.TASK_TYPE_LIST,
+      data,
+      onAdd: () => {
+        console.log(['onAdd']);
+      },
+      onSelect: type => {
+        console.log(['handlers:taskTypeList:type'], type);
+        const temporaryId = Date.now();
+
+        this.setState({
+          activeModuleId: temporaryId,
+          openedTasksData: [
+            ...this.state.openedTasksData,
+            {
+              temporaryId,
+              isNew: true,
+              editMode: true,
+              ...type,
+            }
+          ]
+        });
+        // this.onModuleChange(MODULES_IDS.TASK_CREATE, {
+        //   type,
+        // });
+      },
     }),
   };
 
-  moduleHandler(moduleId, props) {
-    console.log(['moduleHandler'], moduleId);
+  moduleHandler(moduleId, data) {
     const handler = this.handlers[moduleId];
 
     if (handler) {
-      return handler(props);
+      return handler(data);
     }
 
     console.error(`No module handler provider for module ${moduleId}`);
   }
 
-  onAdded = () => {
-    this.onModuleChange(MODULES_IDS.TASK_LIST);
-  };
+  onModuleChange = (activeModuleId) => {
+    console.log(['App:onModuleChange:activeModuleId'], activeModuleId);
 
-  onDetails = selectedTaskId => {
-    this.setState({ selectedTaskId });
-    if (this.state.gridView) {
-      this.setState({
-        visited: this.state.visited.includes(MODULES_IDS.TASK_DETAILS)
-          ? this.state.visited
-          : [...this.state.visited, MODULES_IDS.TASK_DETAILS]
-      })
-    } else {
-      this.onModuleChange(MODULES_IDS.TASK_DETAILS);
-    }
-  };
-
-  onEdit = editTaskData => {
-    console.log(['App:onEdit'], editTaskData);
-    this.setState({ editTaskData });
-    this.onModuleChange(MODULES_IDS.TASK_EDIT);
-  };
-
-  onEdited = () => {
-    console.log(['App:onEdited']);
-    this.setState({ editTaskData: null });
-    this.onModuleChange(MODULES_IDS.TASK_LIST);
-  };
-
-  onModuleChange = (moduleId, extend = {}) => {
-    const { visited } = this.state;
+    const { appOpenedModules } = this.state;
+    const isApplicationModule = APP_MODULES_IDS.includes(activeModuleId);
+    const setAppOpenedModules = () => {
+      return appOpenedModules.includes(activeModuleId)
+        ? appOpenedModules
+        : [...appOpenedModules, activeModuleId];
+    };
 
     this.setState({
-      activeModuleId: moduleId,
-      visited: visited.includes(moduleId) ? visited : [...visited, moduleId],
+      activeModuleId,
       gridView: false,
-      ...extend
+      appOpenedModules: isApplicationModule
+        ? setAppOpenedModules()
+        : appOpenedModules,
     });
   };
 
-  onModuleClose = moduleId => {
-    const { activeModuleId, visited } = this.state;
+  closeModule = moduleId => {
+    console.log(['App:closeModule:moduleId'], moduleId);
+    const { appOpenedModules, openedTasksData } = this.state;
 
-    this.setState({
-      activeModuleId: activeModuleId === moduleId ? MODULES_IDS.TASK_LIST : activeModuleId,
-      visited: visited.filter(id => id !== moduleId)
-    });
+    if (APP_MODULES_IDS.includes(moduleId)) {
+      this.setState({
+        appOpenedModuleIds: appOpenedModules.filter(id => id !== moduleId),
+      });
+    } else {
+      this.setState({
+        appOpenedModuleIds: appOpenedModules.filter(id => id !== moduleId),
+        openedTasksData: openedTasksData.filter(({ id }) => id !== moduleId),
+      });
+    }
   };
 
   resetGrid= () => {
@@ -181,7 +210,7 @@ class App extends Component {
           }, {
             label: 'Show grid',
             action: this.toggleGridView,
-            disabled: this.state.visited.length === 1,
+            disabled: this.state.appOpenedModules.length + this.state.openedTasksData.length < 2,
           }, {
             label: 'Reset grid',
             action: this.resetGrid,
@@ -193,28 +222,53 @@ class App extends Component {
   }
 
   renderModule(moduleId, props) {
-    const { activeModuleId } = this.state;
-    const Component = MODULES_COMPONENTS[activeModuleId];
+    const { activeModuleId, openedTasksData } = this.state;
+    const taskData = openedTasksData.find(({ id, temporaryId }) => id === activeModuleId || temporaryId === activeModuleId);
+    const isApplicationModule = APP_MODULES_IDS.includes(moduleId);
+    const Component = isApplicationModule ? MODULES_COMPONENTS[activeModuleId] : MODULES_COMPONENTS[MODULES_IDS.TASK];
+    const handlerName = isApplicationModule ? moduleId : MODULES_IDS.TASK;
+    const data = isApplicationModule ? props.app[activeModuleId] : taskData;
 
     return (
-      <Component moduleId={activeModuleId} key={activeModuleId} {...this.moduleHandler(activeModuleId, props)} />
+      <Component
+        key={activeModuleId}
+        {...this.moduleHandler(handlerName, data)}
+      />
     );
   }
 
+  renderApplicationModules(props) {
+    const { appOpenedModules } = this.state;
+
+    return appOpenedModules.map(moduleId => {
+      const Component = MODULES_COMPONENTS[moduleId];
+
+      return (
+        <Component key={moduleId} {...this.moduleHandler(moduleId, props.app[moduleId])} />
+      );
+    });
+  }
+
+  renderTaskModules() {
+    const { openedTasksData } = this.state;
+
+    return openedTasksData.map(data => (
+      <Task key={data.id} {...this.moduleHandler(MODULES_IDS.TASK, data)} />
+    ));
+  }
+
   renderResponsiveGrid(props) {
-    const { layouts, visited } = this.state;
-    const modules = visited.map(moduleId => ({ moduleId, Component: MODULES_COMPONENTS[moduleId] }));
+    const { layouts } = this.state;
 
     return (
       <ResponsiveGrid
         layouts={layouts}
-        onModuleClose={this.onModuleClose}
+        onModuleClose={this.closeModule}
         onModuleChange={this.onModuleChange}
         onLayoutChange={this.onLayoutChange}
       >
-        {modules.map(({ moduleId, Component }) => (
-          <Component moduleId={moduleId} key={moduleId} {...this.moduleHandler(moduleId, props)} />
-        ))}
+        {this.renderApplicationModules(props)}
+        {this.renderTaskModules()}
       </ResponsiveGrid>
     );
   }
@@ -223,7 +277,7 @@ class App extends Component {
     return (
       <Fragment>
         {this.renderMenu()}
-        {this.state.gridView ? this.renderResponsiveGrid(props) : this.renderModule(MODULES_IDS.TASK_LIST, props)}
+        {this.state.gridView ? this.renderResponsiveGrid(props) : this.renderModule(this.state.activeModuleId, props)}
       </Fragment>
     )
   }
@@ -246,8 +300,6 @@ class App extends Component {
                 taskTypeList {
                   ...TaskTypeList
                 }
-                ...TaskDetails
-                ...TaskCreate
               }
             }
           `}

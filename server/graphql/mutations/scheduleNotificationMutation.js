@@ -1,10 +1,10 @@
 const { GraphQLString } = require('graphql');
 const { mutationWithClientMutationId } = require('graphql-relay');
 const { schedule } = require('../../agenda');
-const notificationType = require('./inputs/notificationType');
+const notificationType = require('./inputs/notificationInputType');
 
 module.exports = mutationWithClientMutationId({
-  name: 'scheduleNotification',
+  name: 'scheduleNotificationMutation',
   inputFields: {
     when: {
       type: GraphQLString,
@@ -17,7 +17,7 @@ module.exports = mutationWithClientMutationId({
     message: { type: GraphQLString },
   },
   mutateAndGetPayload: async ({ when, notification }) => {
-    console.log(['scheduleNotification:mutateAndGetPayload'], { when, notification });
+    console.log(['scheduleNotificationMutation:mutateAndGetPayload'], { when, notification });
     schedule(when, 'notification', notification);
 
     return notification;

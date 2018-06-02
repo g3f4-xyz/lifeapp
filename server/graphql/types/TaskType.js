@@ -5,7 +5,7 @@ const FieldType = require('./FieldType');
 
 module.exports = new GraphQLObjectType({
   name: 'TaskType',
-  description: 'Task type decription',
+  description: 'task type',
   fields: () => ({
     id: globalIdField('Task', ({ _id }) => _id),
     taskType: {

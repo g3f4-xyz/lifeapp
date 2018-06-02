@@ -6,7 +6,7 @@ import environment from '../environment';
 
 const mutation = graphql`
   mutation deleteTaskMutation(
-    $input: deleteTaskInput!
+    $input: deleteTaskMutationInput!
   ) {
     deleteTask(input: $input) {
       # Aktualnie serwer zwraca null przez co za pewne nie działa jakiś mechanizm relay

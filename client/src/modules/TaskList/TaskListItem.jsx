@@ -61,7 +61,7 @@ class Field extends React.Component {
   };
 }
 
-class Task extends React.Component {
+class TaskListItem extends React.Component {
   static propTypes = {
     data: PropTypes.object,
     expanded: PropTypes.bool,
@@ -156,7 +156,7 @@ class Task extends React.Component {
           >
             <CardContent>
               <div className={classes.actions}>
-                <Button onClick={() => onDetails(id)}>Show</Button>
+                <Button onClick={() => onDetails(data)}>Show</Button>
                 <Button onClick={() => onEdit(data)}>Edit</Button>
                 <Button onClick={() => onDelete(id)}>Delete</Button>
               </div>
@@ -173,4 +173,4 @@ class Task extends React.Component {
   }
 }
 
-export default withStyles(styles)(Task);
+export default withStyles(styles)(TaskListItem);

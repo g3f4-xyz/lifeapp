@@ -1,53 +1,9 @@
-input addTaskInput {
-  id: ID
-  taskType: String
-  fields: [editTaskInputType]
-  clientMutationId: String
-}
-
-type addTaskPayload {
-  newTaskEdge: TaskTypeEdge
-  clientMutationId: String
-}
-
-input addTaskTypeInput {
-  typeId: ID
-  name: String
-  description: String
-  order: Int
-  isCustom: Boolean
-  parentId: String
-  fieldsConfig: [taskTypeFieldsConfigInputType]
-  clientMutationId: String
-}
-
-type addTaskTypePayload {
-  newTaskTypeEdge: TaskTypeTypeEdge
-  taskTypeList: TaskTypeListType
-  clientMutationId: String
-}
-
-"""add task`s type value input type"""
-input addTaskTypeValueFieldType {
-  number: Int
-  text: String
-  id: String
-}
-
 """Application entry point"""
 type AppType {
   """The ID of an object"""
   id: ID!
   taskList: TaskListType
   taskTypeList: TaskTypeListType
-  detailsList(ids: [ID]): [TaskType]
-  taskCreate(type: String): TaskType
-}
-
-"""Choice options input Type"""
-input ChoiceOptionsInputType {
-  text: String
-  value: String
 }
 
 """Choice options Type"""
@@ -59,60 +15,29 @@ type ChoiceOptionsType {
   value: String
 }
 
-input deleteTaskInput {
+input deleteTaskMutationInput {
   id: ID
   clientMutationId: String
 }
 
-type deleteTaskPayload {
+type deleteTaskMutationPayload {
   deletedTaskId: String
   clientMutationId: String
 }
 
-input editTaskInput {
-  id: ID
-  taskType: String
-  fields: [editTaskInputType]
-  clientMutationId: String
-}
-
-"""edit task input type"""
-input editTaskInputType {
+"""fields input type"""
+input fieldsInputType {
   fieldId: String
   format: String
   order: Int
   type: String
   label: String
-  value: FieldValueInputType
+  value: valueInputType
   info: String
-  meta: FieldMetaInputType
+  meta: metaInputType
 }
 
-type editTaskPayload {
-  newTaskEdge: TaskTypeEdge
-  clientMutationId: String
-}
-
-"""FieldMetaInputType"""
-input FieldMetaInputType {
-  required: Boolean
-  minLen: Int
-  maxLen: Int
-
-  """options"""
-  options: [ChoiceOptionsInputType]
-}
-
-"""add task`s type meta input type"""
-input fieldsConfigMetaInputType {
-  required: Boolean
-  minLen: Int
-  maxLen: Int
-  min: Float
-  max: Float
-}
-
-"""Field Type"""
+"""field type"""
 type FieldType {
   """fieldId field description"""
   fieldId: String
@@ -139,21 +64,21 @@ type FieldType {
   meta: MetasUnion
 }
 
-"""FieldValueInputType"""
-input FieldValueInputType {
-  text: String
-  number: Int
-  id: String
+"""meta input type"""
+input metaInputType {
+  required: Boolean
+  minLen: Int
+  maxLen: Int
+  options: [optionsInputType]
 }
 
-"""Metas Union"""
+"""metas union"""
 union MetasUnion = NumberMetaType | TextMetaType
 
 type Mutation {
-  addTask(input: addTaskInput!): addTaskPayload
-  addTaskType(input: addTaskTypeInput!): addTaskTypePayload
-  editTask(input: editTaskInput!): editTaskPayload
-  deleteTask(input: deleteTaskInput!): deleteTaskPayload
+  deleteTask(input: deleteTaskMutationInput!): deleteTaskMutationPayload
+  saveTask(input: saveTaskMutationInput!): saveTaskMutationPayload
+  saveTaskType(input: saveTaskTypeMutationInput!): saveTaskTypeMutationPayload
 }
 
 """An object with an ID"""
@@ -162,7 +87,7 @@ interface Node {
   id: ID!
 }
 
-"""NumberMetaType"""
+"""number meta type"""
 type NumberMetaType {
   """required"""
   required: Boolean
@@ -174,8 +99,15 @@ type NumberMetaType {
   max: Float
 }
 
+"""number value type"""
 type NumberValueType {
   number: Float
+}
+
+"""options input type"""
+input optionsInputType {
+  text: String
+  value: String
 }
 
 """Information about pagination in a connection."""
@@ -196,15 +128,45 @@ type PageInfo {
 type Query {
   """Application entry point"""
   app: AppType
-
-  """Fetches an object given its ID"""
-  node(
-    """The ID of an object"""
-    id: ID!
-  ): Node
 }
 
-"""TaskListType module description"""
+input saveTaskMutationInput {
+  isNew: Boolean
+  task: taskInputType
+  clientMutationId: String
+}
+
+type saveTaskMutationPayload {
+  newTaskEdge: TaskTypeEdge
+  clientMutationId: String
+}
+
+input saveTaskTypeMutationInput {
+  typeId: ID
+  name: String
+  description: String
+  order: Int
+  isNew: Boolean
+  isCustom: Boolean
+  parentId: String
+  fieldsConfig: [fieldsInputType]
+  clientMutationId: String
+}
+
+type saveTaskTypeMutationPayload {
+  newTaskTypeEdge: TaskTypeTypeEdge
+  taskTypeList: TaskTypeListType
+  clientMutationId: String
+}
+
+"""task input type"""
+input taskInputType {
+  id: ID
+  taskType: String
+  fields: [fieldsInputType]
+}
+
+"""task list type"""
 type TaskListType implements Node {
   """The ID of an object"""
   id: ID!
@@ -213,7 +175,7 @@ type TaskListType implements Node {
   list(after: String, first: Int, before: String, last: Int): TaskTypeConnection
 }
 
-"""Task type decription"""
+"""task type"""
 type TaskType implements Node {
   """The ID of an object"""
   id: ID!
@@ -239,19 +201,7 @@ type TaskTypeEdge {
   cursor: String!
 }
 
-"""add task type fields config input type"""
-input taskTypeFieldsConfigInputType {
-  fieldId: String
-  format: String
-  order: Int
-  type: String
-  label: String
-  info: String
-  meta: fieldsConfigMetaInputType
-  value: addTaskTypeValueFieldType
-}
-
-"""TaskTypeListType module description"""
+"""task type list type"""
 type TaskTypeListType implements Node {
   """The ID of an object"""
   id: ID!
@@ -260,7 +210,7 @@ type TaskTypeListType implements Node {
   list(after: String, first: Int, before: String, last: Int): TaskTypeTypeConnection
 }
 
-"""Task type decription"""
+"""task type type"""
 type TaskTypeType implements Node {
   """The ID of an object"""
   id: ID!
@@ -291,7 +241,7 @@ type TaskTypeTypeEdge {
   cursor: String!
 }
 
-"""TextMetaType"""
+"""text meta type"""
 type TextMetaType {
   """required"""
   required: Boolean
@@ -306,10 +256,17 @@ type TextMetaType {
   options: [ChoiceOptionsType]
 }
 
-type TextNumberType {
+type TextValueType {
   text: String
   id: String
 }
 
+"""value input type"""
+input valueInputType {
+  text: String
+  number: Int
+  id: String
+}
+
 """Values Union"""
-union ValuesUnion = NumberValueType | TextNumberType
+union ValuesUnion = NumberValueType | TextValueType

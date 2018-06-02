@@ -9,7 +9,7 @@ const TYPES = {
 
 module.exports = new GraphQLUnionType({
   name: 'MetasUnion',
-  description: 'Metas Union',
+  description: 'metas union',
   types: [NumberMetaType, TextMetaType],
   resolveType: ({ type }) => TYPES[type] || TYPES.TEXT,
 });

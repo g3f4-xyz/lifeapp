@@ -4,9 +4,9 @@ import { createPaginationContainer, graphql } from 'react-relay';
 import IconButton from '@material-ui/core/IconButton';
 import More from '@material-ui/icons/MoreHoriz';
 import AddCircle from '@material-ui/icons/AddCircle';
-import onDeleteMutation from '../mutations/deleteTask';
-import Loader from '../components/Loader';
-import Task from './Task';
+import onDeleteMutation from '../../mutations/deleteTask';
+import Loader from '../../components/Loader';
+import Task from './TaskListItem';
 
 const PAGE_SIZE = 5;
 
@@ -74,8 +74,6 @@ class TaskList extends React.Component {
   render() {
     const { data, onAdd, onDetails, onEdit } = this.props;
     const { list: { edges, pageInfo } }  = data || { list: { edges: [], pageInfo: {} } };
-
-    console.log(['TaskList:render'], this.props);
 
     return (
       <Fragment>
@@ -145,7 +143,7 @@ export default createPaginationContainer(
                 ... on NumberValueType {
                   number
                 }
-                ... on TextNumberType{
+                ... on TextValueType{
                   text
                   id # tymczasowo do czasu dorobienia type dla ChoiceValueType
                 }

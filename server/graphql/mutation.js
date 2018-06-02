@@ -1,17 +1,15 @@
 const { GraphQLObjectType } = require('graphql');
-const addTask = require('./mutations/addTask');
-const addTaskType = require('./mutations/addTaskType');
-const editTask = require('./mutations/editTask');
-const deleteTask = require('./mutations/deleteTask');
-const scheduleNotification = require('./mutations/scheduleNotification');
+const deleteTask = require('./mutations/deleteTaskMutation');
+const saveTask = require('./mutations/saveTaskMutation');
+const saveTaskType = require('./mutations/saveTaskTypeMutation');
+// const scheduleNotification = require('./mutations/scheduleNotificationMutation');
 
 module.exports = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
-    addTask,
-    addTaskType,
-    editTask,
     deleteTask,
-    scheduleNotification,
+    saveTask,
+    saveTaskType,
+    // scheduleNotification,
   }),
 });

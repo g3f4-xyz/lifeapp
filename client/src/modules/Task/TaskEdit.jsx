@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import update from 'immutability-helper';
 import AddButton from '@material-ui/icons/Check';
-import Loader from '../components/Loader';
-import editTaskMutation from '../mutations/editTask';
-import Fields from '../components/Fields';
+import saveTaskMutation from '../../mutations/saveTask';
+import Fields from '../../components/Fields';
 
 const styles = {
   row: {
@@ -17,7 +16,7 @@ const styles = {
 
 export default class TaskEdit extends React.Component {
   static propTypes = {
-    onEdited: PropTypes.func,
+    onSave: PropTypes.func,
     data: PropTypes.object,
     parentId: PropTypes.string,
   };
@@ -36,12 +35,20 @@ export default class TaskEdit extends React.Component {
   }
 
   onSave = async () => {
-    const { id, fields } = this.state.task;
+    const { isNew, ...task } = this.state.task;
+    const id = isNew ? '' : task.id;
     console.log(['TaskEdit:onSave'], this.state.task);
-    this.props.onEdited();
+    this.props.onSave(id);
 
     try {
-      await editTaskMutation({ id, fields });
+      await saveTaskMutation({
+        isNew,
+        task: {
+          fields: task.fields,
+          id,
+          taskType: task.taskType,
+        },
+      });
     }
 
     catch (error) {
@@ -51,12 +58,10 @@ export default class TaskEdit extends React.Component {
 
   render() {
     if (!this.state.task) {
-      return (
-        <Loader />
-      );
+      return null;
     }
 
-    const { fields } = this.state.task;
+    const { fields, taskType } = this.state.task;
     const updateFieldValue = (fieldId, value) => {
       const fieldIndex = this.state.task.fields.findIndex(field => field.fieldId === fieldId);
 
@@ -75,22 +80,19 @@ export default class TaskEdit extends React.Component {
 
     return (
       <div style={styles.root}>
-        {this.state.pending ? (
-          <Loader />
-        ) : (
-          <AddButton
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              color: '#8BC34A',
-              right: 0,
-              margin: 20,
-              width: '20%',
-              height: '20%',
-            }}
-            onClick={this.onSave}
-          />
-        )}
+        <AddButton
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            color: '#8BC34A',
+            right: 0,
+            margin: 20,
+            width: '20%',
+            height: '20%',
+          }}
+          onClick={this.onSave}
+        />
+        <h1>{taskType}</h1>
         <Fields fields={fields} onFieldChange={updateFieldValue} />
       </div>
     );

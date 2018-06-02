@@ -2,7 +2,7 @@ const { GraphQLObjectType, GraphQLBoolean, GraphQLFloat } = require('graphql');
 
 module.exports = new GraphQLObjectType({
   name: 'NumberMetaType',
-  description: 'NumberMetaType',
+  description: 'number meta type',
   fields: () => ({
     required: {
       description: 'required',

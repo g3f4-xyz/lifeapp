@@ -5,7 +5,7 @@ const FieldType = require('./FieldType');
 
 module.exports = new GraphQLObjectType({
   name: 'TaskTypeType',
-  description: 'Task type decription',
+  description: 'task type type',
   fields: () => ({
     id: globalIdField('TaskTypeType', ({ _id }) => _id),
     typeId: {
@@ -30,7 +30,7 @@ module.exports = new GraphQLObjectType({
     },
     parentId: {
       type: GraphQLString,
-      resolve: ({ parentId }) => parentId,
+      resolve: ({ parentId }) => console.log(['taskatype parent id resolce'], parentId) || parentId,
     },
     fieldsConfig: {
       type: new GraphQLList(FieldType),

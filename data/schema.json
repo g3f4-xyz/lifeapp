@@ -25,33 +25,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "node",
-              "description": "Fetches an object given its ID",
-              "args": [
-                {
-                  "name": "id",
-                  "description": "The ID of an object",
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "ID",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "INTERFACE",
-                "name": "Node",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
             }
           ],
           "inputFields": null,
@@ -103,60 +76,6 @@
               },
               "isDeprecated": false,
               "deprecationReason": null
-            },
-            {
-              "name": "detailsList",
-              "description": null,
-              "args": [
-                {
-                  "name": "ids",
-                  "description": null,
-                  "type": {
-                    "kind": "LIST",
-                    "name": null,
-                    "ofType": {
-                      "kind": "SCALAR",
-                      "name": "ID",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "OBJECT",
-                  "name": "TaskType",
-                  "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "taskCreate",
-              "description": null,
-              "args": [
-                {
-                  "name": "type",
-                  "description": null,
-                  "type": {
-                    "kind": "SCALAR",
-                    "name": "String",
-                    "ofType": null
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "TaskType",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
             }
           ],
           "inputFields": null,
@@ -177,7 +96,7 @@
         {
           "kind": "OBJECT",
           "name": "TaskListType",
-          "description": "TaskListType module description",
+          "description": "task list type",
           "fields": [
             {
               "name": "id",
@@ -490,7 +409,7 @@
         {
           "kind": "OBJECT",
           "name": "TaskType",
-          "description": "Task type decription",
+          "description": "task type",
           "fields": [
             {
               "name": "id",
@@ -566,7 +485,7 @@
         {
           "kind": "OBJECT",
           "name": "FieldType",
-          "description": "Field Type",
+          "description": "field type",
           "fields": [
             {
               "name": "fieldId",
@@ -686,7 +605,7 @@
             },
             {
               "kind": "OBJECT",
-              "name": "TextNumberType",
+              "name": "TextValueType",
               "ofType": null
             }
           ]
@@ -694,7 +613,7 @@
         {
           "kind": "OBJECT",
           "name": "NumberValueType",
-          "description": null,
+          "description": "number value type",
           "fields": [
             {
               "name": "number",
@@ -726,7 +645,7 @@
         },
         {
           "kind": "OBJECT",
-          "name": "TextNumberType",
+          "name": "TextValueType",
           "description": null,
           "fields": [
             {
@@ -762,7 +681,7 @@
         {
           "kind": "UNION",
           "name": "MetasUnion",
-          "description": "Metas Union",
+          "description": "metas union",
           "fields": null,
           "inputFields": null,
           "interfaces": null,
@@ -783,7 +702,7 @@
         {
           "kind": "OBJECT",
           "name": "NumberMetaType",
-          "description": "NumberMetaType",
+          "description": "number meta type",
           "fields": [
             {
               "name": "required",
@@ -830,7 +749,7 @@
         {
           "kind": "OBJECT",
           "name": "TextMetaType",
-          "description": "TextMetaType",
+          "description": "text meta type",
           "fields": [
             {
               "name": "required",
@@ -928,7 +847,7 @@
         {
           "kind": "OBJECT",
           "name": "TaskTypeListType",
-          "description": "TaskTypeListType module description",
+          "description": "task type list type",
           "fields": [
             {
               "name": "id",
@@ -1096,7 +1015,7 @@
         {
           "kind": "OBJECT",
           "name": "TaskTypeType",
-          "description": "Task type decription",
+          "description": "task type type",
           "fields": [
             {
               "name": "id",
@@ -1220,87 +1139,6 @@
           "description": null,
           "fields": [
             {
-              "name": "addTask",
-              "description": null,
-              "args": [
-                {
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "addTaskInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "addTaskPayload",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "addTaskType",
-              "description": null,
-              "args": [
-                {
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "addTaskTypeInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "addTaskTypePayload",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "editTask",
-              "description": null,
-              "args": [
-                {
-                  "name": "input",
-                  "description": null,
-                  "type": {
-                    "kind": "NON_NULL",
-                    "name": null,
-                    "ofType": {
-                      "kind": "INPUT_OBJECT",
-                      "name": "editTaskInput",
-                      "ofType": null
-                    }
-                  },
-                  "defaultValue": null
-                }
-              ],
-              "type": {
-                "kind": "OBJECT",
-                "name": "editTaskPayload",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
               "name": "deleteTask",
               "description": null,
               "args": [
@@ -1312,7 +1150,7 @@
                     "name": null,
                     "ofType": {
                       "kind": "INPUT_OBJECT",
-                      "name": "deleteTaskInput",
+                      "name": "deleteTaskMutationInput",
                       "ofType": null
                     }
                   },
@@ -1321,7 +1159,61 @@
               ],
               "type": {
                 "kind": "OBJECT",
-                "name": "deleteTaskPayload",
+                "name": "deleteTaskMutationPayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "saveTask",
+              "description": null,
+              "args": [
+                {
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "saveTaskMutationInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "saveTaskMutationPayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "saveTaskType",
+              "description": null,
+              "args": [
+                {
+                  "name": "input",
+                  "description": null,
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "saveTaskTypeMutationInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "saveTaskTypeMutationPayload",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -1335,8 +1227,115 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "addTaskInput",
+          "name": "deleteTaskMutationInput",
           "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "id",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "deleteTaskMutationPayload",
+          "description": null,
+          "fields": [
+            {
+              "name": "deletedTaskId",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "saveTaskMutationInput",
+          "description": null,
+          "fields": null,
+          "inputFields": [
+            {
+              "name": "isNew",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "task",
+              "description": null,
+              "type": {
+                "kind": "INPUT_OBJECT",
+                "name": "taskInputType",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
+              "name": "clientMutationId",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "defaultValue": null
+            }
+          ],
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "INPUT_OBJECT",
+          "name": "taskInputType",
+          "description": "task input type",
           "fields": null,
           "inputFields": [
             {
@@ -1367,19 +1366,9 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "editTaskInputType",
+                  "name": "fieldsInputType",
                   "ofType": null
                 }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "clientMutationId",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
               },
               "defaultValue": null
             }
@@ -1390,8 +1379,8 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "editTaskInputType",
-          "description": "edit task input type",
+          "name": "fieldsInputType",
+          "description": "fields input type",
           "fields": null,
           "inputFields": [
             {
@@ -1449,7 +1438,7 @@
               "description": null,
               "type": {
                 "kind": "INPUT_OBJECT",
-                "name": "FieldValueInputType",
+                "name": "valueInputType",
                 "ofType": null
               },
               "defaultValue": null
@@ -1469,7 +1458,7 @@
               "description": null,
               "type": {
                 "kind": "INPUT_OBJECT",
-                "name": "FieldMetaInputType",
+                "name": "metaInputType",
                 "ofType": null
               },
               "defaultValue": null
@@ -1481,8 +1470,8 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "FieldValueInputType",
-          "description": "FieldValueInputType",
+          "name": "valueInputType",
+          "description": "value input type",
           "fields": null,
           "inputFields": [
             {
@@ -1522,8 +1511,8 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "FieldMetaInputType",
-          "description": "FieldMetaInputType",
+          "name": "metaInputType",
+          "description": "meta input type",
           "fields": null,
           "inputFields": [
             {
@@ -1558,13 +1547,13 @@
             },
             {
               "name": "options",
-              "description": "options",
+              "description": null,
               "type": {
                 "kind": "LIST",
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "ChoiceOptionsInputType",
+                  "name": "optionsInputType",
                   "ofType": null
                 }
               },
@@ -1577,8 +1566,8 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "ChoiceOptionsInputType",
-          "description": "Choice options input Type",
+          "name": "optionsInputType",
+          "description": "options input type",
           "fields": null,
           "inputFields": [
             {
@@ -1608,7 +1597,7 @@
         },
         {
           "kind": "OBJECT",
-          "name": "addTaskPayload",
+          "name": "saveTaskMutationPayload",
           "description": null,
           "fields": [
             {
@@ -1643,7 +1632,7 @@
         },
         {
           "kind": "INPUT_OBJECT",
-          "name": "addTaskTypeInput",
+          "name": "saveTaskTypeMutationInput",
           "description": null,
           "fields": null,
           "inputFields": [
@@ -1688,6 +1677,16 @@
               "defaultValue": null
             },
             {
+              "name": "isNew",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
+            {
               "name": "isCustom",
               "description": null,
               "type": {
@@ -1715,7 +1714,7 @@
                 "name": null,
                 "ofType": {
                   "kind": "INPUT_OBJECT",
-                  "name": "taskTypeFieldsConfigInputType",
+                  "name": "fieldsInputType",
                   "ofType": null
                 }
               },
@@ -1737,201 +1736,8 @@
           "possibleTypes": null
         },
         {
-          "kind": "INPUT_OBJECT",
-          "name": "taskTypeFieldsConfigInputType",
-          "description": "add task type fields config input type",
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "fieldId",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "format",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "order",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "type",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "label",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "info",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "meta",
-              "description": null,
-              "type": {
-                "kind": "INPUT_OBJECT",
-                "name": "fieldsConfigMetaInputType",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "value",
-              "description": null,
-              "type": {
-                "kind": "INPUT_OBJECT",
-                "name": "addTaskTypeValueFieldType",
-                "ofType": null
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "fieldsConfigMetaInputType",
-          "description": "add task`s type meta input type",
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "required",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Boolean",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "minLen",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "maxLen",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "min",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Float",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "max",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Float",
-                "ofType": null
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "addTaskTypeValueFieldType",
-          "description": "add task`s type value input type",
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "number",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "Int",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "text",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "id",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
           "kind": "OBJECT",
-          "name": "addTaskTypePayload",
+          "name": "saveTaskTypeMutationPayload",
           "description": null,
           "fields": [
             {
@@ -1953,162 +1759,6 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "TaskTypeListType",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "clientMutationId",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "editTaskInput",
-          "description": null,
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "id",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "taskType",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "fields",
-              "description": null,
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "INPUT_OBJECT",
-                  "name": "editTaskInputType",
-                  "ofType": null
-                }
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "clientMutationId",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "editTaskPayload",
-          "description": null,
-          "fields": [
-            {
-              "name": "newTaskEdge",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "OBJECT",
-                "name": "TaskTypeEdge",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "clientMutationId",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            }
-          ],
-          "inputFields": null,
-          "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "INPUT_OBJECT",
-          "name": "deleteTaskInput",
-          "description": null,
-          "fields": null,
-          "inputFields": [
-            {
-              "name": "id",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "ID",
-                "ofType": null
-              },
-              "defaultValue": null
-            },
-            {
-              "name": "clientMutationId",
-              "description": null,
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
-                "ofType": null
-              },
-              "defaultValue": null
-            }
-          ],
-          "interfaces": null,
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "OBJECT",
-          "name": "deleteTaskPayload",
-          "description": null,
-          "fields": [
-            {
-              "name": "deletedTaskId",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "SCALAR",
-                "name": "String",
                 "ofType": null
               },
               "isDeprecated": false,

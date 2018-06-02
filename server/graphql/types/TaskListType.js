@@ -6,7 +6,7 @@ const { getTaskList } = require('../../db/api');
 
 module.exports = new GraphQLObjectType({
   name: 'TaskListType',
-  description: 'TaskListType module description',
+  description: 'task list type',
   fields: () => ({
     id: globalIdField('TaskList'),
     list: {

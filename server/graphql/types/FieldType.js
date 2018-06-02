@@ -1,10 +1,10 @@
 const { GraphQLObjectType, GraphQLString, GraphQLInt } = require('graphql');
-const MetasUnion = require('./metas');
-const ValuesUnion = require('./values');
+const MetasUnion = require('./MetasUnion');
+const ValuesUnion = require('./ValuesUnion');
 
 module.exports = new GraphQLObjectType({
   name: 'FieldType',
-  description: 'Field Type',
+  description: 'field type',
   fields: () => ({
     fieldId: {
       description: 'fieldId field description',
