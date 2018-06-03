@@ -76,36 +76,43 @@ export default createPaginationContainer(
             order
             isCustom
             parentId
-            fields: fieldsConfig {
+            fields {
               fieldId
               format
               order
               type
               label
-              value {
-                  ... on NumberValueType {
-                      number
-                  }
-                  ... on TextValueType {
-                      text
-                      id
-                  }
-              }
+              info
               meta {
-                  ... on NumberMetaType {
-                      required
-                      min
-                      max
+                ... on ChoiceMetaType {
+                  required
+                  defaultValue
+                  options {
+                    text
+                    value
                   }
-                  ... on TextMetaType {
-                      required
-                      minLen
-                      maxLen
-                      options {
-                          text
-                          value
-                      }
-                  }
+                }
+                ... on NumberMetaType {
+                  required
+                  min
+                  max
+                }
+                ... on TextMetaType {
+                  required
+                  minLen
+                  maxLen
+                }
+              }
+              value {
+                ... on ChoiceValueType {
+                  id
+                }
+                ... on NumberValueType {
+                  number
+                }
+                ... on TextValueType {
+                  text
+                }
               }
             }
           }
@@ -132,10 +139,6 @@ export default createPaginationContainer(
     },
     query: graphql`
       query TaskTypeListPaginationQuery 
-      # (
-        # $count: Int!
-        # $cursor: String
-      # ) 
       {
         app {
           taskTypeList {

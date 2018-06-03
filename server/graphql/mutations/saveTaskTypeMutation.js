@@ -1,4 +1,4 @@
-const { GraphQLBoolean, GraphQLList, GraphQLString, GraphQLInt, GraphQLID } = require('graphql');
+const { GraphQLBoolean, GraphQLString, GraphQLInt, GraphQLID } = require('graphql');
 const { mutationWithClientMutationId, cursorForObjectInConnection } = require('graphql-relay');
 const TaskTypeListType = require('../types/TaskTypeListType');
 const { TaskTypeTypeEdge } = require('../connections');
@@ -29,8 +29,8 @@ module.exports = mutationWithClientMutationId({
     parentId: {
       type: GraphQLString,
     },
-    fieldsConfig: {
-      type: new GraphQLList(fieldsInputType),
+    fields: {
+      type: fieldsInputType,
     },
   },
   outputFields: {

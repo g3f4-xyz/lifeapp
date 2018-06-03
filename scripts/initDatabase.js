@@ -36,13 +36,14 @@ dbHook.tasks.insert([
         },
       }, {
         fieldId: "PRIORITY",
-        format: "NUMBER",
-        type: "NUMBER",
+        format: "CHOICE",
+        type: "CHOICE",
         order: 0,
         label: "Priority",
         info: "Informacje o testowym polu Priority",
         meta: {
           required: true,
+          defaultValue: "LOW",
           options: [{
             text: "Low",
             value: "LOW",
@@ -67,6 +68,7 @@ dbHook.tasks.insert([
         info: "Informacje o testowym polu Status",
         meta: {
           required: true,
+          defaultValue: "TODO",
           options: [{
             text: "To do",
             value: "TODO",
@@ -129,6 +131,7 @@ dbHook.tasks.insert([
         info: "Informacje o testowym polu Priority",
         meta: {
           required: true,
+          defaultValue: "LOW",
           options: [{
             text: "Low",
             value: "LOW",
@@ -153,6 +156,7 @@ dbHook.tasks.insert([
         info: "Informacje o testowym polu Status",
         meta: {
           required: true,
+          defaultValue: "TODO",
           options: [{
             text: "To do",
             value: "TODO",
@@ -203,7 +207,7 @@ dbHook.tasks.insert([
       {
         fieldId: "DATE",
         format: "DATE",
-        type: "DATE",
+        type: "TEXT",
         order: 4,
         label: "Date",
         info: "Informacje o testowym polu Date",
@@ -227,11 +231,11 @@ dbHook.tasktypes.insert([{
   order: null,
   isCustom: false,
   parentId: null,
-  fieldsConfig: [{
+  fields: [{
     fieldId: "TITLE",
     format: "ELIXIR",
     order: -1,
-    type: "TITLE",
+    type: "TEXT",
     label: "Title",
     info: "Title info",
     meta: {
@@ -251,6 +255,7 @@ dbHook.tasktypes.insert([{
     info: "Status info",
     meta: {
       required: true,
+      defaultValue: "DONE",
       options: [{
         text: "To do",
         value: "TODO",
@@ -274,6 +279,7 @@ dbHook.tasktypes.insert([{
     info: "Priority info",
     meta: {
       required: true,
+      defaultValue: "LOW",
       options: [{
         text: "Low",
         value: "LOW",
@@ -296,11 +302,11 @@ dbHook.tasktypes.insert([{
   order: 0,
   isCustom: false,
   parentId: "TASK",
-  fieldsConfig: [{
+  fields: [{
     fieldId: "DESC",
     format: "ELIXIR",
     order: 2,
-    type: "ELIXIR",
+    type: "TEXT",
     label: "Description",
     info: "Description info",
     meta: {
@@ -319,11 +325,11 @@ dbHook.tasktypes.insert([{
   order: 1,
   isCustom: false,
   parentId: "TODO",
-  fieldsConfig: [{
+  fields: [{
     fieldId: "LOCATION",
-    format: "LOCATION",
+    format: "TEXT",
     order: 3,
-    type: "LOCATION",
+    type: "TEXT",
     label: "Location",
     info: "Location info",
     meta: {
@@ -336,7 +342,7 @@ dbHook.tasktypes.insert([{
     fieldId: "DATE",
     format: "DATE",
     order: 4,
-    type: "DATE",
+    type: "TEXT",
     label: "Date",
     info: "Date info",
     meta: {
@@ -353,11 +359,11 @@ dbHook.tasktypes.insert([{
   order: 2,
   isCustom: false,
   parentId: "EVENT",
-  fieldsConfig: [{
+  fields: [{
     fieldId: "PERSON",
     format: "TEXT",
     order:5,
-    type: "PERSON",
+    type: "TEXT",
     label: "Person",
     info: "Person info",
     meta: {
@@ -374,11 +380,11 @@ dbHook.tasktypes.insert([{
   order: 3,
   isCustom: false,
   parentId: "TODO",
-  fieldsConfig: [{
+  fields: [{
     fieldId: "RELATED_TASKS",
-    format: "LINKS",
+    format: "TEXT",
     order: 6,
-    type: "RELATION",
+    type: "TEXT",
     label: "Related tasks",
     info: "Related tasks info",
     meta: {

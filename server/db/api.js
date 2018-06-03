@@ -147,8 +147,8 @@ const getTaskTypeList = async () => {
     console.log(['api:getTaskTypeList:taskTypeList'], taskTypeList);
     const getTypeRelatedFields = (type, aggregator = []) => {
       console.log(['getTypeRelatedFields'], type);
-      const { parentId, fieldsConfig = [] } = type.toJSON();
-      aggregator.push(...fieldsConfig);
+      const { parentId, fields = [] } = type.toJSON();
+      aggregator.push(...fields);
 
       if (parentId) {
         const parentType = taskTypeList.find(task => task.get('typeId') === parentId);
@@ -159,7 +159,7 @@ const getTaskTypeList = async () => {
     };
     const mapped = taskTypeList.map(type => ({
       ...type.toJSON(),
-      fieldsConfig: getTypeRelatedFields(type),
+      fields: getTypeRelatedFields(type),
     }));
 
     console.log(['api:getTaskTypeList:taskTypeList:mapped'], mapped);
@@ -208,11 +208,11 @@ const saveTaskType = async ({ taskType, isNew = true }) => {
   console.log(['api:saveTaskType'], { taskType, isNew });
   try {
     const { id } = await fromGlobalId(taskType.id);
-    const { fieldsConfig } = taskType;
+    const { fields } = taskType;
 
-    console.log(['api:saveTaskType:fieldsConfig'], fieldsConfig);
+    console.log(['api:saveTaskType:fields'], fields);
 
-    return await (isNew ? addTask(taskType) : TaskTypeModel.findByIdAndUpdate(id, { fieldsConfig }));
+    return await (isNew ? addTask(taskType) : TaskTypeModel.findByIdAndUpdate(id, { fields }));
   }
 
   catch (error) {

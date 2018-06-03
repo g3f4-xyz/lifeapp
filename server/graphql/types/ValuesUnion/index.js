@@ -1,8 +1,10 @@
 const { GraphQLUnionType } = require('graphql');
+const ChoiceValueType = require('./ChoiceValueType');
 const NumberValueType = require('./NumberValueType');
 const TextValueType = require('./TextValueType');
 
 const TYPES = {
+  CHOICE: ChoiceValueType,
   NUMBER: NumberValueType,
   TEXT: TextValueType,
 };
@@ -10,6 +12,10 @@ const TYPES = {
 module.exports = new GraphQLUnionType({
   name: 'ValuesUnion',
   description: 'Values Union',
-  types: [NumberValueType, TextValueType],
-  resolveType: ({ type }) => TYPES[type] || TYPES.TEXT,
+  types: Object.values(TYPES),
+  resolveType: ({ type }) => {
+    console.log(['ValuesUnion:resolveType'], type);
+
+    return TYPES[type] || TYPES.TEXT;
+  },
 });

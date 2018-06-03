@@ -24,26 +24,36 @@ const mutation = graphql`
             type
             order
             label
-            value {
-              ... on NumberValueType {
-                number
-              }
-              ... on TextValueType{
-                text
-                id
-              }
-            }
             info
             meta {
-              ... on NumberMetaType {
-                required
-                min
-                max
+              ... on ChoiceMetaType {
+                  required
+                  defaultValue
+                  options {
+                      text
+                      value
+                  }
               }
-              ... on TextMetaType{
-                required
-                minLen
-                maxLen
+              ... on NumberMetaType {
+                  required
+                  min
+                  max
+              }
+              ... on TextMetaType {
+                  required
+                  minLen
+                  maxLen
+              }
+            }
+            value {
+              ... on ChoiceValueType {
+                  id
+              }
+              ... on NumberValueType {
+                  number
+              }
+              ... on TextValueType {
+                  text
               }
             }
           }

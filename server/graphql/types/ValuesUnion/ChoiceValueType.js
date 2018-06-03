@@ -1,10 +1,10 @@
 const { GraphQLObjectType, GraphQLString } = require('graphql');
 
 module.exports =  new GraphQLObjectType({
-  name: 'TextValueType',
-  describe: 'text value type',
+  name: 'ChoiceValueType',
+  describe: 'choice value type',
   fields: () => ({
-    text: {
+    id: {
       type: GraphQLString,
     },
   }),

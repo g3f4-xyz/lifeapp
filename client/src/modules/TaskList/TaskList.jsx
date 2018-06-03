@@ -139,30 +139,36 @@ export default createPaginationContainer(
               order
               type
               label
-              value {
-                ... on NumberValueType {
-                  number
-                }
-                ... on TextValueType{
-                  text
-                  id # tymczasowo do czasu dorobienia type dla ChoiceValueType
-                }
-              }
               info
               meta {
+                ... on ChoiceMetaType {
+                  required
+                  defaultValue
+                  options {
+                    text
+                    value
+                  }
+                }
                 ... on NumberMetaType {
                   required
                   min
                   max
                 }
-                ... on TextMetaType{
+                ... on TextMetaType {
                   required
                   minLen
                   maxLen
-                  options {
-                    text
-                    value
-                  }
+                }
+              }
+              value {
+                ... on ChoiceValueType {
+                  id
+                }
+                ... on NumberValueType {
+                  number
+                }
+                ... on TextValueType {
+                  text
                 }
               }
             }

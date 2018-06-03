@@ -1,4 +1,4 @@
-const { GraphQLID, GraphQLList, GraphQLString, GraphQLInputObjectType } = require('graphql');
+const { GraphQLID, GraphQLString, GraphQLInputObjectType } = require('graphql');
 const fieldsInputType = require('./fieldsInputType');
 
 module.exports = new GraphQLInputObjectType({
@@ -12,7 +12,7 @@ module.exports = new GraphQLInputObjectType({
       type: GraphQLString,
     },
     fields: {
-      type: new GraphQLList(fieldsInputType),
+      type: fieldsInputType,
     },
   }),
 });

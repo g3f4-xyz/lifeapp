@@ -7,7 +7,7 @@ const taskTypeModel = mongoose.Schema({
   order: Number,
   isCustom: Boolean,
   parentID: String,
-  fieldsConfig: Array,
+  fields: Array,
 });
 const TaskTypeModel = mongoose.model('TaskType', taskTypeModel);
 

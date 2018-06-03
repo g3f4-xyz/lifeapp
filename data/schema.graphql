@@ -6,13 +6,29 @@ type AppType {
   taskTypeList: TaskTypeListType
 }
 
-"""Choice options Type"""
-type ChoiceOptionsType {
+"""choice meta type"""
+type ChoiceMetaType {
+  """required"""
+  required: Boolean
+
+  """defaultValue"""
+  defaultValue: Int
+
+  """options"""
+  options: [ChoiceOptionsMetaType]
+}
+
+"""choice options meta type"""
+type ChoiceOptionsMetaType {
   """text"""
   text: String
 
   """value"""
   value: String
+}
+
+type ChoiceValueType {
+  id: String
 }
 
 input deleteTaskMutationInput {
@@ -67,13 +83,16 @@ type FieldType {
 """meta input type"""
 input metaInputType {
   required: Boolean
+  min: Float
+  max: Float
   minLen: Int
   maxLen: Int
+  defaultValue: String
   options: [optionsInputType]
 }
 
 """metas union"""
-union MetasUnion = NumberMetaType | TextMetaType
+union MetasUnion = ChoiceMetaType | NumberMetaType | TextMetaType
 
 type Mutation {
   deleteTask(input: deleteTaskMutationInput!): deleteTaskMutationPayload
@@ -149,7 +168,7 @@ input saveTaskTypeMutationInput {
   isNew: Boolean
   isCustom: Boolean
   parentId: String
-  fieldsConfig: [fieldsInputType]
+  fields: [fieldsInputType]
   clientMutationId: String
 }
 
@@ -220,7 +239,7 @@ type TaskTypeType implements Node {
   order: Int
   isCustom: Boolean
   parentId: String
-  fieldsConfig: [FieldType]
+  fields: [FieldType]
 }
 
 """A connection to a list of items."""
@@ -251,14 +270,10 @@ type TextMetaType {
 
   """maxLen"""
   maxLen: Int
-
-  """options"""
-  options: [ChoiceOptionsType]
 }
 
 type TextValueType {
   text: String
-  id: String
 }
 
 """value input type"""
@@ -269,4 +284,4 @@ input valueInputType {
 }
 
 """Values Union"""
-union ValuesUnion = NumberValueType | TextValueType
+union ValuesUnion = ChoiceValueType | NumberValueType | TextValueType

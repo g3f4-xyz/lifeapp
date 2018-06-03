@@ -1,4 +1,4 @@
-const { GraphQLBoolean, GraphQLInt, GraphQLInputObjectType } = require('graphql');
+const { GraphQLBoolean, GraphQLFloat, GraphQLInt, GraphQLInputObjectType, GraphQLString } = require('graphql');
 const optionsInputType = require('./optionsInputType');
 
 module.exports = new GraphQLInputObjectType({
@@ -8,11 +8,20 @@ module.exports = new GraphQLInputObjectType({
     required: {
       type: GraphQLBoolean,
     },
+    min: {
+      type: GraphQLFloat,
+    },
+    max: {
+      type: GraphQLFloat,
+    },
     minLen: {
       type: GraphQLInt,
     },
     maxLen: {
       type: GraphQLInt,
+    },
+    defaultValue: {
+      type: GraphQLString,
     },
     options: {
       type: optionsInputType,

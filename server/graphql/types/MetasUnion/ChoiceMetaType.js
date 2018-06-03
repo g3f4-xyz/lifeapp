@@ -1,20 +1,21 @@
 const { GraphQLObjectType, GraphQLBoolean, GraphQLInt } = require('graphql');
+const ChoiceOptionsType = require('./ChoiceOptionsType');
 
 module.exports = new GraphQLObjectType({
-  name: 'TextMetaType',
-  description: 'text meta type',
+  name: 'ChoiceMetaType',
+  description: 'choice meta type',
   fields: () => ({
     required: {
       description: 'required',
       type: GraphQLBoolean,
     },
-    minLen: {
-      description: 'minLen',
+    defaultValue: {
+      description: 'defaultValue',
       type: GraphQLInt,
     },
-    maxLen: {
-      description: 'maxLen',
-      type: GraphQLInt,
+    options: {
+      description: 'options',
+      type: ChoiceOptionsType,
     },
   }),
 });

@@ -10,7 +10,6 @@ module.exports = new GraphQLObjectType({
     id: globalIdField('Task', ({ _id }) => _id),
     taskType: {
       type: GraphQLString,
-      resolve: ({ taskType }) => taskType,
     },
     fields: {
       type: new GraphQLList(FieldType),
