@@ -1,4 +1,4 @@
-const { GraphQLObjectType, GraphQLBoolean, GraphQLInt } = require('graphql');
+const { GraphQLObjectType, GraphQLBoolean, GraphQLString } = require('graphql');
 const ChoiceOptionsType = require('./ChoiceOptionsType');
 
 module.exports = new GraphQLObjectType({
@@ -11,7 +11,7 @@ module.exports = new GraphQLObjectType({
     },
     defaultValue: {
       description: 'defaultValue',
-      type: GraphQLInt,
+      type: GraphQLString,
     },
     options: {
       description: 'options',

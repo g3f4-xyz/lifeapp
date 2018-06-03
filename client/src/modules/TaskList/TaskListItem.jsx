@@ -63,16 +63,24 @@ class Field extends React.Component {
 
 class TaskListItem extends React.Component {
   static propTypes = {
+    classes: PropTypes.object,
     data: PropTypes.object,
-    expanded: PropTypes.bool,
-    onToggle: PropTypes.func,
     onDelete: PropTypes.func,
     onDetails: PropTypes.func,
     onEdit: PropTypes.func,
   };
 
+  state = {
+    expanded: false,
+  };
+
+  onExpand = () => {
+    this.setState({ expanded: !this.state.expanded });
+  };
+
   render() {
-    const { classes, expanded, data, onToggle, onDelete, onDetails, onEdit } = this.props;
+    const { expanded } = this.state;
+    const { classes, data, onDelete, onDetails, onEdit } = this.props;
     const { id, /* taskType, */fields } = data;
     const { title, priority, status, additionalFields } = fields.reduce((result, field) => {
       if (field.fieldId === 'TITLE') {
@@ -142,7 +150,7 @@ class TaskListItem extends React.Component {
               className={classnames(classes.expand, {
                 [classes.expandOpen]: expanded,
               })}
-              onClick={() => onToggle(id)}
+              onClick={this.onExpand}
               aria-expanded={expanded}
               aria-label="More"
             >

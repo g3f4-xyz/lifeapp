@@ -191,7 +191,7 @@ type TaskListType implements Node {
   id: ID!
 
   """Task list"""
-  list(after: String, first: Int, before: String, last: Int): TaskTypeConnection
+  list(after: String, first: Int, before: String, last: Int): Task
 }
 
 """task type"""
@@ -203,7 +203,7 @@ type TaskType implements Node {
 }
 
 """A connection to a list of items."""
-type TaskTypeConnection {
+type Task {
   """Information to aid in pagination."""
   pageInfo: PageInfo!
 

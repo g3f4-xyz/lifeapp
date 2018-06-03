@@ -6,46 +6,10 @@ import More from '@material-ui/icons/MoreHoriz';
 import AddCircle from '@material-ui/icons/AddCircle';
 import onDeleteMutation from '../../mutations/deleteTask';
 import Loader from '../../components/Loader';
-import Task from './TaskListItem';
+import List from './List';
+import Task from './Task';
 
 const PAGE_SIZE = 5;
-
-class List extends React.Component {
-  static propTypes = {
-    list: PropTypes.array,
-    onDelete: PropTypes.func,
-    onDetails: PropTypes.func,
-    onEdit: PropTypes.func,
-  };
-
-  state = {
-    expanded: [],
-  };
-
-  onToggle = (id) => {
-    this.setState({
-      expanded: this.state.expanded.includes(id) ?
-        this.state.expanded.filter(item => item !== id) :
-        this.state.expanded.concat(id)
-    });
-  };
-
-  render() {
-    const { list, onDelete, onDetails, onEdit } = this.props;
-
-    return list.map(data => (
-      <Task
-        key={data.id}
-        expanded={this.state.expanded.includes(data.id)}
-        data={data}
-        onDelete={onDelete}
-        onDetails={onDetails}
-        onEdit={onEdit}
-        onToggle={this.onToggle}
-      />
-    ));
-  }
-}
 
 class TaskList extends React.Component {
   static propTypes = {
@@ -74,15 +38,21 @@ class TaskList extends React.Component {
   render() {
     const { data, onAdd, onDetails, onEdit } = this.props;
     const { list: { edges, pageInfo } }  = data || { list: { edges: [], pageInfo: {} } };
+    const tasks = edges.map(({ node }) => node);
 
     return (
       <Fragment>
-        <List
-          list={edges.map(({ node }) => node)}
-          onDetails={onDetails}
-          onEdit={onEdit}
-          onDelete={this.onDelete}
-        />
+        <List>
+        {tasks.map((data, key) => (
+          <Task
+            key={key}
+            data={data}
+            onDelete={id => this.onDelete(id)}
+            onDetails={onDetails}
+            onEdit={onEdit}
+          />
+        ))}
+        </List>
         <IconButton
           style={{
             zIndex: 9,
@@ -131,47 +101,7 @@ export default createPaginationContainer(
       ) @connection(key: "TaskList_list") {
         edges {
           node {
-            id
-            taskType
-            fields {
-              fieldId
-              format
-              order
-              type
-              label
-              info
-              meta {
-                ... on ChoiceMetaType {
-                  required
-                  defaultValue
-                  options {
-                    text
-                    value
-                  }
-                }
-                ... on NumberMetaType {
-                  required
-                  min
-                  max
-                }
-                ... on TextMetaType {
-                  required
-                  minLen
-                  maxLen
-                }
-              }
-              value {
-                ... on ChoiceValueType {
-                  id
-                }
-                ... on NumberValueType {
-                  number
-                }
-                ... on TextValueType {
-                  text
-                }
-              }
-            }
+            ...Task
           }
         }
         pageInfo {
