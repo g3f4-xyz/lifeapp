@@ -57,10 +57,11 @@ class App extends Component {
   };
 
   handlers = {
-    [MODULES_IDS.TASK]: ({ editMode, ...data }) => ({
+    [MODULES_IDS.TASK]: ({ editMode, ...data }, taskListId) => ({
       moduleId: data.id,
       editMode,
       data,
+      taskListId,
       onSave: taskId => {
         console.log(['handlers:task:onSave']);
 
@@ -134,18 +135,15 @@ class App extends Component {
             }
           ]
         });
-        // this.onModuleChange(MODULES_IDS.TASK_CREATE, {
-        //   type,
-        // });
       },
     }),
   };
 
-  moduleHandler(moduleId, data) {
+  moduleHandler(moduleId, data, taskListId) {
     const handler = this.handlers[moduleId];
 
     if (handler) {
-      return handler(data);
+      return handler(data, taskListId);
     }
 
     console.error(`No module handler provider for module ${moduleId}`);
@@ -223,6 +221,7 @@ class App extends Component {
 
   renderModule(moduleId, props) {
     const { activeModuleId, openedTasksData } = this.state;
+    const taskListId = props.app.taskList.id;
     const taskData = openedTasksData.find(({ id, temporaryId }) => id === activeModuleId || temporaryId === activeModuleId);
     const isApplicationModule = APP_MODULES_IDS.includes(moduleId);
     const Component = isApplicationModule ? MODULES_COMPONENTS[activeModuleId] : MODULES_COMPONENTS[MODULES_IDS.TASK];
@@ -232,7 +231,7 @@ class App extends Component {
     return (
       <Component
         key={activeModuleId}
-        {...this.moduleHandler(handlerName, data)}
+        {...this.moduleHandler(handlerName, data, taskListId)}
       />
     );
   }

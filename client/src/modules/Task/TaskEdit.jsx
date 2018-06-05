@@ -18,7 +18,7 @@ export default class TaskEdit extends React.Component {
   static propTypes = {
     onSave: PropTypes.func,
     data: PropTypes.object,
-    parentId: PropTypes.string,
+    taskListId: PropTypes.string,
   };
 
   state = {
@@ -48,6 +48,7 @@ export default class TaskEdit extends React.Component {
           id,
           taskType: task.taskType,
         },
+        parentID: this.props.taskListId,
       });
     }
 

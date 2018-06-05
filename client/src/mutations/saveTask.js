@@ -63,13 +63,24 @@ const mutation = graphql`
   }
 `;
 
-export default ({ isNew, task }) => new Promise((resolve, reject) => {
+export default ({ isNew, task, parentID }) => new Promise((resolve, reject) => {
   const variables = { input: { isNew, task } };
   console.log(['mutation:saveTask:variables'], variables);
+  const configs = isNew ? [{
+    parentID,
+    type: 'RANGE_ADD',
+    connectionInfo: [{
+      key: 'TaskList_list',
+      rangeBehavior: 'prepend',
+    }],
+    edgeName: 'newTaskEdge',
+  }] : [];
+  console.log(['mutation:saveTask:configs'], configs);
 
   commitMutation(
     environment,
     {
+      configs,
       mutation,
       variables,
       onCompleted: resolve,
@@ -97,9 +108,7 @@ export default ({ isNew, task }) => new Promise((resolve, reject) => {
       },
       updater: proxyStore => {
         console.log(['updater:isNew'], isNew);
-        if (isNew) {
-          console.log(['updater'], `zaimplementuj to`);
-        } else {
+        if (!isNew) {
           const fieldsRecords = proxyStore.get(task.id).getLinkedRecords('fields');
           const mutationRootRecord = proxyStore.getRootField('saveTask');
           const mutatedFieldsRecords = mutationRootRecord

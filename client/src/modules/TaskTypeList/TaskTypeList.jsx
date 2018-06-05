@@ -70,6 +70,7 @@ export default createPaginationContainer(
         edges {
           node {
               id
+              order
               ...TaskType
           }
         }
