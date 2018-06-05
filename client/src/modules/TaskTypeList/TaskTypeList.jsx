@@ -69,52 +69,8 @@ export default createPaginationContainer(
       ) @connection(key: "TaskTypeList_list") {
         edges {
           node {
-            id
-            typeId
-            name
-            description
-            order
-            isCustom
-            parentId
-            fields {
-              fieldId
-              format
-              order
-              type
-              label
-              info
-              meta {
-                ... on ChoiceMetaType {
-                  required
-                  defaultValue
-                  options {
-                    text
-                    value
-                  }
-                }
-                ... on NumberMetaType {
-                  required
-                  min
-                  max
-                }
-                ... on TextMetaType {
-                  required
-                  minLen
-                  maxLen
-                }
-              }
-              value {
-                ... on ChoiceValueType {
-                  id
-                }
-                ... on NumberValueType {
-                  number
-                }
-                ... on TextValueType {
-                  text
-                }
-              }
-            }
+              id
+              ...TaskType
           }
         }
         pageInfo {

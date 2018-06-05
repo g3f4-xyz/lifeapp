@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { createFragmentContainer, graphql } from 'react-relay';
 import IconButton from '@material-ui/core/IconButton';
 import AddCircle from '@material-ui/icons/AddCircle';
 import InfoOutline from '@material-ui/icons/InfoOutline';
 import SettingsIcon from '@material-ui/icons/Settings';
 
-export default class TaskType extends React.Component {
+class TaskType extends React.Component {
   static propTypes = {
     data: PropTypes.object,
     onSelect: PropTypes.func,
@@ -91,3 +92,57 @@ export default class TaskType extends React.Component {
     );
   }
 }
+
+export default createFragmentContainer(
+  TaskType,
+  graphql`
+      fragment TaskType on TaskTypeType {
+          id
+          typeId
+          name
+          description
+          order
+          isCustom
+          parentId
+          fields {
+              fieldId
+              format
+              order
+              type
+              label
+              info
+              meta {
+                  ... on ChoiceMetaType {
+                      required
+                      defaultValue
+                      options {
+                          text
+                          value
+                      }
+                  }
+                  ... on NumberMetaType {
+                      required
+                      min
+                      max
+                  }
+                  ... on TextMetaType {
+                      required
+                      minLen
+                      maxLen
+                  }
+              }
+              value {
+                  ... on ChoiceValueType {
+                      id
+                  }
+                  ... on NumberValueType {
+                      number
+                  }
+                  ... on TextValueType {
+                      text
+                  }
+              }
+          }
+      }
+  `,
+);

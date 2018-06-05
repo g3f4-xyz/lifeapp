@@ -6,7 +6,6 @@ import More from '@material-ui/icons/MoreHoriz';
 import AddCircle from '@material-ui/icons/AddCircle';
 import onDeleteMutation from '../../mutations/deleteTask';
 import Loader from '../../components/Loader';
-import List from './List';
 import Task from './Task';
 
 const PAGE_SIZE = 5;
@@ -24,7 +23,7 @@ class TaskList extends React.Component {
       return;
     }
 
-    this.props.relay.loadMore(PAGE_SIZE, () => {
+    this.props.relay.loadMore(PAGE_SIZE, () => { // #FIXIT
       this.forceUpdate(); // when data comes, relay.isLoading is returning true, so we need to render page one more time
     });
 
@@ -32,6 +31,7 @@ class TaskList extends React.Component {
   };
 
   onDelete = id => {
+    console.log(['TaskList:onDelete'], id);
     onDeleteMutation({ id, parentId: this.props.data.id });
   };
 
@@ -42,8 +42,7 @@ class TaskList extends React.Component {
 
     return (
       <Fragment>
-        <List>
-        {tasks.map((data, key) => (
+      {tasks.map((data, key) => (
           <Task
             key={key}
             data={data}
@@ -51,40 +50,39 @@ class TaskList extends React.Component {
             onDetails={onDetails}
             onEdit={onEdit}
           />
-        ))}
-        </List>
+      ))}
+      <IconButton
+        style={{
+          zIndex: 9,
+          position: 'absolute',
+          bottom: 20,
+          left: 20,
+          height: 72,
+          width: 72,
+        }}
+        color="primary"
+        onClick={onAdd}
+      >
+        <AddCircle style={{ fontSize: 72 }} />
+      </IconButton>
+      {pageInfo.hasNextPage && (this.props.relay.hasMore() && !this.props.relay.isLoading() ? (
         <IconButton
           style={{
             zIndex: 9,
             position: 'absolute',
             bottom: 20,
-            left: 20,
+            right: 20,
             height: 72,
             width: 72,
           }}
           color="primary"
-          onClick={onAdd}
+          onClick={this.onMore}
         >
-          <AddCircle style={{ fontSize: 72 }} />
+          <More style={{ fontSize: 72 }} />
         </IconButton>
-        {pageInfo.hasNextPage && (this.props.relay.hasMore() && !this.props.relay.isLoading() ? (
-          <IconButton
-            style={{
-              zIndex: 9,
-              position: 'absolute',
-              bottom: 20,
-              right: 20,
-              height: 72,
-              width: 72,
-            }}
-            color="primary"
-            onClick={this.onMore}
-          >
-            <More style={{ fontSize: 72 }} />
-          </IconButton>
-        ) : (
-          <Loader />
-        ))}
+      ) : (
+        <Loader />
+      ))}
       </Fragment>
     );
   }
