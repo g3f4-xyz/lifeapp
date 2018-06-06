@@ -5,11 +5,11 @@ import TaskEdit from './TaskEdit';
 
 export default class Task extends React.Component {
   static propTypes = {
-    editMode: PropTypes.bool,
+    data: PropTypes.object,
   };
 
   render() {
-    if (this.props.editMode) {
+    if (this.props.data.editMode) {
       return <TaskEdit {...this.props} />;
     }
 

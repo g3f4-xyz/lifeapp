@@ -13,9 +13,5 @@ module.exports = new GraphQLUnionType({
   name: 'ValuesUnion',
   description: 'Values Union',
   types: Object.values(TYPES),
-  resolveType: ({ type }) => {
-    console.log(['ValuesUnion:resolveType'], type);
-
-    return TYPES[type] || TYPES.TEXT;
-  },
+  resolveType: ({ type }) => TYPES[type] || TYPES.TEXT,
 });

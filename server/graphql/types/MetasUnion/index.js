@@ -13,9 +13,5 @@ module.exports = new GraphQLUnionType({
   name: 'MetasUnion',
   description: 'metas union',
   types: Object.values(TYPES),
-  resolveType: ({ type }) => {
-    console.log(['MetasUnion:resolveType'], type);
-
-    return TYPES[type] || TYPES.TEXT;
-  },
+  resolveType: ({ type }) => TYPES[type] || TYPES.TEXT,
 });
