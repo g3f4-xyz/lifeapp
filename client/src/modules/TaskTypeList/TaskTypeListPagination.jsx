@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { createPaginationContainer, graphql } from 'react-relay';
+import { withStyles } from '@material-ui/core/styles';
 import TaskType from './TaskTypeFragment';
 
 const styles = {
-  root: {
+  container: {
     height: '100%',
     width: '100%',
     display: 'flex',
@@ -15,6 +16,7 @@ const styles = {
 
 class TaskTypeListPagination extends React.Component {
   static propTypes = {
+    classes: PropTypes.object,
     data: PropTypes.object,
     relay: PropTypes.object,
     onSelect: PropTypes.func,
@@ -28,11 +30,11 @@ class TaskTypeListPagination extends React.Component {
 
   render() {
     console.log(['TaskTypeListPagination:render'], this.props);
-    const { data: { list: { edges } }, onSelect } = this.props;
+    const { classes, data: { list: { edges } }, onSelect } = this.props;
     const list = edges.map(({ node }) => node);
 
     return (
-      <div style={styles.root}>
+      <div className={classes.container}>
         {[...list].sort(({ order: orderA }, { order: orderB }) => orderA - orderB).map((data, key) => (
           <TaskType key={key} data={data} onSelect={onSelect} />
         ))}
@@ -42,7 +44,7 @@ class TaskTypeListPagination extends React.Component {
 }
 
 export default createPaginationContainer(
-  TaskTypeListPagination,
+  withStyles(styles)(TaskTypeListPagination),
   graphql`
     fragment TaskTypeListPagination on TaskTypeListType
     @argumentDefinitions(

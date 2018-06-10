@@ -11,6 +11,12 @@ const styles = {
     margin: 10,
     minHeight: 50,
   },
+  width80p: {
+    width: '80%',
+  },
+  width100p: {
+    width: '100%',
+  },
 };
 
 class Fields extends React.Component {
@@ -29,12 +35,12 @@ class Fields extends React.Component {
       .map(({ fieldId, label, type, meta: { options }, value, info }) => (
         <div key={fieldId}>
           <Paper className={classes.row}>
-            <div style={{ width: '100%' }}>
+            <div className={classes.width100p}>
               {({
                 CHOICE: (
                   <Select
-                    style={{ width: '80%' }}
                     value={(value && value.id) || ''}
+                    className={classes.width80p}
                     label={label}
                     placeholder={info}
                     options={options || []}
@@ -46,7 +52,6 @@ class Fields extends React.Component {
                 ),
                 DATE: (
                   <DatePicker
-                    textFieldStyle={{ width: '80%' }}
                     autoOk
                     value={value}
                     helperText={info}
@@ -59,7 +64,7 @@ class Fields extends React.Component {
                 ),
               })[type] || (
                 <Input
-                  style={{ width: '80%' }}
+                  className={classes.width80p}
                   label={label}
                   placeholder={info}
                   value={(value && (value.text || value.number)) || ''}

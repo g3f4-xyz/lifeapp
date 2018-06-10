@@ -1,23 +1,16 @@
 import React from 'react';
+import classnames from 'classnames';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
 const styles = theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     width: 200,
   },
-  menu: {
-    width: 200,
-  },
 });
-
 
 class Input extends React.Component {
   static propTypes = {
@@ -26,11 +19,11 @@ class Input extends React.Component {
   };
 
   render() {
-    const { classes, ...props } = this.props;
+    const { classes, className, ...props } = this.props;
 
     return (
       <TextField
-        className={classes.textField}
+        className={classnames(className, classes.textField)}
         margin="normal"
         InputLabelProps={{
           shrink: true,

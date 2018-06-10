@@ -9,6 +9,9 @@ import ZoomIn from '@material-ui/icons/ZoomIn';
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 const styles = {
+  tileContainer: {
+    overflow: 'scroll',
+  },
   remove: {
     position: 'absolute',
     right: 0,
@@ -19,11 +22,12 @@ const styles = {
     position: 'absolute',
     top: 0,
     cursor: 'pointer',
-  }
+  },
 };
 
 class ResponsiveGrid extends React.PureComponent {
   static propTypes = {
+    classes: PropTypes.object,
     layouts: PropTypes.object,
     onModuleClose: PropTypes.func,
     onModuleChange: PropTypes.func,
@@ -49,7 +53,7 @@ class ResponsiveGrid extends React.PureComponent {
           onLayoutChange={onLayoutChange}
         >
           {Children.map(children, (node, key) => (
-            <Paper style={{ overflow: 'scroll' }} key={key} data-grid={{ w: 6, h: 4, x: key * 2, y: 0, minW: 1, minH: 1 }}>
+            <Paper className={classes.tileContainer} key={key} data-grid={{ w: 6, h: 4, x: key * 2, y: 0, minW: 1, minH: 1 }}>
               {node}
               <IconButton
                 className={classes.remove}

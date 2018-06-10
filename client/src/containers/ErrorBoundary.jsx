@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import BugReportIcon from '@material-ui/icons/BugReport';
 
 const styles = {
@@ -14,8 +15,9 @@ const styles = {
   },
 };
 
-export default class ErrorBoundary extends React.Component {
+class ErrorBoundary extends React.Component {
   static propTypes = {
+    classes: PropTypes.object,
     children: PropTypes.node,
   };
 
@@ -28,13 +30,17 @@ export default class ErrorBoundary extends React.Component {
   }
 
   render() {
+    const { classes } = this.props;
+
     if (this.state.hasError) {
-      console.log(['BugReportIcon'])
       return [
-        <h1 key="ErrorBoundary:Header" style={styles.header}>ERROR!</h1>,
-        <BugReportIcon key="ErrorBoundary:BugReportIcon" style={styles.icon} />
+        <h1 key="ErrorBoundary:Header" className={classes.header}>ERROR!</h1>,
+        <BugReportIcon key="ErrorBoundary:BugReportIcon" className={classes.icon} />
       ];
     }
+
     return this.props.children;
   }
 }
+
+export default withStyles(styles)(ErrorBoundary);

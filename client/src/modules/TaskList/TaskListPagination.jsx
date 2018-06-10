@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { createPaginationContainer, graphql } from 'react-relay';
+import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import More from '@material-ui/icons/MoreHoriz';
 import AddCircle from '@material-ui/icons/AddCircle';
@@ -10,8 +11,34 @@ import Task from './TaskListFragment';
 
 const PAGE_SIZE = 5;
 
+const styles = {
+  addButton: {
+    zIndex: 9,
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    height: 72,
+    width: 72,
+  },
+  addButtonIcon: {
+    fontSize: 72,
+  },
+  moreButton: {
+    zIndex: 9,
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
+    height: 72,
+    width: 72,
+  },
+  moreButtonIcon: {
+    fontSize: 72,
+  },
+};
+
 class TaskListPagination extends React.Component {
   static propTypes = {
+    classes: PropTypes.object,
     data: PropTypes.object,
     onMore: PropTypes.func,
     onDetails: PropTypes.func,
@@ -37,7 +64,7 @@ class TaskListPagination extends React.Component {
 
   render() {
     console.log(['TaskListPagination:render'], this.props);
-    const { data, onAdd, onDetails, onEdit } = this.props;
+    const { classes, data, onAdd, onDetails, onEdit } = this.props;
     const { list: { edges, pageInfo } }  = data || { list: { edges: [], pageInfo: {} } };
     const tasks = edges.map(({ node }) => node);
 
@@ -53,33 +80,19 @@ class TaskListPagination extends React.Component {
         />
       ))}
       <IconButton
-        style={{
-          zIndex: 9,
-          position: 'absolute',
-          bottom: 20,
-          left: 20,
-          height: 72,
-          width: 72,
-        }}
+        className={classes.addButton}
         color="primary"
         onClick={onAdd}
       >
-        <AddCircle style={{ fontSize: 72 }} />
+        <AddCircle className={classes.addButtonIcon} />
       </IconButton>
       {pageInfo.hasNextPage && (this.props.relay.hasMore() && !this.props.relay.isLoading() ? (
         <IconButton
-          style={{
-            zIndex: 9,
-            position: 'absolute',
-            bottom: 20,
-            right: 20,
-            height: 72,
-            width: 72,
-          }}
+          className={classes.moreButton}
           color="primary"
           onClick={this.onMore}
         >
-          <More style={{ fontSize: 72 }} />
+          <More className={classes.moreButtonIcon} />
         </IconButton>
       ) : (
         <Loader />
@@ -90,7 +103,7 @@ class TaskListPagination extends React.Component {
 }
 
 export default createPaginationContainer(
-  TaskListPagination,
+  withStyles(styles)(TaskListPagination),
   graphql`
     fragment TaskListPagination on TaskListType
     @argumentDefinitions(

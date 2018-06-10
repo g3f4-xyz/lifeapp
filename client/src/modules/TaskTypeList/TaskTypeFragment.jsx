@@ -1,13 +1,58 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { createFragmentContainer, graphql } from 'react-relay';
+import { withStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import AddCircle from '@material-ui/icons/AddCircle';
 import InfoOutline from '@material-ui/icons/InfoOutline';
 import SettingsIcon from '@material-ui/icons/Settings';
 
+const styles = {
+  actionsContainer: {
+    height: '25%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  container: {
+    width: 250,
+    height: 250,
+    margin: 20,
+  },
+  nameContainer: {
+    height: '15%',
+    width: '100%',
+  },
+  descContainer: {
+    height: '65%',
+    width: '100%',
+  },
+  descText: {
+    padding: 0,
+    margin: 0,
+  },
+  icon: {
+    height: '100%',
+    width: '100%',
+  },
+  infoButton: {
+    color: '#505ae8',
+    height: 72,
+    width: 72,
+  },
+  addButton: {
+    color: '#8BC34A',
+    height: 72,
+    width: 72,
+  },
+  fontSize72: {
+    fontSize: 72,
+  }
+};
+
 class TaskTypeFragment extends React.Component {
   static propTypes = {
+    classes: PropTypes.object,
     data: PropTypes.object,
     onSelect: PropTypes.func,
   };
@@ -24,66 +69,35 @@ class TaskTypeFragment extends React.Component {
 
   render() {
     console.log(['TaskTypeFragment:render'], this.props);
-    const { data, onSelect } = this.props;
+    const { classes, data, onSelect } = this.props;
     const { name, description, typeId } = data;
 
     return (
-      <div
-        style={{
-          width: 250,
-          height: 250,
-          margin: 20,
-        }}
-      >
-        <div style={{
-          height: '15%',
-          width: '100%',
-        }}>
+      <div className={classes.container}>
+        <div className={classes.nameContainer}>
           <h1>{name}</h1>
         </div>
-        <div style={{
-          height: '65%',
-          width: '100%',
-        }}>
+        <div className={classes.descContainer}>
         {this.state.info ? (
-          <h3 style={{
-            padding: 0,
-            margin: 0,
-          }}>{description}</h3>
+          <h3 className={classes.descText}>{description}</h3>
         ) : (
-          <SettingsIcon style={{
-            height: '100%',
-            width: '100%',
-          }} />
+          <SettingsIcon className={classes.icon} />
         )}
         </div>
-        <div style={{
-          height: '25%',
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'space-between',
-        }}>
+        <div className={classes.actionsContainer}>
           <IconButton
             key="TaskTypeList:List:IconButton:Info"
-            style={{
-              color: '#505ae8',
-              height: 72,
-              width: 72,
-            }}
+            className={classes.infoButton}
             onClick={this.onInfo}
           >
-            <InfoOutline style={{ fontSize: 72 }}/>
+            <InfoOutline className={classes.fontSize72} />
           </IconButton>
           <IconButton
             key="TaskTypeList:List:IconButton:Add"
-            style={{
-              color: '#8BC34A',
-              height: 72,
-              width: 72,
-            }}
+            className={classes.addButton}
             onClick={() => onSelect(typeId)}
           >
-            <AddCircle style={{ fontSize: 72 }}/>
+            <AddCircle className={classes.fontSize72} />
           </IconButton>
         </div>
       </div>
@@ -92,7 +106,7 @@ class TaskTypeFragment extends React.Component {
 }
 
 export default createFragmentContainer(
-  TaskTypeFragment,
+  withStyles(styles)(TaskTypeFragment),
   graphql`
     fragment TaskTypeFragment on TaskTypeType {
       id

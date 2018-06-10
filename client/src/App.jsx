@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { QueryRenderer, graphql } from 'react-relay'
 import immutabilityHelper from 'immutability-helper'
+import { withStyles } from '@material-ui/core/styles';
 import ErrorBoundary from './containers/ErrorBoundary';
 import ResponsiveGrid from './containers/ResponsiveGrid';
 import environment from './environment';
@@ -11,6 +12,13 @@ import TaskListQuery from './modules/TaskList/TaskListQuery';
 import TaskTypeListQuery from './modules/TaskTypeList/TaskTypeListQuery';
 
 const originalLayouts = getFromLS('layouts') || {};
+const styles = {
+  menuContainer: {
+    position: 'absolute',
+    right: 10,
+    zIndex: 9,
+  },
+};
 
 const MODULES_IDS = {
   TASK: 'task',
@@ -219,7 +227,7 @@ class App extends Component {
     const { gridView, gridViewLocked } = this.state;
 
     return (
-      <div style={{ position: 'absolute', right: 10, zIndex: 9 }}>
+      <div className={this.props.classes.menuContainer}>
         <Menu
           options={[{
             label: 'Log out',
@@ -343,4 +351,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withStyles(styles)(App);

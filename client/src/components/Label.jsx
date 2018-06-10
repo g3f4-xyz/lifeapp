@@ -1,19 +1,26 @@
 import React from 'react';
+import classnames from 'classnames';
 import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 
-const style = {
-  display: 'inline-flex',
+const styles = {
+  container: 'inline-flex',
 };
 
-export default class Label extends React.Component {
+class Label extends React.Component {
   static propTypes = {
+    className: PropTypes.string,
+    classes: PropTypes.object,
     children: PropTypes.node,
-    style: PropTypes.object,
   };
 
   render() {
+    const { className, classes, children } = this.props;
+
     return (
-      <div style={{ ...style, ...this.props.style }}>{this.props.children}</div>
+      <div className={classnames(className, classes.container)}>{children}</div>
     );
   }
 }
+
+export default withStyles(styles)(Label);

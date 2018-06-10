@@ -1,10 +1,26 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Create from '@material-ui/icons/Create';
 import { Label } from '../../components/index';
 
 const styles = {
+  label: {
+    padding: 10,
+  },
+  labelContainer: {
+    padding: 10,
+    width: 200,
+    textAlign: 'left',
+  },
+  value: {
+    padding: 20,
+  },
+  valueContainer: {
+    width: '80%',
+    textAlign: 'right',
+  },
   row: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -12,34 +28,32 @@ const styles = {
   },
 };
 
-export default class TaskDetails extends React.Component {
+class TaskDetails extends React.Component {
   static propTypes = {
+    classes: PropTypes.object,
     data: PropTypes.object,
   };
 
   render() {
     console.log(['TaskDetails:render'], this.props);
-    if (!this.props.data) {
-      return null;
-    }
-
+    const { classes } = this.props;
     const { taskType, fields } = this.props.data;
 
     return (
-      <div style={styles.root}>
+      <div className={classes.root}>
         <h1>{taskType}</h1>
       {fields
         .map(item => item) // propsy są immutable, sortowanie modyfikuje oryginalną tablicę
         .sort((a, b) => a.order - b.order)
         .map(({ fieldId, label, type, meta: { options }, value }) => (
         <div key={fieldId}>
-          <Paper style={styles.row}>
-            <div style={{ padding: 10, width: 200, textAlign: 'left' }}>
+          <Paper className={classes.row}>
+            <div className={classes.labelContainer}>
               <Create />
-              <Label style={{ padding: 10 }}>{label}</Label>
+              <Label class>{label}</Label>
             </div>
-            <div style={{ width: '80%', textAlign: 'right' }}>
-              <div style={{ padding: 20 }}>{value.text || value.number || value.id}</div>
+            <div className={classes.valueContainer}>
+              <div className={classes.value}>{value.text || value.number || value.id}</div>
             </div>
           </Paper>
         </div>
@@ -48,3 +62,5 @@ export default class TaskDetails extends React.Component {
     );
   }
 }
+
+export default withStyles(styles)(TaskDetails);

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import update from 'immutability-helper';
 import AddButton from '@material-ui/icons/Check';
 import saveTaskMutation from '../../mutations/saveTask';
@@ -12,14 +13,24 @@ const styles = {
     margin: 10,
     minHeight: 50,
   },
+  addButton: {
+    position: 'absolute',
+    bottom: 0,
+    color: '#8BC34A',
+    right: 0,
+    margin: 20,
+    width: '20%',
+    height: '20%',
+  },
 };
 
-export default class TaskEdit extends React.Component {
+class TaskEdit extends React.Component {
   static propTypes = {
-    onSaveDone: PropTypes.func,
-    isNew: PropTypes.bool,
+    classes: PropTypes.object,
     data: PropTypes.object,
     taskListId: PropTypes.string,
+    isNew: PropTypes.bool,
+    onSaveDone: PropTypes.func,
   };
 
   state = {
@@ -50,46 +61,38 @@ export default class TaskEdit extends React.Component {
     }
   };
 
-  render() {
-    console.log(['TaskEdit:render'], this.props);
-    if (!this.state) {
-      return null;
-    }
+  updateFieldValue = (fieldId, value) => {
+    const fieldIndex = this.state.task.fields.findIndex(field => field.fieldId === fieldId);
 
-    const { fields, taskType } = this.state.task;
-    const updateFieldValue = (fieldId, value) => {
-      const fieldIndex = fields.findIndex(field => field.fieldId === fieldId);
-
-      this.setState(update(this.state, {
-        task: {
-          fields: {
-            [fieldIndex]: {
-              value: {
-                $set: value
-              }
+    this.setState(update(this.state, {
+      task: {
+        fields: {
+          [fieldIndex]: {
+            value: {
+              $set: value
             }
           }
         }
-      }));
-    };
+      }
+    }));
+  };
+
+  render() {
+    console.log(['TaskEdit:render'], this.props);
+    const { classes } = this.props;
+    const { fields, taskType } = this.state.task;
 
     return (
-      <div style={styles.root}>
+      <div className={classes.root}>
         <AddButton
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            color: '#8BC34A',
-            right: 0,
-            margin: 20,
-            width: '20%',
-            height: '20%',
-          }}
+          className={classes.addButton}
           onClick={this.onSave}
         />
         <h1>{taskType}</h1>
-        <Fields fields={fields} onFieldChange={updateFieldValue} />
+        <Fields fields={fields} onFieldChange={this.updateFieldValue} />
       </div>
     );
   }
 }
+
+export default withStyles(styles)(TaskEdit);
