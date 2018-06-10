@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import update from 'immutability-helper';
-import AddButton from '@material-ui/icons/Check';
+import IconButton from '@material-ui/core/IconButton';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import saveTaskMutation from '../../mutations/saveTask';
 import Fields from '../../components/Fields';
 
@@ -14,13 +15,16 @@ const styles = {
     minHeight: 50,
   },
   addButton: {
+    zIndex: 9,
     position: 'absolute',
-    bottom: 0,
+    bottom: 20,
+    right: 20,
+    height: 72,
+    width: 72,
+  },
+  addButtonIcon: {
     color: '#8BC34A',
-    right: 0,
-    margin: 20,
-    width: '20%',
-    height: '20%',
+    fontSize: 72,
   },
 };
 
@@ -84,10 +88,13 @@ class TaskEdit extends React.Component {
 
     return (
       <div className={classes.root}>
-        <AddButton
+        <IconButton
           className={classes.addButton}
+          color="primary"
           onClick={this.onSave}
-        />
+        >
+          <CheckCircleIcon className={classes.addButtonIcon} />
+        </IconButton>
         <h1>{taskType}</h1>
         <Fields fields={fields} onFieldChange={this.updateFieldValue} />
       </div>

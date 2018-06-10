@@ -30,7 +30,7 @@ class ResponsiveGrid extends React.PureComponent {
     classes: PropTypes.object,
     layouts: PropTypes.object,
     onModuleClose: PropTypes.func,
-    onModuleChange: PropTypes.func,
+    onModuleZoom: PropTypes.func,
     onLayoutChange: PropTypes.func,
   };
 
@@ -41,7 +41,7 @@ class ResponsiveGrid extends React.PureComponent {
   };
 
   render() {
-    const { classes, children, layouts, onLayoutChange, onModuleClose, onModuleChange } = this.props;
+    const { classes, children, layouts, onLayoutChange, onModuleClose, onModuleZoom } = this.props;
 
     return (
       <div>
@@ -63,7 +63,7 @@ class ResponsiveGrid extends React.PureComponent {
               </IconButton>
               <IconButton
                 className={classes.zoom}
-                onClick={() => onModuleChange(node.props.moduleId)}
+                onClick={() => onModuleZoom(node.props.moduleId)}
               >
                 <ZoomIn />
               </IconButton>

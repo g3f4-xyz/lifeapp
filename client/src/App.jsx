@@ -2,6 +2,8 @@ import React, { Component, Fragment } from 'react';
 import { QueryRenderer, graphql } from 'react-relay'
 import immutabilityHelper from 'immutability-helper'
 import { withStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import CancelIcon from '@material-ui/icons/Cancel';
 import ErrorBoundary from './containers/ErrorBoundary';
 import ResponsiveGrid from './containers/ResponsiveGrid';
 import environment from './environment';
@@ -13,6 +15,17 @@ import TaskTypeListQuery from './modules/TaskTypeList/TaskTypeListQuery';
 
 const originalLayouts = getFromLS('layouts') || {};
 const styles = {
+  backButton: {
+    zIndex: 9,
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    height: 72,
+    width: 72,
+  },
+  backButtonIcon: {
+    fontSize: 72,
+  },
   menuContainer: {
     position: 'absolute',
     right: 10,
@@ -59,7 +72,8 @@ function saveToLS(key, value) {
 class App extends Component {
   state = {
     activeModuleId: MODULES_IDS.TASK_LIST,
-    appOpenedModules: [MODULES_IDS.TASK_LIST],
+    activeModulesHistory: [MODULES_IDS.TASK_LIST],
+    appOpenedModuleIds: [MODULES_IDS.TASK_LIST],
     openedTasksModulesProps: [],
     layouts: originalLayouts,
     gridView: false,
@@ -76,6 +90,7 @@ class App extends Component {
         update({
           $merge: {
             activeModuleId: MODULES_IDS.TASK_LIST,
+            activeModulesHistory: [MODULES_IDS.TASK_LIST],
             openedTasksModulesProps: state.openedTasksModulesProps.filter(props => props.taskId === taskId),
           }
         })
@@ -88,10 +103,11 @@ class App extends Component {
 
         update({
           $merge: {
-            appOpenedModules: state.appOpenedModules.includes(MODULES_IDS.TASK_TYPE_LIST)
-              ? state.appOpenedModules
-              : [...state.appOpenedModules, MODULES_IDS.TASK_TYPE_LIST],
-            activeModuleId: MODULES_IDS.TASK_TYPE_LIST
+            appOpenedModuleIds: state.appOpenedModuleIds.includes(MODULES_IDS.TASK_TYPE_LIST)
+              ? state.appOpenedModuleIds
+              : [...state.appOpenedModuleIds, MODULES_IDS.TASK_TYPE_LIST],
+            activeModuleId: MODULES_IDS.TASK_TYPE_LIST,
+            activeModulesHistory: [...state.activeModulesHistory, MODULES_IDS.TASK_TYPE_LIST],
           }
         })
       },
@@ -103,6 +119,7 @@ class App extends Component {
         update({
           $merge: {
             activeModuleId: moduleId,
+            activeModulesHistory: [...state.activeModulesHistory, moduleId],
             gridView: gridView ? gridView : gridViewLocked,
             openedTasksModulesProps: [...openedTasksModulesProps, {
               editMode: false,
@@ -121,6 +138,7 @@ class App extends Component {
         update({
           $merge: {
             activeModuleId: moduleId,
+            activeModulesHistory: [...state.activeModulesHistory, moduleId],
             gridView: gridView ? gridView : gridViewLocked,
             openedTasksModulesProps: [...openedTasksModulesProps, {
               editMode: true,
@@ -137,11 +155,12 @@ class App extends Component {
       onSelect: type => {
         console.log(['handlers:taskList:onSelect'], type);
         const { gridView, gridViewLocked, openedTasksModulesProps } = state;
-        const temporaryId = Date.now();
+        const temporaryId = `${Date.now()}:temporaryId`;
 
         update({
           $merge: {
             activeModuleId: temporaryId,
+            activeModulesHistory: [...state.activeModulesHistory, temporaryId],
             gridView: gridView ? gridView : gridViewLocked,
             openedTasksModulesProps: [...openedTasksModulesProps, {
               editMode: true,
@@ -167,37 +186,59 @@ class App extends Component {
     console.error(`No module handler provider for module ${moduleProps.moduleId}`);
   }
 
-  onModuleChange = activeModuleId => {
-    console.log(['App:onModuleChange:activeModuleId'], activeModuleId);
-
-    const { appOpenedModules } = this.state;
+  onModuleZoom = activeModuleId => {
+    console.log(['App:onModuleZoom:activeModuleId'], activeModuleId);
+    const { appOpenedModuleIds } = this.state;
     const isApplicationModule = APP_MODULES_IDS.includes(activeModuleId);
-    const setAppOpenedModules = () => {
-      return appOpenedModules.includes(activeModuleId)
-        ? appOpenedModules
-        : [...appOpenedModules, activeModuleId];
+    const setAppOpenedModuleIds = () => {
+      return appOpenedModuleIds.includes(activeModuleId)
+        ? appOpenedModuleIds
+        : [...appOpenedModuleIds, activeModuleId];
     };
 
     this.setState({
       activeModuleId,
+      activeModulesHistory: [MODULES_IDS.TASK_LIST, activeModuleId],
       gridView: false,
-      appOpenedModules: isApplicationModule
-        ? setAppOpenedModules()
-        : appOpenedModules,
+      appOpenedModuleIds: isApplicationModule
+        ? setAppOpenedModuleIds()
+        : appOpenedModuleIds,
     });
   };
 
   onModuleClose = moduleId => {
     console.log(['App:onModuleClose:moduleId'], moduleId);
-    const { appOpenedModules, openedTasksModulesProps } = this.state;
+    if (moduleId !== MODULES_IDS.TASK_LIST) {
+      const { appOpenedModuleIds, openedTasksModulesProps } = this.state;
 
-    if (APP_MODULES_IDS.includes(moduleId)) {
+      if (APP_MODULES_IDS.includes(moduleId)) {
+        this.setState({
+          appOpenedModuleIds: appOpenedModuleIds.filter(id => id !== moduleId),
+        });
+      } else {
+        this.setState({
+          openedTasksModulesProps: openedTasksModulesProps.filter(props => props.moduleId !== moduleId),
+        });
+      }
+    }
+  };
+
+  onActiveModuleBack = () => {
+    console.log(['App:onActiveModuleBack']);
+    const { activeModuleId, activeModulesHistory, appOpenedModuleIds, openedTasksModulesProps } = this.state;
+    const isApplicationModule = APP_MODULES_IDS.includes(activeModuleId);
+
+    if (isApplicationModule) {
       this.setState({
-        appOpenedModuleIds: appOpenedModules.filter(id => id !== moduleId),
+        activeModuleId: activeModulesHistory[activeModulesHistory.length - 2],
+        activeModulesHistory: activeModulesHistory.filter(moduleId => moduleId !== activeModuleId),
+        appOpenedModuleIds: appOpenedModuleIds.filter(id => id !== activeModuleId),
       });
     } else {
       this.setState({
-        openedTasksModulesProps: openedTasksModulesProps.filter(props => props.moduleId !== moduleId),
+        activeModuleId: activeModulesHistory[activeModulesHistory.length - 2],
+        activeModulesHistory: activeModulesHistory.filter(moduleId => moduleId !== activeModuleId),
+        openedTasksModulesProps: openedTasksModulesProps.filter(props => props.moduleId !== activeModuleId),
       });
     }
   };
@@ -271,7 +312,7 @@ class App extends Component {
   }
 
   renderApplicationModules(data) {
-    return this.state.appOpenedModules.map(moduleId =>
+    return this.state.appOpenedModuleIds.map(moduleId =>
       this.renderApplicationModule(moduleId, data.app[moduleId]));
   }
 
@@ -282,7 +323,7 @@ class App extends Component {
       <ResponsiveGrid
         layouts={layouts}
         onModuleClose={this.onModuleClose}
-        onModuleChange={this.onModuleChange}
+        onModuleZoom={this.onModuleZoom}
         onLayoutChange={this.onLayoutChange}
       >
         {this.renderApplicationModules(data)}
@@ -309,10 +350,23 @@ class App extends Component {
   }
 
   renderApplication(data) {
+    const { classes } = this.props;
+    const { activeModuleId, gridView } = this.state;
+    const isTaskListModuleActive = MODULES_IDS.TASK_LIST === activeModuleId;
+
     return (
       <Fragment>
         {this.renderMenu()}
         {this.state.gridView ? this.renderResponsiveGrid(data) : this.renderModule(data)}
+        {!(isTaskListModuleActive || gridView) && (
+          <IconButton
+            className={classes.backButton}
+            color="secondary"
+            onClick={this.onActiveModuleBack}
+          >
+            <CancelIcon className={classes.backButtonIcon} />
+          </IconButton>
+        )}
       </Fragment>
     )
   }

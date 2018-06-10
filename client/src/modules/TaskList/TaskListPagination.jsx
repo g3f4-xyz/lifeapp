@@ -70,9 +70,9 @@ class TaskListPagination extends React.Component {
 
     return (
       <Fragment>
-      {tasks.map((data, key) => (
+      {tasks.map(data => (
         <Task
-          key={key}
+          key={data.id}
           data={data}
           onDelete={id => this.onDelete(id)}
           onDetails={onDetails}
@@ -121,6 +121,7 @@ export default createPaginationContainer(
       ) @connection(key: "TaskList_list") {
         edges {
           node {
+            id
             ...TaskListFragment
           }
         }
