@@ -50,7 +50,7 @@ input fieldsInputType {
   type: String
   label: String
   value: valueInputType
-  info: String
+  helperText: String
   meta: metaInputType
 }
 
@@ -74,8 +74,8 @@ type FieldType {
   """value field description"""
   value: ValuesUnion
 
-  """info field description"""
-  info: String
+  """helperText field description"""
+  helperText: String
 
   """meta field description"""
   meta: MetasUnion

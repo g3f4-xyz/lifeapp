@@ -29,16 +29,16 @@ module.exports = new GraphQLObjectType({
     value: {
       description: 'value field description',
       type: ValuesUnion,
-      resolve: ({ type, value }) => ({ type, ...value }),
+      resolve: ({ format, value }) => ({ format, ...value }),
     },
-    info: {
-      description: 'info field description',
+    helperText: {
+      description: 'helperText field description',
       type: GraphQLString,
     },
     meta: {
       description: 'meta field description',
       type: MetasUnion,
-      resolve: ({ type, meta }) => ({ type, ...meta }),
+      resolve: ({ format, meta }) => ({ format, ...meta }),
     },
   }),
 });

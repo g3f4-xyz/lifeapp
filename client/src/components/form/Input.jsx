@@ -18,12 +18,15 @@ class Input extends React.Component {
   };
 
   render() {
-    const { classes, className, info, ...props } = this.props;
+    const { classes, className, helperText, ...props } = this.props;
 
     return (
       <TextField
+        InputLabelProps={{
+          shrink: true,
+        }}
         className={classnames(className, classes.textField)}
-        helperText={info}
+        helperText={helperText}
         fullWidth
         {...props}
       />

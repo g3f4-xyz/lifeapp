@@ -24,7 +24,7 @@ module.exports = new GraphQLList(new GraphQLInputObjectType({
     value: {
       type: valueInputType,
     },
-    info: {
+    helperText: {
       type: GraphQLString,
     },
     meta: {

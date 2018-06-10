@@ -22,14 +22,14 @@ class Select extends React.Component {
     options: PropTypes.array,
     fieldId: PropTypes.string,
     id: PropTypes.string,
-    info: PropTypes.string,
+    helperText: PropTypes.string,
     label: PropTypes.string,
     onChange: PropTypes.func,
     ...SelectField.propTypes,
   };
 
   render() {
-    const { classes, fieldId, info, id, label, options, ...selectProps } = this.props;
+    const { classes, fieldId, helperText, id, label, options, ...selectProps } = this.props;
 
     return (
       <FormControl className={classes.formControl}>
@@ -45,7 +45,7 @@ class Select extends React.Component {
           >{text}</MenuItem>
         ))}
         </SelectField>
-        <FormHelperText>{info}</FormHelperText>
+        <FormHelperText>{helperText}</FormHelperText>
       </FormControl>
     )
   }

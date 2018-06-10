@@ -24,7 +24,7 @@ const mutation = graphql`
             type
             order
             label
-            info
+            helperText
             meta {
               ... on ChoiceMetaType {
                   required

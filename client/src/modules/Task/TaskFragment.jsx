@@ -39,7 +39,7 @@ export default createFragmentContainer(
         order
         type
         label
-        info
+        helperText
         meta {
           ... on ChoiceMetaType {
             required

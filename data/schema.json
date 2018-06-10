@@ -413,8 +413,8 @@
               "deprecationReason": null
             },
             {
-              "name": "info",
-              "description": "info field description",
+              "name": "helperText",
+              "description": "helperText field description",
               "args": [],
               "type": {
                 "kind": "SCALAR",
@@ -1608,7 +1608,7 @@
               "defaultValue": null
             },
             {
-              "name": "info",
+              "name": "helperText",
               "description": null,
               "type": {
                 "kind": "SCALAR",

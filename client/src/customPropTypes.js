@@ -9,7 +9,7 @@ export const taskDataType = PropTypes.shape({
     order: PropTypes.number,
     type: PropTypes.string,
     label: PropTypes.string,
-    info: PropTypes.string,
+    helperText: PropTypes.string,
     meta: PropTypes.shape({
       min: PropTypes.number,
       minLen: PropTypes.number,
