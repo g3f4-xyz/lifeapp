@@ -6,12 +6,13 @@ import IconButton from '@material-ui/core/IconButton';
 import CancelIcon from '@material-ui/icons/Cancel';
 import ErrorBoundary from './containers/ErrorBoundary';
 import ResponsiveGrid from './containers/ResponsiveGrid';
+import { MODULES_IDS } from './constans';
 import environment from './environment';
 import Menu from './components/Menu';
 import Loader from './components/Loader';
-import TaskQuery from './modules/Task/TaskQuery';
-import TaskListQuery from './modules/TaskList/TaskListQuery';
-import TaskTypeListQuery from './modules/TaskTypeList/TaskTypeListQuery';
+import TaskQuery, { handler as taskHandler } from './modules/Task';
+import TaskListQuery, { handler as taskListHandler } from './modules/TaskList';
+import TaskTypeListQuery, { handler as taskTypeListHandler } from './modules/TaskTypeList';
 
 const originalLayouts = getFromLS('layouts') || {};
 const styles = {
@@ -31,12 +32,6 @@ const styles = {
     right: 10,
     zIndex: 9,
   },
-};
-
-const MODULES_IDS = {
-  TASK: 'task',
-  TASK_LIST: 'taskList',
-  TASK_TYPE_LIST: 'taskTypeList',
 };
 
 const QUERIES_COMPONENTS = {
@@ -81,98 +76,9 @@ class App extends Component {
   };
 
   handlers = {
-    [MODULES_IDS.TASK]: (moduleProps, data, state, update) => ({
-      ...moduleProps,
-      taskListId: data.app.taskList.id,
-      onSaveDone: taskId => {
-        console.log(['handlers:task:onSaveDone'], taskId);
-
-        update({
-          $merge: {
-            activeModuleId: MODULES_IDS.TASK_LIST,
-            activeModulesHistory: [MODULES_IDS.TASK_LIST],
-            openedTasksModulesProps: state.openedTasksModulesProps.filter(props => props.taskId === taskId),
-          }
-        })
-      },
-    }),
-    [MODULES_IDS.TASK_LIST]: ({ moduleId }, data, state, update) => ({
-      moduleId,
-      onAdd: () => {
-        console.log(['handlers:taskList:onAdd']);
-
-        update({
-          $merge: {
-            appOpenedModuleIds: state.appOpenedModuleIds.includes(MODULES_IDS.TASK_TYPE_LIST)
-              ? state.appOpenedModuleIds
-              : [...state.appOpenedModuleIds, MODULES_IDS.TASK_TYPE_LIST],
-            activeModuleId: MODULES_IDS.TASK_TYPE_LIST,
-            activeModulesHistory: [...state.activeModulesHistory, MODULES_IDS.TASK_TYPE_LIST],
-          }
-        })
-      },
-      onDetails: taskId => {
-        console.log(['App:onDetails:taskId'], taskId);
-        const moduleId = `${taskId}:details`;
-        const { gridView, gridViewLocked, openedTasksModulesProps } = state;
-
-        update({
-          $merge: {
-            activeModuleId: moduleId,
-            activeModulesHistory: [...state.activeModulesHistory, moduleId],
-            gridView: gridView ? gridView : gridViewLocked,
-            openedTasksModulesProps: [...openedTasksModulesProps, {
-              editMode: false,
-              isNew: false,
-              moduleId,
-              taskId,
-            }],
-          },
-        });
-      },
-      onEdit: taskId => {
-        console.log(['handlers:task:onEdit'], taskId);
-        const { gridView, gridViewLocked, openedTasksModulesProps } = state;
-        const moduleId = `${taskId}:edit`;
-
-        update({
-          $merge: {
-            activeModuleId: moduleId,
-            activeModulesHistory: [...state.activeModulesHistory, moduleId],
-            gridView: gridView ? gridView : gridViewLocked,
-            openedTasksModulesProps: [...openedTasksModulesProps, {
-              editMode: true,
-              isNew: false,
-              moduleId,
-              taskId,
-            }]
-          }
-        });
-      },
-    }),
-    [MODULES_IDS.TASK_TYPE_LIST]: ({ moduleId }, data, state, update) => ({
-      moduleId,
-      onSelect: type => {
-        console.log(['handlers:taskList:onSelect'], type);
-        const { gridView, gridViewLocked, openedTasksModulesProps } = state;
-        const temporaryId = `${Date.now()}:temporaryId`;
-
-        update({
-          $merge: {
-            activeModuleId: temporaryId,
-            activeModulesHistory: [...state.activeModulesHistory, temporaryId],
-            gridView: gridView ? gridView : gridViewLocked,
-            openedTasksModulesProps: [...openedTasksModulesProps, {
-              editMode: true,
-              isNew: true,
-              moduleId: temporaryId,
-              taskId: temporaryId,
-              type,
-            }],
-          },
-        });
-      },
-    }),
+    [MODULES_IDS.TASK]: taskHandler,
+    [MODULES_IDS.TASK_LIST]: taskListHandler,
+    [MODULES_IDS.TASK_TYPE_LIST]: taskTypeListHandler,
   };
 
   moduleHandler(handlerName, moduleProps, data) {
