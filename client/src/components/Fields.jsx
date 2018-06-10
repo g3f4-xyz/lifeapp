@@ -55,7 +55,7 @@ class Fields extends React.Component {
         })[type] || (
           <Input
             label={label}
-            placeholder={info}
+            info={info}
             value={(value && (value.text || value.number)) || ''}
             onChange={({ target: { value } }) => {
               console.log(['onChange.value'], value);

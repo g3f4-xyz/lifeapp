@@ -6,9 +6,8 @@ import TextField from '@material-ui/core/TextField';
 
 const styles = theme => ({
   textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 200,
+    margin: theme.spacing.unit * 2,
+    flex: 1,
   },
 });
 
@@ -19,15 +18,12 @@ class Input extends React.Component {
   };
 
   render() {
-    const { classes, className, ...props } = this.props;
+    const { classes, className, info, ...props } = this.props;
 
     return (
       <TextField
         className={classnames(className, classes.textField)}
-        margin="normal"
-        InputLabelProps={{
-          shrink: true,
-        }}
+        helperText={info}
         fullWidth
         {...props}
       />

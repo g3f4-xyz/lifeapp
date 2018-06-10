@@ -25,6 +25,7 @@ class Select extends React.Component {
     info: PropTypes.string,
     label: PropTypes.string,
     onChange: PropTypes.func,
+    ...SelectField.propTypes,
   };
 
   render() {
