@@ -18,6 +18,7 @@ export default class TaskDetails extends React.Component {
   };
 
   render() {
+    console.log(['TaskDetails:render'], this.props);
     if (!this.props.data) {
       return null;
     }

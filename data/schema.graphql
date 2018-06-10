@@ -2,6 +2,7 @@
 type AppType {
   """The ID of an object"""
   id: ID!
+  task(id: ID, type: String): TaskType
   taskList: TaskListType
   taskTypeList: TaskTypeListType
 }
@@ -147,6 +148,12 @@ type PageInfo {
 type Query {
   """Application entry point"""
   app: AppType
+
+  """Fetches an object given its ID"""
+  node(
+    """The ID of an object"""
+    id: ID!
+  ): Node
 }
 
 input saveTaskMutationInput {
@@ -190,7 +197,7 @@ type TaskListType implements Node {
   """The ID of an object"""
   id: ID!
 
-  """Task list"""
+  """task list type"""
   list(after: String, first: Int, before: String, last: Int): TaskTypeConnection
 }
 
@@ -199,6 +206,10 @@ type TaskType implements Node {
   """The ID of an object"""
   id: ID!
   taskType: String
+  title: String
+  description: String
+  priority: String
+  status: String
   fields(filterByIds: [String]): [FieldType]
 }
 
@@ -225,7 +236,7 @@ type TaskTypeListType implements Node {
   """The ID of an object"""
   id: ID!
 
-  """Task`s type list description"""
+  """task type list type"""
   list(after: String, first: Int, before: String, last: Int): TaskTypeTypeConnection
 }
 

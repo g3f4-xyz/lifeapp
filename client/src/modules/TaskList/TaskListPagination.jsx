@@ -6,11 +6,11 @@ import More from '@material-ui/icons/MoreHoriz';
 import AddCircle from '@material-ui/icons/AddCircle';
 import onDeleteMutation from '../../mutations/deleteTask';
 import Loader from '../../components/Loader';
-import Task from './Task';
+import Task from './TaskListFragment';
 
 const PAGE_SIZE = 5;
 
-class TaskList extends React.Component {
+class TaskListPagination extends React.Component {
   static propTypes = {
     data: PropTypes.object,
     onMore: PropTypes.func,
@@ -31,11 +31,12 @@ class TaskList extends React.Component {
   };
 
   onDelete = id => {
-    console.log(['TaskList:onDelete'], id);
+    console.log(['TaskListPagination:onDelete'], id);
     onDeleteMutation({ id, parentId: this.props.data.id });
   };
 
   render() {
+    console.log(['TaskListPagination:render'], this.props);
     const { data, onAdd, onDetails, onEdit } = this.props;
     const { list: { edges, pageInfo } }  = data || { list: { edges: [], pageInfo: {} } };
     const tasks = edges.map(({ node }) => node);
@@ -43,13 +44,13 @@ class TaskList extends React.Component {
     return (
       <Fragment>
       {tasks.map((data, key) => (
-          <Task
-            key={key}
-            data={data}
-            onDelete={id => this.onDelete(id)}
-            onDetails={onDetails}
-            onEdit={onEdit}
-          />
+        <Task
+          key={key}
+          data={data}
+          onDelete={id => this.onDelete(id)}
+          onDetails={onDetails}
+          onEdit={onEdit}
+        />
       ))}
       <IconButton
         style={{
@@ -89,9 +90,17 @@ class TaskList extends React.Component {
 }
 
 export default createPaginationContainer(
-  TaskList,
+  TaskListPagination,
   graphql`
-    fragment TaskList on TaskListType {
+    fragment TaskListPagination on TaskListType
+    @argumentDefinitions(
+        count: { type: "Int", defaultValue: 10 }
+        cursor: { type: "String" }
+#        cursor: { type: "ID" }
+#        GraphQLParser: Variable \`$cursor\` was defined as type \`ID\`, but used in a location that expects type \`String\`. Source: document \`TaskListPagination\` file: \`modules/TaskList/TaskListPagination.jsx\`.
+#        orderby: {type: "[FriendsOrdering]", defaultValue: [DATE_ADDED]}
+    )
+    {
       id
       list (
         first: $count
@@ -99,7 +108,7 @@ export default createPaginationContainer(
       ) @connection(key: "TaskList_list") {
         edges {
           node {
-            ...Task
+            ...TaskListFragment
           }
         }
         pageInfo {
@@ -129,7 +138,7 @@ export default createPaginationContainer(
       ) {
         app {
           taskList {
-            ...TaskList
+            ...TaskListPagination
           }
         }
       }

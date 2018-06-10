@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { createPaginationContainer, graphql } from 'react-relay';
-import TaskType from './TaskType';
+import TaskType from './TaskTypeFragment';
 
 const styles = {
   root: {
@@ -13,26 +13,7 @@ const styles = {
   },
 };
 
-class List extends React.Component {
-  static propTypes = {
-    list: PropTypes.array,
-    onSelect: PropTypes.func,
-  };
-
-  render() {
-    const { list, onSelect } = this.props;
-
-    return (
-      <div style={styles.root}>
-      {[...list].sort(({ order: orderA }, { order: orderB }) => orderA - orderB).map((data, key) => (
-        <TaskType key={key} data={data} onSelect={onSelect} />
-      ))}
-      </div>
-    );
-  }
-}
-
-class TaskTypeList extends React.Component {
+class TaskTypeListPagination extends React.Component {
   static propTypes = {
     data: PropTypes.object,
     relay: PropTypes.object,
@@ -40,38 +21,45 @@ class TaskTypeList extends React.Component {
   };
 
   onSelect = taskType => {
-    console.log(['TaskTypeList:onSelect:taskType'], taskType);
+    console.log(['TaskTypeListPagination:onSelect:taskType'], taskType);
 
     this.props.onSelect(taskType);
   };
 
   render() {
-    const { data: { list: { edges } } } = this.props;
+    console.log(['TaskTypeListPagination:render'], this.props);
+    const { data: { list: { edges } }, onSelect } = this.props;
+    const list = edges.map(({ node }) => node);
 
-    return [
-      <List
-        key="TaskTypeList:List"
-        list={edges.map(({ node }) => node)}
-        onSelect={this.onSelect}
-      />,
-    ];
+    return (
+      <div style={styles.root}>
+        {[...list].sort(({ order: orderA }, { order: orderB }) => orderA - orderB).map((data, key) => (
+          <TaskType key={key} data={data} onSelect={onSelect} />
+        ))}
+      </div>
+    );
   }
 }
 
 export default createPaginationContainer(
-  TaskTypeList,
+  TaskTypeListPagination,
   graphql`
-    fragment TaskTypeList on TaskTypeListType {
+    fragment TaskTypeListPagination on TaskTypeListType
+    @argumentDefinitions(
+        count: { type: "Int", defaultValue: 10 }
+        cursor: { type: "String" }
+    )
+    {
       id
       list (
-        first: 10
-        # after: $cursor
+          first: $count
+          after: $cursor
       ) @connection(key: "TaskTypeList_list") {
         edges {
           node {
               id
               order
-              ...TaskType
+              ...TaskTypeFragment
           }
         }
         pageInfo {
@@ -99,7 +87,7 @@ export default createPaginationContainer(
       {
         app {
           taskTypeList {
-            ...TaskTypeList
+            ...TaskTypeListPagination
           }
         }
       }

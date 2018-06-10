@@ -6,7 +6,7 @@ import AddCircle from '@material-ui/icons/AddCircle';
 import InfoOutline from '@material-ui/icons/InfoOutline';
 import SettingsIcon from '@material-ui/icons/Settings';
 
-class TaskType extends React.Component {
+class TaskTypeFragment extends React.Component {
   static propTypes = {
     data: PropTypes.object,
     onSelect: PropTypes.func,
@@ -23,6 +23,7 @@ class TaskType extends React.Component {
   };
 
   render() {
+    console.log(['TaskTypeFragment:render'], this.props);
     const { data, onSelect } = this.props;
     const { name, description, typeId } = data;
 
@@ -80,10 +81,7 @@ class TaskType extends React.Component {
               height: 72,
               width: 72,
             }}
-            onClick={() => onSelect({
-              fields: data.fields,
-              taskType: typeId,
-            })}
+            onClick={() => onSelect(typeId)}
           >
             <AddCircle style={{ fontSize: 72 }}/>
           </IconButton>
@@ -94,55 +92,13 @@ class TaskType extends React.Component {
 }
 
 export default createFragmentContainer(
-  TaskType,
+  TaskTypeFragment,
   graphql`
-      fragment TaskType on TaskTypeType {
-          id
-          typeId
-          name
-          description
-          order
-          isCustom
-          parentId
-          fields {
-              fieldId
-              format
-              order
-              type
-              label
-              info
-              meta {
-                  ... on ChoiceMetaType {
-                      required
-                      defaultValue
-                      options {
-                          text
-                          value
-                      }
-                  }
-                  ... on NumberMetaType {
-                      required
-                      min
-                      max
-                  }
-                  ... on TextMetaType {
-                      required
-                      minLen
-                      maxLen
-                  }
-              }
-              value {
-                  ... on ChoiceValueType {
-                      id
-                  }
-                  ... on NumberValueType {
-                      number
-                  }
-                  ... on TextValueType {
-                      text
-                  }
-              }
-          }
-      }
+    fragment TaskTypeFragment on TaskTypeType {
+      id
+      typeId
+      name
+      description
+    }
   `,
 );

@@ -1,13 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import { QueryRenderer, graphql } from 'react-relay'
+import immutabilityHelper from 'immutability-helper'
 import ErrorBoundary from './containers/ErrorBoundary';
 import ResponsiveGrid from './containers/ResponsiveGrid';
 import environment from './environment';
 import Menu from './components/Menu';
 import Loader from './components/Loader';
-import Task from './modules/Task/Task';
-import TaskList from './modules/TaskList/TaskList';
-import TaskTypeList from './modules/TaskTypeList/TaskTypeList';
+import TaskQuery from './modules/Task/TaskQuery';
+import TaskListQuery from './modules/TaskList/TaskListQuery';
+import TaskTypeListQuery from './modules/TaskTypeList/TaskTypeListQuery';
 
 const originalLayouts = getFromLS('layouts') || {};
 
@@ -17,10 +18,10 @@ const MODULES_IDS = {
   TASK_TYPE_LIST: 'taskTypeList',
 };
 
-const MODULES_COMPONENTS = {
-  [MODULES_IDS.TASK]: Task,
-  [MODULES_IDS.TASK_LIST]: TaskList,
-  [MODULES_IDS.TASK_TYPE_LIST]: TaskTypeList,
+const QUERIES_COMPONENTS = {
+  [MODULES_IDS.TASK]: TaskQuery,
+  [MODULES_IDS.TASK_LIST]: TaskListQuery,
+  [MODULES_IDS.TASK_TYPE_LIST]: TaskTypeListQuery,
 };
 const APP_MODULES_IDS = [MODULES_IDS.TASK_LIST, MODULES_IDS.TASK_TYPE_LIST];
 
@@ -50,130 +51,115 @@ function saveToLS(key, value) {
 class App extends Component {
   state = {
     activeModuleId: MODULES_IDS.TASK_LIST,
-    openedTasksData: {},
     appOpenedModules: [MODULES_IDS.TASK_LIST],
-    layouts: JSON.parse(JSON.stringify(originalLayouts)),
+    openedTasksModulesProps: [],
+    layouts: originalLayouts,
     gridView: false,
     gridViewLocked: false,
   };
 
   handlers = {
-    [MODULES_IDS.TASK]: ({ data, moduleId }, taskListId) => ({
-      data,
-      moduleId,
-      taskListId,
-      onSave: () => {
-        console.log(['handlers:task:onSave']);
-        const { gridView } = this.state;
-        const openedTasksData = [...this.state.openedTasksData];
-        delete openedTasksData[moduleId];
+    [MODULES_IDS.TASK]: (moduleProps, data, state, update) => ({
+      ...moduleProps,
+      taskListId: data.app.taskList.id,
+      onSaveDone: taskId => {
+        console.log(['handlers:task:onSaveDone'], taskId);
 
-        this.setState({ openedTasksData });
-        !gridView && this.onModuleChange(MODULES_IDS.TASK_LIST);
-        this.onModuleClose(moduleId);
+        update({
+          $merge: {
+            activeModuleId: MODULES_IDS.TASK_LIST,
+            openedTasksModulesProps: state.openedTasksModulesProps.filter(props => props.taskId === taskId),
+          }
+        })
       },
-      onTaskChange: data => {
-        const openedTasksData = { ...this.state.openedTasksData };
-        openedTasksData[moduleId].data = data;
-        this.setState({openedTasksData});
-      }
     }),
-    [MODULES_IDS.TASK_LIST]: (data) => ({
-      moduleId: MODULES_IDS.TASK_LIST,
-      data,
+    [MODULES_IDS.TASK_LIST]: ({ moduleId }, data, state, update) => ({
+      moduleId,
       onAdd: () => {
         console.log(['handlers:taskList:onAdd']);
 
-        this.onModuleChange(MODULES_IDS.TASK_TYPE_LIST);
-      },
-      onDetails: (taskData) => {
-        const { gridViewLocked, openedTasksData } = this.state;
-        console.log(['handlers:taskList:onDetails'], taskData);
-        const moduleId = `${taskData.id}:details`;
-        console.log(['handlers:taskList:moduleId'], moduleId);
-        const isOpened = openedTasksData[moduleId];
-
-        !isOpened && this.setState({
-          activeModuleId: moduleId,
-          gridView: !gridViewLocked,
-          openedTasksData: {
-            ...openedTasksData,
-            [moduleId]: {
-              moduleId,
-              data: {
-                ...taskData,
-                editMode: false,
-              }
-            }
+        update({
+          $merge: {
+            appOpenedModules: state.appOpenedModules.includes(MODULES_IDS.TASK_TYPE_LIST)
+              ? state.appOpenedModules
+              : [...state.appOpenedModules, MODULES_IDS.TASK_TYPE_LIST],
+            activeModuleId: MODULES_IDS.TASK_TYPE_LIST
           }
+        })
+      },
+      onDetails: taskId => {
+        console.log(['App:onDetails:taskId'], taskId);
+        const moduleId = `${taskId}:details`;
+        const { gridView, gridViewLocked, openedTasksModulesProps } = state;
+
+        update({
+          $merge: {
+            activeModuleId: moduleId,
+            gridView: gridView ? gridView : gridViewLocked,
+            openedTasksModulesProps: [...openedTasksModulesProps, {
+              editMode: false,
+              isNew: false,
+              moduleId,
+              taskId,
+            }],
+          },
         });
       },
-      onEdit: (taskData) => {
-        console.log(['handlers:taskList:onEdit'], taskData);
-        const { gridViewLocked, openedTasksData } = this.state;
-        const moduleId = `${taskData.id}:edited`;
-        console.log(['handlers:taskList:moduleId'], moduleId);
-        const isOpened = openedTasksData[moduleId];
+      onEdit: taskId => {
+        console.log(['handlers:task:onEdit'], taskId);
+        const { gridView, gridViewLocked, openedTasksModulesProps } = state;
+        const moduleId = `${taskId}:edit`;
 
-        !isOpened && this.setState({
-          activeModuleId: moduleId,
-          gridView: !gridViewLocked,
-          openedTasksData: {
-            ...openedTasksData,
-            [moduleId]: {
+        update({
+          $merge: {
+            activeModuleId: moduleId,
+            gridView: gridView ? gridView : gridViewLocked,
+            openedTasksModulesProps: [...openedTasksModulesProps, {
+              editMode: true,
+              isNew: false,
               moduleId,
-              data: {
-                ...taskData,
-                editMode: true,
-              }
-            }
+              taskId,
+            }]
           }
         });
       },
     }),
-    [MODULES_IDS.TASK_TYPE_LIST]: data => ({
-      moduleId: MODULES_IDS.TASK_TYPE_LIST,
-      data,
-      onAdd: () => {
-        console.log(['onAdd']);
-      },
+    [MODULES_IDS.TASK_TYPE_LIST]: ({ moduleId }, data, state, update) => ({
+      moduleId,
       onSelect: type => {
-        const { gridView, gridViewLocked, openedTasksData } = this.state;
-        console.log(['handlers:taskTypeList:type'], type);
+        console.log(['handlers:taskList:onSelect'], type);
+        const { gridView, gridViewLocked, openedTasksModulesProps } = state;
         const temporaryId = Date.now();
 
-        this.setState({
-          activeModuleId: temporaryId,
-          gridView: gridView ? gridView : gridViewLocked,
-          openedTasksData: {
-            ...openedTasksData,
-            [temporaryId]: {
+        update({
+          $merge: {
+            activeModuleId: temporaryId,
+            gridView: gridView ? gridView : gridViewLocked,
+            openedTasksModulesProps: [...openedTasksModulesProps, {
+              editMode: true,
+              isNew: true,
               moduleId: temporaryId,
-              data: {
-                moduleId: temporaryId,
-                temporaryId,
-                isNew: true,
-                editMode: true,
-                ...type,
-              }
-            }
-          }
+              taskId: temporaryId,
+              type,
+            }],
+          },
         });
       },
     }),
   };
 
-  moduleHandler(moduleId, data, taskListId) {
-    const handler = this.handlers[moduleId];
+  moduleHandler(handlerName, moduleProps, data) {
+    const handler = this.handlers[handlerName];
+    const updateState = spec => this.setState(immutabilityHelper(this.state, spec));
 
     if (handler) {
-      return handler(data, taskListId);
+      return handler(moduleProps, data, this.state, updateState);
     }
 
-    console.error(`No module handler provider for module ${moduleId}`);
+    console.error(`No module handler provider for module ${moduleProps.moduleId}`);
   }
 
-  onModuleChange = (activeModuleId) => {
+  onModuleChange = activeModuleId => {
     console.log(['App:onModuleChange:activeModuleId'], activeModuleId);
 
     const { appOpenedModules } = this.state;
@@ -195,35 +181,34 @@ class App extends Component {
 
   onModuleClose = moduleId => {
     console.log(['App:onModuleClose:moduleId'], moduleId);
-    const { appOpenedModules } = this.state;
+    const { appOpenedModules, openedTasksModulesProps } = this.state;
 
     if (APP_MODULES_IDS.includes(moduleId)) {
       this.setState({
         appOpenedModuleIds: appOpenedModules.filter(id => id !== moduleId),
       });
     } else {
-      const openedTasksData = { ...this.state.openedTasksData };
-
-      delete openedTasksData[moduleId];
-
-      this.setState({ openedTasksData });
+      this.setState({
+        openedTasksModulesProps: openedTasksModulesProps.filter(props => props.moduleId !== moduleId),
+      });
     }
   };
 
-  resetGrid= () => {
+  onResetGrid= () => {
     this.setState({ layouts: {} });
   };
 
   onLayoutChange = (layout, layouts) => {
+    console.log(['App:onLayoutChange'], layout, layouts, layouts === this.state.layouts);
     saveToLS('layouts', layouts);
     this.setState({ layouts });
   };
 
-  toggleGridView = () => {
+  onToggleGridView = () => {
     this.setState({ gridView: !this.state.gridView })
   };
 
-  toggleGridViewLocked = () => {
+  onToggleGridViewLocked = () => {
     this.setState({
       gridView: !this.state.gridViewLocked,
       gridViewLocked: !this.state.gridViewLocked
@@ -231,7 +216,8 @@ class App extends Component {
   };
 
   renderMenu() {
-    const { appOpenedModules, gridView, gridViewLocked, openedTasksData} = this.state;
+    const { gridView, gridViewLocked } = this.state;
+
     return (
       <div style={{ position: 'absolute', right: 10, zIndex: 9 }}>
         <Menu
@@ -240,14 +226,13 @@ class App extends Component {
             action: () => window.location.replace('logout'),
           }, {
             label: gridView ? 'Hide grid' : 'Show grid',
-            action: this.toggleGridView,
-            disabled: appOpenedModules.length + openedTasksData.length < 2,
+            action: this.onToggleGridView,
           },  {
             label: gridViewLocked ? 'Unlock grid' : 'Lock grid',
-            action: this.toggleGridViewLocked,
+            action: this.onToggleGridViewLocked,
           }, {
             label: 'Reset grid',
-            action: this.resetGrid,
+            action: this.onResetGrid,
             visible: gridView,
           }]}
         />
@@ -255,49 +240,34 @@ class App extends Component {
     );
   }
 
-  renderModule(moduleId, props) {
-    const { activeModuleId, openedTasksData } = this.state;
-    const isApplicationModule = APP_MODULES_IDS.includes(moduleId);
-    const taskListId = props.app.taskList.id;
-    const taskData = openedTasksData[activeModuleId];
-    const Component = isApplicationModule ? MODULES_COMPONENTS[activeModuleId] : MODULES_COMPONENTS[MODULES_IDS.TASK];
-    const handlerName = isApplicationModule ? moduleId : MODULES_IDS.TASK;
-    const data = isApplicationModule ? props.app[activeModuleId] : taskData;
+  renderTaskModule(moduleProps, data) {
+    return (
+      <TaskQuery key={moduleProps.moduleId} { ...this.moduleHandler(MODULES_IDS.TASK, moduleProps, data) } />
+    );
+  }
 
-    if (!data) {
-      console.error(`No data for "${activeModuleId}" module`);
-    }
+  renderTaskModules(data) {
+    return this.state.openedTasksModulesProps.map(module => this.renderTaskModule(module, data));
+  }
+
+  renderApplicationModule(moduleId, data) {
+    const Component = QUERIES_COMPONENTS[moduleId];
 
     return (
       <Component
-        key={activeModuleId}
-        {...this.moduleHandler(handlerName, data, taskListId)}
+        key={moduleId}
+        moduleId={moduleId}
+        {...this.moduleHandler(moduleId, { moduleId }, data)}
       />
     );
   }
 
-  renderApplicationModules(props) {
-    const { appOpenedModules } = this.state;
-
-    return appOpenedModules.map(moduleId => {
-      const Component = MODULES_COMPONENTS[moduleId];
-
-      return (
-        <Component key={moduleId} {...this.moduleHandler(moduleId, props.app[moduleId])} />
-      );
-    });
+  renderApplicationModules(data) {
+    return this.state.appOpenedModules.map(moduleId =>
+      this.renderApplicationModule(moduleId, data.app[moduleId]));
   }
 
-  renderTaskModules() {
-    const { openedTasksData } = this.state;
-    const list = Object.keys(openedTasksData).map(moduleId => openedTasksData[moduleId]);
-
-    return list.map(data => (
-      <Task key={data.id} {...this.moduleHandler(MODULES_IDS.TASK, data)} />
-    ));
-  }
-
-  renderResponsiveGrid(props) {
+  renderResponsiveGrid(data) {
     const { layouts } = this.state;
 
     return (
@@ -307,47 +277,56 @@ class App extends Component {
         onModuleChange={this.onModuleChange}
         onLayoutChange={this.onLayoutChange}
       >
-        {this.renderApplicationModules(props)}
-        {this.renderTaskModules()}
+        {this.renderApplicationModules(data)}
+        {this.renderTaskModules(data)}
       </ResponsiveGrid>
     );
   }
 
-  renderApplication(props) {
+  renderModule(data) {
+    const { activeModuleId } = this.state;
+    const isApplicationModule = APP_MODULES_IDS.includes(activeModuleId);
+
+    if (isApplicationModule) {
+      return this.renderApplicationModule(activeModuleId, data);
+    }
+
+    const taskModuleProps = this.state.openedTasksModulesProps.find(({ moduleId }) => activeModuleId === moduleId);
+
+    if (!taskModuleProps) {
+      console.error(`No moduleProps for module "${activeModuleId}"`);
+    }
+
+    return this.renderTaskModule(taskModuleProps, data);
+  }
+
+  renderApplication(data) {
     return (
       <Fragment>
         {this.renderMenu()}
-        {this.state.gridView ? this.renderResponsiveGrid(props) : this.renderModule(this.state.activeModuleId, props)}
+        {this.state.gridView ? this.renderResponsiveGrid(data) : this.renderModule(data)}
       </Fragment>
     )
   }
 
   render() {
+    console.log(['App:render'], this.state);
     return (
       <ErrorBoundary>
         <QueryRenderer
           environment={environment}
           query={graphql`
-            query AppQuery (
-              $count: Int!
-              $cursor: String
-            ) {
+            query AppQuery {
               app {
                 taskList {
-                 id
-                  ...TaskList
+                  id
                 }
                 taskTypeList {
-                  ...TaskTypeList
+                  id
                 }
               }
             }
           `}
-          variables={{
-            count: 5,
-            type: null,
-            ids: []
-          }}
           render={({error, props}) => {
             if (error) {
               return <div>{JSON.stringify(error)}</div>;

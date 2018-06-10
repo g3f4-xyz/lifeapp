@@ -1,4 +1,5 @@
 const { GraphQLObjectType } = require('graphql');
+const { nodeField } = require('./nodeDefinitions');
 const AppType = require('./types/AppType');
 
 module.exports = new GraphQLObjectType({
@@ -9,5 +10,6 @@ module.exports = new GraphQLObjectType({
       type: AppType,
       resolve: ({ user }) => user,
     },
+    node: nodeField,
   }),
 });

@@ -16,28 +16,33 @@ const styles = {
 
 export default class TaskEdit extends React.Component {
   static propTypes = {
-    onSave: PropTypes.func,
-    onTaskChange: PropTypes.func,
+    onSaveDone: PropTypes.func,
+    isNew: PropTypes.bool,
     data: PropTypes.object,
     taskListId: PropTypes.string,
   };
 
+  state = {
+    task: this.props.data,
+  };
+
   onSave = async () => {
-    const { isNew, ...task } = this.props.data;
+    const { isNew, taskListId } = this.props;
+    const { task } = this.state;
     const id = isNew ? '' : task.id;
-    console.log(['TaskEdit:onSave'], this.props.data);
-    this.props.onSave();
+    console.log(['TaskEdit:onSave'], this.state);
 
     try {
       await saveTaskMutation({
         isNew,
         task: {
-          fields: task.fields,
           id,
+          fields: task.fields,
           taskType: task.taskType,
         },
-        parentID: this.props.taskListId,
+        parentID: taskListId,
       });
+      this.props.onSaveDone();
     }
 
     catch (error) {
@@ -46,24 +51,26 @@ export default class TaskEdit extends React.Component {
   };
 
   render() {
-    if (!this.props.data) {
+    console.log(['TaskEdit:render'], this.props);
+    if (!this.state) {
       return null;
     }
 
-    const { fields, taskType } = this.props.data;
+    const { fields, taskType } = this.state.task;
     const updateFieldValue = (fieldId, value) => {
       const fieldIndex = fields.findIndex(field => field.fieldId === fieldId);
-      const data = update(this.props.data, {
-        fields: {
-          [fieldIndex]: {
-            value: {
-              $set: value
+
+      this.setState(update(this.state, {
+        task: {
+          fields: {
+            [fieldIndex]: {
+              value: {
+                $set: value
+              }
             }
           }
         }
-      });
-
-      this.props.onTaskChange(data);
+      }));
     };
 
     return (

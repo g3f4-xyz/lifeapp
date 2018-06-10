@@ -7,9 +7,25 @@ module.exports = new GraphQLObjectType({
   name: 'TaskType',
   description: 'task type',
   fields: () => ({
-    id: globalIdField('Task', ({ _id }) => _id),
+    id: globalIdField('TaskType', ({ _id }) => _id),
     taskType: {
       type: GraphQLString,
+    },
+    title: {
+      type: GraphQLString,
+      resolve: ({ fields }) => fields.find(({ fieldId }) => fieldId === 'TITLE').value.text,
+    },
+    description: {
+      type: GraphQLString,
+      resolve: ({ fields }) => fields.find(({ fieldId }) => fieldId === 'DESC').value.text,
+    },
+    priority: {
+      type: GraphQLString,
+      resolve: ({ fields }) => fields.find(({ fieldId }) => fieldId === 'PRIORITY').value.id,
+    },
+    status: {
+      type: GraphQLString,
+      resolve: ({ fields }) => fields.find(({ fieldId }) => fieldId === 'STATUS').value.id,
     },
     fields: {
       type: new GraphQLList(FieldType),

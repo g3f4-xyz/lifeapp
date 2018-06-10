@@ -15,7 +15,6 @@ if (dbHook.tasks) {
 // DANE TESTOWE
 dbHook.tasks.insert([
   {
-    id: "123",
     taskType: "TODO",
     ownerId: "1234567890",
     fields: [
@@ -103,7 +102,6 @@ dbHook.tasks.insert([
     ],
   },
   {
-    id: "1234",
     taskType: "TODO",
     ownerId: "1234567890",
     fields: [

@@ -11,7 +11,7 @@ module.exports = new GraphQLObjectType({
     id: globalIdField('TaskTypeList'),
     list: {
       type: TaskTypeTypeConnection,
-      description: 'Task`s type list description',
+      description: 'task type list type',
       args: connectionArgs,
       resolve: async (_, args) => {
         const list = await getTaskTypeList();

@@ -79,7 +79,7 @@ const deleteTaskType = async (hashId) => {
     return error;
   }
 };
-const deleteUser = async (hashId) => {
+const deleteUser = async hashId => {
   console.log(['api:deleteUser:hashId'], hashId);
   try {
     const { id } = await fromGlobalId(hashId);
@@ -98,8 +98,42 @@ const deleteUser = async (hashId) => {
   }
 };
 
-const getTask = async (id) => {
-  console.log(['api:getTaskType:id'], id);
+const getEmptyTask = async type => {
+  console.log(['api:getEmptyTask:type'], type);
+  try {
+    const taskType = await TaskTypeModel.findOne({ typeId: type });
+    console.log(['api:getEmptyTask:taskType'], taskType);
+    const taskTypeList = await TaskTypeModel.find().sort({ _id : -1 });
+    console.log(['api:getTaskTypeList:taskTypeList'], taskTypeList);
+    const getTypeRelatedFields = (type, aggregator = []) => {
+      const { parentId, fields = [] } = type.toJSON();
+      aggregator.push(...fields);
+
+      if (parentId) {
+        const parentType = taskTypeList.find(task => task.get('typeId') === parentId);
+        getTypeRelatedFields(parentType, aggregator);
+      }
+
+      return aggregator;
+    };
+
+    const emptyTask = {
+      taskType: type,
+      fields: getTypeRelatedFields(taskType),
+    };
+
+    console.log(['api:getEmptyTask:emptyTask'], emptyTask.fields);
+
+    return emptyTask;
+  }
+
+  catch (error) {
+    console.error(['api:getTask:error'], error);
+    return error;
+  }
+};
+const getTask = async id => {
+  console.log(['api:getTask:id'], id);
   try {
     const task = await TaskModel.findById(id);
     console.log(['api:getTask:task'], task);
@@ -146,7 +180,6 @@ const getTaskTypeList = async () => {
     const taskTypeList = await TaskTypeModel.find().sort({ _id : -1 });
     console.log(['api:getTaskTypeList:taskTypeList'], taskTypeList);
     const getTypeRelatedFields = (type, aggregator = []) => {
-      console.log(['getTypeRelatedFields'], type);
       const { parentId, fields = [] } = type.toJSON();
       aggregator.push(...fields);
 
@@ -241,6 +274,7 @@ module.exports = {
   deleteTask,
   deleteTaskType,
   deleteUser,
+  getEmptyTask,
   getTask,
   getTaskList,
   getTaskType,
