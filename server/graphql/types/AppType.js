@@ -30,7 +30,7 @@ module.exports = new GraphQLObjectType({
     },
     taskList: {
       type: TaskListType,
-      resolve: ({ id }) => ({ id: id }),
+      resolve: root => root,
     },
     taskTypeList: {
       type: TaskTypeListType,

@@ -1,22 +1,32 @@
 const publicVapidKey = 'BJthRQ5myDgc7OSXzPCMftGw-n16F7zQBEN7EUD6XxcfTTvrLGWSIG7y_JxiWtVlCFua0S8MTB5rPziBqNx1qIo';
 
-// Check for service worker
-if ('serviceWorker' in navigator) {
-  send().catch(err => console.error(err));
-}
+(async () => {
+  // Check for service worker
+  if ('serviceWorker' in navigator) {
+    // Register Service Worker
+    console.log('Registering service worker...');
+    const register = await navigator.serviceWorker.register('/worker.js', {
+      scope: '/'
+    });
+    console.log('Service Worker Registered...');
+
+    const subscription = await register.pushManager.getSubscription();
+
+    if (subscription) {
+      console.log('Subscription found');
+
+      return null;
+    }
+
+    send(register).catch(err => console.error(err));
+  }
+})();
 
 // Register SW, Register Push, Send Push
-async function send() {
-  // Register Service Worker
-  console.log('Registering service worker...');
-  const register = await navigator.serviceWorker.register('/worker.js', {
-    scope: '/'
-  });
-  console.log('Service Worker Registered...');
-
+async function send(register) {
   // Register Push
   console.log('Registering Push...');
-  const subscription = await register.pushManager.subscribe({
+  const newSubscription = await register.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
   });
@@ -25,11 +35,13 @@ async function send() {
   // Send Push Notification
   console.log('Sending Push...');
   await fetch('/notifications', {
+    credentials: 'same-origin',
     method: 'POST',
-    body: JSON.stringify(subscription),
     headers: {
-      'content-type': 'application/json'
-    }
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(newSubscription),
   });
   console.log('Push Sent...');
 }

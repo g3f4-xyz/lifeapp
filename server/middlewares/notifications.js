@@ -1,12 +1,17 @@
-const webpush = require('web-push');
+const { addSubscription } = require('../db/api');
 
-module.exports = (req, res) => {
+module.exports = async (req, res) => {
   // Get pushSubscription object
   const subscription = req.body;
+
+  // save subscription for agenda
+  const { id: ownerId } = req.user;
+  await addSubscription(ownerId, subscription);
 
   // Send 201 - resource created
   res.status(201).json({});
 
+  const webpush = require('web-push');
   const payload = JSON.stringify({
     title: 'Welcome to LifeApp!',
     notification: {

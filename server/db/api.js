@@ -1,12 +1,45 @@
-const UserModel = require('../db/models/UserModel');
+const { schedule } = require('../agenda');
+const SubscriptionModel = require('../db/models/SubscriptionModel');
 const TaskModel = require('../db/models/TaskModel');
 const TaskTypeModel = require('../db/models/TaskTypeModel');
 const { fromGlobalId } = require('graphql-relay');
 
+const addSubscription = async (ownerId, subscription) => {
+  console.log(['api:addSubscription'], { ownerId, subscription });
+  try {
+    const previousSubscription = await SubscriptionModel.findOne({ subscription });
+
+    if (previousSubscription) {
+      return previousSubscription;
+    }
+
+    const newSubscription = new SubscriptionModel({ ownerId, subscription });
+
+    return await newSubscription.save();
+  }
+
+  catch (error) {
+    console.error(['api:addTask:error'], error);
+    return error;
+  }
+};
 const addTask = async task => {
   console.log(['api:addTask'], task);
   try {
     const newTask = new TaskModel(task);
+
+    if (newTask.taskType === 'MEETING') {
+      const when = newTask.fields.find(({ fieldId }) => fieldId === 'DATE_TIME').value.text;
+      const person = newTask.fields.find(({ fieldId }) => fieldId === 'PERSON').value.text;
+      const location = newTask.fields.find(({ fieldId }) => fieldId === 'LOCATION').value.text;
+      schedule(when, 'notification', {
+        ownerId: task.ownerId,
+        notification: {
+          body: `Time: ${when} | Location: ${location}`,
+          title: `You have meeting with ${person}`,
+        },
+      });
+    }
 
     return await newTask.save();
   }
@@ -26,19 +59,6 @@ const addTaskType = async taskType => {
 
   catch (error) {
     console.error(['api:addTaskType:error'], error);
-    return error;
-  }
-};
-const addUser = async ({ id}) => {
-  console.log(['addUser'], { id });
-  try {
-    const newUser = new UserModel({ id });
-
-    return await newUser.save();
-  }
-
-  catch (error) {
-    console.error(['api:addUser:error'], error);
     return error;
   }
 };
@@ -79,21 +99,47 @@ const deleteTaskType = async (hashId) => {
     return error;
   }
 };
-const deleteUser = async hashId => {
-  console.log(['api:deleteUser:hashId'], hashId);
+const deleteSubscription = async id => {
+  console.log(['api:deleteSubscription:id'], id);
   try {
-    const { id } = await fromGlobalId(hashId);
-    console.log(['api:deleteUser:id'], id);
-    const user = await getUser(id);
-    console.log(['api:deleteUser:user'], user);
+    const subscription = await getSubscription(id);
+    console.log(['api:deleteSubscription:user'], subscription);
 
-    await user.remove();
+    await subscription.remove();
 
-    return hashId;
+    return id;
   }
 
   catch (error) {
-    console.error(['api:deleteUser:error'], error);
+    console.error(['api:deleteSubscription:error'], error);
+    return error;
+  }
+};
+const getSubscription = async id => {
+  console.log(['api:getSubscription:id'], id);
+  try {
+    const subscription = await SubscriptionModel.findById(id);
+    console.log(['api:getSubscription:subscription'], subscription);
+
+    return subscription;
+  }
+
+  catch (error) {
+    console.error(['api:getSubscription:error'], error);
+    return error;
+  }
+};
+const getSubscriptions = async ownerId => {
+  console.log(['api:getSubscriptions:ownerId'], ownerId);
+  try {
+    const subscriptions = await SubscriptionModel.find({ ownerId });
+    console.log(['api:getSubscription:subscriptions'], subscriptions);
+
+    return subscriptions;
+  }
+
+  catch (error) {
+    console.error(['api:getSubscriptions:error'], error);
     return error;
   }
 };
@@ -205,20 +251,6 @@ const getTaskTypeList = async () => {
     return error;
   }
 };
-const getUser = async (id) => {
-  console.log(['api:getTaskType:id'], id);
-  try {
-    const user = await UserModel.findOne({ id });
-    console.log(['api:getUser:user'], user);
-
-    return user;
-  }
-
-  catch (error) {
-    console.error(['api:getUser:error'], error);
-    return error;
-  }
-};
 
 const saveTask = async ({ task, isNew = true }) => {
   console.log(['api:saveTask'], { task, isNew });
@@ -253,34 +285,21 @@ const saveTaskType = async ({ taskType, isNew = true }) => {
     return error;
   }
 };
-const saveUser = async ({ user, isNew = true }) => {
-  console.log(['api:saveUser'], { user, isNew });
-  try {
-    const { id } = await fromGlobalId(user.id);
-
-    return await (isNew ? addUser(user) : UserModel.findByIdAndUpdate(id, user));
-  }
-
-  catch (error) {
-    console.error(['api:saveUser:error'], error);
-    return error;
-  }
-};
 
 module.exports = {
+  addSubscription,
   addTask,
   addTaskType,
-  addUser,
   deleteTask,
   deleteTaskType,
-  deleteUser,
+  deleteSubscription,
+  getSubscription,
+  getSubscriptions,
   getEmptyTask,
   getTask,
   getTaskList,
   getTaskType,
   getTaskTypeList,
-  getUser,
   saveTask,
   saveTaskType,
-  saveUser,
 };

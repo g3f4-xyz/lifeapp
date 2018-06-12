@@ -1,11 +1,29 @@
 const Agenda = require('agenda');
+const webPush = require('web-push');
 const { DB_HOST } = require('./config');
 
 let agenda = new Agenda({ db: { address: DB_HOST } });
 
-agenda.define('notification', (job, done) => {
+agenda.define('notification', async (job, done) => {
   console.log(['notification job'], job.attrs);
-  // w tym miejscu nastąpi wykorzystanie web-push do wysłąnia notyfikacji
+  const { getSubscriptions } = require('./db/api');
+  const { ownerId, notification: { body, title } } = job.attrs.data;
+  const payload = JSON.stringify({
+    title,
+    notification: {
+      body,
+      icon: 'https://avatars2.githubusercontent.com/u/25178950?s=200&v=4',
+    },
+  });
+
+  const subscriptions = await getSubscriptions(ownerId);
+
+  subscriptions.map(({ subscription }) => {
+    webPush
+      .sendNotification(subscription, payload)
+      .catch(err => console.error(err));
+  });
+
   done();
 });
 
