@@ -35,7 +35,7 @@ const addTask = async task => {
 
       console.log(['api:addTask:MEETING'], { date, when });
 
-      schedule(when, 'notification', {
+      schedule('10 seconds', 'notification', {
         ownerId: task.ownerId,
         notification: {
           body: `Time: ${date} | Location: ${location}`,
