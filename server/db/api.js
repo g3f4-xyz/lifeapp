@@ -31,7 +31,7 @@ const addTask = async task => {
       const when = newTask.fields.find(({ fieldId }) => fieldId === 'DATE_TIME').value.text;
       const person = newTask.fields.find(({ fieldId }) => fieldId === 'PERSON').value.text;
       const location = newTask.fields.find(({ fieldId }) => fieldId === 'LOCATION').value.text;
-      schedule('10 seconds', 'notification', {
+      schedule((new Date(when)).toISOString(), 'notification', {
         ownerId: task.ownerId,
         notification: {
           body: `Time: ${when} | Location: ${location}`,
