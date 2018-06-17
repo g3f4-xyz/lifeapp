@@ -31,7 +31,7 @@ const addTask = async task => {
       const date = newTask.fields.find(({ fieldId }) => fieldId === 'DATE_TIME').value.text;
       const person = newTask.fields.find(({ fieldId }) => fieldId === 'PERSON').value.text;
       const location = newTask.fields.find(({ fieldId }) => fieldId === 'LOCATION').value.text;
-      const when = (new Date(date)).toISOString();
+      const when = (new Date(date)).toUTCString();
 
       console.log(['api:addTask:MEETING'], { date, when });
 
