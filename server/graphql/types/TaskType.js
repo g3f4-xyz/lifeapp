@@ -1,4 +1,4 @@
-const { GraphQLList, GraphQLObjectType, GraphQLString } = require('graphql');
+const { GraphQLBoolean, GraphQLList, GraphQLObjectType, GraphQLString } = require('graphql');
 const { globalIdField } = require('graphql-relay');
 const { nodeInterface } = require('../nodeDefinitions');
 const FieldType = require('./FieldType');
@@ -20,8 +20,8 @@ module.exports = new GraphQLObjectType({
       resolve: ({ fields }) => fields.find(({ fieldId }) => fieldId === 'DESCRIPTION').value.text,
     },
     priority: {
-      type: GraphQLString,
-      resolve: ({ fields }) => fields.find(({ fieldId }) => fieldId === 'PRIORITY').value.id,
+      type: GraphQLBoolean,
+      resolve: ({ fields }) => fields.find(({ fieldId }) => fieldId === 'PRIORITY').value.bool,
     },
     status: {
       type: GraphQLString,

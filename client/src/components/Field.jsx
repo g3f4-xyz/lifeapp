@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { taskDataType } from '../customPropTypes';
-import { Input, Select } from './form/index';
+import { Input, Select, Switch } from './form/index';
 
 export default class Field extends React.Component {
   static propTypes = {
@@ -11,8 +11,9 @@ export default class Field extends React.Component {
   };
 
   static handler(props) {
-    const { fieldId, format, meta: { options }, value: { id, text }, ...rest } = props;
+    const { fieldId, format, meta: { options }, value: { bool, id, text }, ...rest } = props;
     const Component = ({
+      BOOL: Switch,
       CHOICE: Select,
       TEXT: Input,
     })[format];
@@ -23,6 +24,10 @@ export default class Field extends React.Component {
         {
           id: fieldId,
           ...rest,
+        },
+        format === 'BOOL' && {
+          checked: bool,
+          value: fieldId,
         },
         format === 'CHOICE' && {
           options,

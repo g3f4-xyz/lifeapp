@@ -41,6 +41,9 @@ export default createFragmentContainer(
         label
         helperText
         meta {
+          ... on BoolMetaType {
+            required
+          }
           ... on ChoiceMetaType {
             required
             defaultValue
@@ -61,6 +64,9 @@ export default createFragmentContainer(
           }
         }
         value {
+          ... on BoolValueType {
+            bool
+          }
           ... on ChoiceValueType {
             id
           }

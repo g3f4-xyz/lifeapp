@@ -1,9 +1,11 @@
 const { GraphQLUnionType } = require('graphql');
+const BoolValueType = require('./BoolValueType');
 const ChoiceValueType = require('./ChoiceValueType');
 const NumberValueType = require('./NumberValueType');
 const TextValueType = require('./TextValueType');
 
 const TYPES = {
+  BOOL: BoolValueType,
   CHOICE: ChoiceValueType,
   NUMBER: NumberValueType,
   TEXT: TextValueType,

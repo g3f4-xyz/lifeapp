@@ -35,26 +35,16 @@ dbHook.tasks.insert([
         },
       }, {
         fieldId: "PRIORITY",
-        format: "CHOICE",
-        type: "select",
+        format: "BOOL",
+        type: "switch",
         order: 0,
-        label: "Priority",
+        label: "Important",
         helperText: "Informacje o testowym polu Priority",
         meta: {
           required: true,
-          options: [{
-            text: "Low",
-            value: "LOW",
-          }, {
-            text: "Normal",
-            value: "NORMAL",
-          }, {
-            text: "High",
-            value: "HIGH",
-          }],
         },
         value: {
-          id: "HIGH",
+          bool: false,
         },
       },
       {
@@ -120,26 +110,16 @@ dbHook.tasks.insert([
         },
       }, {
         fieldId: "PRIORITY",
-        format: "CHOICE",
-        type: "select",
+        format: "BOOL",
+        type: "switch",
         order: 0,
-        label: "Priority",
+        label: "Important",
         helperText: "Informacje o testowym polu Priority",
         meta: {
           required: true,
-          options: [{
-            text: "Low",
-            value: "LOW",
-          }, {
-            text: "Normal",
-            value: "NORMAL",
-          }, {
-            text: "High",
-            value: "HIGH",
-          }],
         },
         value: {
-          id: "HIGH",
+          bool: false,
         },
       },
       {
@@ -265,26 +245,16 @@ dbHook.tasktypes.insert([{
     },
   }, {
     fieldId: "PRIORITY",
-    format: "CHOICE",
-    order: 1,
-    type: "select",
-    label: "Priority",
-    helperText: "Priority helperText",
+    format: "BOOL",
+    type: "switch",
+    order: 0,
+    label: "Important",
+    helperText: "Informacje o testowym polu Priority",
     meta: {
       required: true,
-      options: [{
-        text: "Low",
-        value: "LOW",
-      }, {
-        text: "Normal",
-        value: "NORMAL",
-      }, {
-        text: "High",
-        value: "HIGH",
-      }],
     },
     value: {
-      id: "NORMAL",
+      bool: false,
     },
   }, {
     fieldId: "DESCRIPTION",

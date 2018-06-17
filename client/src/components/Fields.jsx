@@ -30,8 +30,9 @@ class Fields extends React.Component {
         <Paper key={fieldId} className={classes.container}>
           <Field
             {...props}
+            fieldId={fieldId}
             format={format}
-            onChange={({ target: { value }}) => {
+            onChange={({ target: { value }}, alternativeValue) => {
               if (format === 'TEXT') {
                 onFieldChange(fieldId, {
                   text: value,
@@ -40,6 +41,11 @@ class Fields extends React.Component {
               else if (format === 'CHOICE') {
                 onFieldChange(fieldId, {
                   id: value,
+                })
+              }
+              else if (format === 'BOOL') {
+                onFieldChange(fieldId, {
+                  bool: alternativeValue,
                 })
               }
             }}

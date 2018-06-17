@@ -226,7 +226,7 @@
               "args": [],
               "type": {
                 "kind": "SCALAR",
-                "name": "String",
+                "name": "Boolean",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -334,6 +334,16 @@
               "ofType": null
             }
           ]
+        },
+        {
+          "kind": "SCALAR",
+          "name": "Boolean",
+          "description": "The `Boolean` scalar type represents `true` or `false`.",
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": null,
+          "possibleTypes": null
         },
         {
           "kind": "OBJECT",
@@ -463,6 +473,11 @@
           "possibleTypes": [
             {
               "kind": "OBJECT",
+              "name": "BoolValueType",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
               "name": "ChoiceValueType",
               "ofType": null
             },
@@ -477,6 +492,29 @@
               "ofType": null
             }
           ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "BoolValueType",
+          "description": null,
+          "fields": [
+            {
+              "name": "bool",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
         },
         {
           "kind": "OBJECT",
@@ -568,6 +606,11 @@
           "possibleTypes": [
             {
               "kind": "OBJECT",
+              "name": "BoolMetaType",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
               "name": "ChoiceMetaType",
               "ofType": null
             },
@@ -582,6 +625,29 @@
               "ofType": null
             }
           ]
+        },
+        {
+          "kind": "OBJECT",
+          "name": "BoolMetaType",
+          "description": "bool meta type",
+          "fields": [
+            {
+              "name": "required",
+              "description": "required",
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
         },
         {
           "kind": "OBJECT",
@@ -631,16 +697,6 @@
           ],
           "inputFields": null,
           "interfaces": [],
-          "enumValues": null,
-          "possibleTypes": null
-        },
-        {
-          "kind": "SCALAR",
-          "name": "Boolean",
-          "description": "The `Boolean` scalar type represents `true` or `false`.",
-          "fields": null,
-          "inputFields": null,
-          "interfaces": null,
           "enumValues": null,
           "possibleTypes": null
         },
@@ -1638,6 +1694,16 @@
           "description": "value input type",
           "fields": null,
           "inputFields": [
+            {
+              "name": "bool",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null
+            },
             {
               "name": "text",
               "description": null,

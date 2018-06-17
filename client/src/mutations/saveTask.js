@@ -26,6 +26,9 @@ const mutation = graphql`
             label
             helperText
             meta {
+              ... on BoolMetaType {
+                  required
+              }
               ... on ChoiceMetaType {
                   required
                   defaultValue
@@ -46,6 +49,9 @@ const mutation = graphql`
               }
             }
             value {
+              ... on BoolValueType {
+                  bool
+              }
               ... on ChoiceValueType {
                   id
               }

@@ -7,6 +7,16 @@ type AppType {
   taskTypeList: TaskTypeListType
 }
 
+"""bool meta type"""
+type BoolMetaType {
+  """required"""
+  required: Boolean
+}
+
+type BoolValueType {
+  bool: Boolean
+}
+
 """choice meta type"""
 type ChoiceMetaType {
   """required"""
@@ -93,7 +103,7 @@ input metaInputType {
 }
 
 """metas union"""
-union MetasUnion = ChoiceMetaType | NumberMetaType | TextMetaType
+union MetasUnion = BoolMetaType | ChoiceMetaType | NumberMetaType | TextMetaType
 
 type Mutation {
   deleteTask(input: deleteTaskMutationInput!): deleteTaskMutationPayload
@@ -208,7 +218,7 @@ type TaskType implements Node {
   taskType: String
   title: String
   description: String
-  priority: String
+  priority: Boolean
   status: String
   fields(filterByIds: [String]): [FieldType]
 }
@@ -289,10 +299,11 @@ type TextValueType {
 
 """value input type"""
 input valueInputType {
+  bool: Boolean
   text: String
   number: Int
   id: String
 }
 
 """Values Union"""
-union ValuesUnion = ChoiceValueType | NumberValueType | TextValueType
+union ValuesUnion = BoolValueType | ChoiceValueType | NumberValueType | TextValueType

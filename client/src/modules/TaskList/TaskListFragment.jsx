@@ -6,10 +6,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import ErrorIcon from '@material-ui/icons/Error';
-import ReportIcon from '@material-ui/icons/Report';
 import SlideshowIcon from '@material-ui/icons/Slideshow';
-import WarningIcon from '@material-ui/icons/Warning';
+import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import Tooltip from '@material-ui/core/Tooltip';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -76,13 +74,6 @@ class TaskListFragment extends React.PureComponent {
       <ExpansionPanel>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <div>
-            <Tooltip title={`Priority: ${priority}`}>
-              {{
-                LOW: <ReportIcon className={classnames(classes.grey, classes.icon)} />,
-                NORMAL: <WarningIcon className={classnames(classes.yellow, classes.icon)} />,
-                HIGH: <ErrorIcon className={classnames(classes.red, classes.icon)} />,
-              }[priority]}
-            </Tooltip>
             <Tooltip title={`Status: ${status}`}>
               {{
                 TODO: <CheckBoxOutlineBlankIcon className={classnames(classes.grey, classes.icon)} />,
@@ -90,6 +81,11 @@ class TaskListFragment extends React.PureComponent {
                 DONE: <CheckBoxIcon className={classnames(classes.green, classes.icon)} />,
               }[status]}
             </Tooltip>
+          {priority && (
+            <Tooltip title="Important!">
+              <PriorityHighIcon className={classnames(classes.red, classes.icon)} />
+            </Tooltip>
+          )}
           </div>
           <Typography className={classes.heading}>{`${title} (${taskType})`}</Typography>
         </ExpansionPanelSummary>
