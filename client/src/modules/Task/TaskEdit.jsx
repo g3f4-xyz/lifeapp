@@ -41,18 +41,33 @@ class TaskEdit extends React.Component {
     task: this.props.data,
   };
 
+  static valueParser(field) {
+    if (field.type === 'datetime-local') {
+      return {
+        ...field,
+        value: {
+          text: (new Date(field.value.text)),
+        }
+      }
+    }
+
+    return field;
+  }
+
   onSave = async () => {
     const { isNew, taskListId } = this.props;
     const { task } = this.state;
     const id = isNew ? '' : task.id;
     console.log(['TaskEdit:onSave'], this.state);
+    console.log(['TaskEdit:fields'], task.fields);
+    console.log(['TaskEdit:parsedFields'], task.fields.map(TaskEdit.valueParser));
 
     try {
       await saveTaskMutation({
         isNew,
         task: {
           id,
-          fields: task.fields,
+          fields: task.fields.map(TaskEdit.valueParser),
           taskType: task.taskType,
         },
         parentID: taskListId,

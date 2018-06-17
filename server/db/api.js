@@ -1,3 +1,4 @@
+const moment = require('moment');
 const { schedule } = require('../agenda');
 const SubscriptionModel = require('../db/models/SubscriptionModel');
 const TaskModel = require('../db/models/TaskModel');
@@ -31,10 +32,9 @@ const addTask = async task => {
       const date = newTask.fields.find(({ fieldId }) => fieldId === 'DATE_TIME').value.text;
       const person = newTask.fields.find(({ fieldId }) => fieldId === 'PERSON').value.text;
       const location = newTask.fields.find(({ fieldId }) => fieldId === 'LOCATION').value.text;
-      const when = '10 seconds';
-      // const when = (new Date(date)).toISOString();
+      const when = new Date(moment(date).subtract(1, 'hour').toString());
 
-      console.log(['api:addTask:MEETING'], { date, when, now: (new Date(date)).toISOString() });
+      console.log(['api:addTask:MEETING'], { date, when });
 
       schedule(when, 'notification', {
         ownerId: task.ownerId,
