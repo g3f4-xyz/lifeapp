@@ -28,13 +28,17 @@ const addTask = async task => {
     const newTask = new TaskModel(task);
 
     if (newTask.taskType === 'MEETING') {
-      const when = newTask.fields.find(({ fieldId }) => fieldId === 'DATE_TIME').value.text;
+      const date = newTask.fields.find(({ fieldId }) => fieldId === 'DATE_TIME').value.text;
       const person = newTask.fields.find(({ fieldId }) => fieldId === 'PERSON').value.text;
       const location = newTask.fields.find(({ fieldId }) => fieldId === 'LOCATION').value.text;
-      schedule((new Date(when)).toISOString(), 'notification', {
+      const when = (new Date(date)).toISOString();
+
+      console.log(['api:addTask:MEETING'], { date, when });
+
+      schedule(when, 'notification', {
         ownerId: task.ownerId,
         notification: {
-          body: `Time: ${when} | Location: ${location}`,
+          body: `Time: ${date} | Location: ${location}`,
           title: `You have meeting with ${person}`,
         },
       });
