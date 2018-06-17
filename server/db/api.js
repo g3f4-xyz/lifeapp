@@ -2,7 +2,6 @@ const { schedule } = require('../agenda');
 const SubscriptionModel = require('../db/models/SubscriptionModel');
 const TaskModel = require('../db/models/TaskModel');
 const TaskTypeModel = require('../db/models/TaskTypeModel');
-const { fromGlobalId } = require('graphql-relay');
 
 const addSubscription = async (ownerId, subscription) => {
   console.log(['api:addSubscription'], { ownerId, subscription });
@@ -24,7 +23,7 @@ const addSubscription = async (ownerId, subscription) => {
   }
 };
 const addTask = async task => {
-  console.log(['api:addTask'], task);
+  console.log(['api:addTask'], { task });
   try {
     const newTask = new TaskModel(task);
 
@@ -63,17 +62,14 @@ const addTaskType = async taskType => {
   }
 };
 
-const deleteTask = async (hashId) => {
-  console.log(['api:deleteTask:hashId'], hashId);
+const deleteTask = async id => {
+  console.log(['api:deleteTask'], id);
   try {
-    const { id } = await fromGlobalId(hashId);
-    console.log(['api:deleteTask:id'], id);
     const task = await getTask(id);
-    console.log(['api:deleteTask:task'], task);
 
     await task.remove();
 
-    return hashId;
+    return id;
   }
 
   catch (error) {
@@ -81,17 +77,14 @@ const deleteTask = async (hashId) => {
     return error;
   }
 };
-const deleteTaskType = async (hashId) => {
-  console.log(['api:deleteTaskType:hashId'], hashId);
+const deleteTaskType = async id => {
+  console.log(['api:deleteTaskType'], id);
   try {
-    const { id } = await fromGlobalId(hashId);
-    console.log(['api:deleteTask:id'], id);
     const taskType = await getTaskType(id);
-    console.log(['api:deleteTask:taskType'], taskType);
 
     await taskType.remove();
 
-    return hashId;
+    return id;
   }
 
   catch (error) {
@@ -145,12 +138,10 @@ const getSubscriptions = async ownerId => {
 };
 
 const getEmptyTask = async type => {
-  console.log(['api:getEmptyTask:type'], type);
+  console.log(['api:getEmptyTask'], type);
   try {
     const taskType = await TaskTypeModel.findOne({ typeId: type });
-    console.log(['api:getEmptyTask:taskType'], taskType);
     const taskTypeList = await TaskTypeModel.find().sort({ _id : -1 });
-    console.log(['api:getTaskTypeList:taskTypeList'], taskTypeList);
     const getTypeRelatedFields = (type, aggregator = []) => {
       const { parentId, fields = [] } = type.toJSON();
       aggregator.push(...fields);
@@ -163,14 +154,10 @@ const getEmptyTask = async type => {
       return aggregator;
     };
 
-    const emptyTask = {
+    return {
       taskType: type,
       fields: getTypeRelatedFields(taskType),
     };
-
-    console.log(['api:getEmptyTask:emptyTask'], emptyTask.fields);
-
-    return emptyTask;
   }
 
   catch (error) {
@@ -179,12 +166,9 @@ const getEmptyTask = async type => {
   }
 };
 const getTask = async id => {
-  console.log(['api:getTask:id'], id);
+  console.log(['api:getTask'], id);
   try {
-    const task = await TaskModel.findById(id);
-    console.log(['api:getTask:task'], task);
-
-    return task;
+    return await TaskModel.findById(id);
   }
 
   catch (error) {
@@ -193,12 +177,9 @@ const getTask = async id => {
   }
 };
 const getTaskList = async ({ ownerId }) => {
-  console.log(['api:getTaskList:ownerId'], ownerId);
+  console.log(['api:getTaskList'], ownerId);
   try {
-    const taskList = await TaskModel.find({ ownerId }).sort({ _id : -1 });
-    console.log(['api:getTaskList:taskList'], taskList);
-
-    return taskList;
+    return await TaskModel.find({ ownerId }).sort({ _id : -1 });
   }
 
   catch (error) {
@@ -206,13 +187,10 @@ const getTaskList = async ({ ownerId }) => {
     return error;
   }
 };
-const getTaskType = async (id) => {
-  console.log(['api:getTaskType:id'], id);
+const getTaskType = async id => {
+  console.log(['api:getTaskType'], id);
   try {
-    const taskType = await TaskTypeModel.findById(id);
-    console.log(['api:getTask:taskType'], taskType);
-
-    return taskType;
+    return await TaskTypeModel.findById(id);
   }
 
   catch (error) {
@@ -224,7 +202,6 @@ const getTaskTypeList = async () => {
   console.log(['api:getTaskTypeList']);
   try {
     const taskTypeList = await TaskTypeModel.find().sort({ _id : -1 });
-    console.log(['api:getTaskTypeList:taskTypeList'], taskTypeList);
     const getTypeRelatedFields = (type, aggregator = []) => {
       const { parentId, fields = [] } = type.toJSON();
       aggregator.push(...fields);
@@ -236,14 +213,11 @@ const getTaskTypeList = async () => {
 
       return aggregator;
     };
-    const mapped = taskTypeList.map(type => ({
+
+    return taskTypeList.map(type => ({
       ...type.toJSON(),
       fields: getTypeRelatedFields(type),
     }));
-
-    console.log(['api:getTaskTypeList:taskTypeList:mapped'], mapped);
-
-    return mapped;
   }
 
   catch (error) {
@@ -252,16 +226,12 @@ const getTaskTypeList = async () => {
   }
 };
 
-const saveTask = async ({ task, isNew = true }) => {
-  console.log(['api:saveTask'], { task, isNew });
+const saveTask = async ({ taskId, task, isNew = true }) => {
+  console.log(['api:saveTask'], { taskId, task, isNew });
   try {
-    const { id } = await fromGlobalId(task.id);
     const { fields } = task;
 
-    console.log(['api:saveTask:id'], id);
-    console.log(['api:saveTask:fields'], fields);
-
-    return await (isNew ? addTask(task) : TaskModel.findByIdAndUpdate(id, { fields }));
+    return await (isNew ? addTask(task) : TaskModel.findByIdAndUpdate(taskId, { fields }));
   }
 
   catch (error) {
@@ -269,15 +239,12 @@ const saveTask = async ({ task, isNew = true }) => {
     return error;
   }
 };
-const saveTaskType = async ({ taskType, isNew = true }) => {
+const saveTaskType = async ({ taskTypeId, taskType, isNew = true }) => {
   console.log(['api:saveTaskType'], { taskType, isNew });
   try {
-    const { id } = await fromGlobalId(taskType.id);
     const { fields } = taskType;
 
-    console.log(['api:saveTaskType:fields'], fields);
-
-    return await (isNew ? addTask(taskType) : TaskTypeModel.findByIdAndUpdate(id, { fields }));
+    return await (isNew ? addTask(taskType) : TaskTypeModel.findByIdAndUpdate(taskTypeId, { fields }));
   }
 
   catch (error) {

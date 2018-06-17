@@ -1,5 +1,5 @@
 const { GraphQLString, GraphQLID } = require('graphql');
-const { mutationWithClientMutationId } = require('graphql-relay');
+const { fromGlobalId, mutationWithClientMutationId } = require('graphql-relay');
 const { deleteTask } = require('../../db/api');
 
 module.exports = mutationWithClientMutationId({
@@ -13,11 +13,15 @@ module.exports = mutationWithClientMutationId({
       resolve: ({ id }) => id,
     },
   },
-  mutateAndGetPayload: async ({ id }) => {
-    console.log(['deleteTaskMutation:mutateAndGetPayload'], id);
+  mutateAndGetPayload: async ({ id: hashId }) => {
+    console.log(['deleteTaskMutation:mutateAndGetPayload'], hashId);
     try {
+      const { id } = await fromGlobalId(hashId);
+
+      await deleteTask(id);
+
       return {
-        id: deleteTask(id),
+        id: hashId,
       };
     }
 

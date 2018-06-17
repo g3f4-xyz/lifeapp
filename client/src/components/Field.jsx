@@ -10,38 +10,37 @@ export default class Field extends React.Component {
     onChange: PropTypes.func,
   };
 
-  render() {
-    const { fieldId, format, meta: { options }, value: { id, text }, ...props } = this.props;
-
-    console.log(['Field:render'], this.props);
-
-    if (!options && format === 'CHOICE') {
-      debugger
-    }
-
-    const component = ({
-      CHOICE: (
-        <Select
-          id={fieldId}
-          options={options || []}
-          value={id}
-          {...props}
-        />
-      ),
-      TEXT: (
-        <Input
-          id={fieldId}
-          value={text}
-          {...props}
-        />
-      ),
+  static handler(props) {
+    const { fieldId, format, meta: { options }, value: { id, text }, ...rest } = props;
+    const Component = ({
+      CHOICE: Select,
+      TEXT: Input,
     })[format];
 
-    if (!component) {
-      console.error(`No component for field format "${format}"`);
-      return null;
+    return {
+      Component,
+      getProps: () => Object.assign(
+        {
+          id: fieldId,
+          ...rest,
+        },
+        format === 'CHOICE' && {
+          options,
+          value: id,
+        },
+        format === 'TEXT' && {
+          value: text,
+        }
+      ),
     }
 
-    return component;
+  }
+
+  render() {
+    const { Component, getProps } = Field.handler(this.props);
+
+    return (
+      <Component {...getProps()} />
+    );
   }
 }

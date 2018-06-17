@@ -5,7 +5,7 @@ const { DB_HOST } = require('./config');
 let agenda = new Agenda({ db: { address: DB_HOST } });
 
 agenda.define('notification', async (job, done) => {
-  console.log(['notification job'], job.attrs);
+  console.log(['agenda:job:notification'], job.attrs);
   const { getSubscriptions } = require('./db/api');
   const { ownerId, notification: { body, title } } = job.attrs.data;
   const payload = JSON.stringify({
@@ -28,7 +28,7 @@ agenda.define('notification', async (job, done) => {
 });
 
 agenda.on('ready', () => {
-  console.log('Agenda ready');
+  console.log(['agenda:ready']);
   agenda.start();
 });
 
@@ -42,5 +42,9 @@ process.on('SIGTERM', graceful);
 process.on('SIGINT' , graceful);
 
 module.exports = {
-  schedule: (when, job, data, callback) => agenda.schedule(when, job, data, callback),
+  schedule: (when, job, data, callback) => {
+    console.log(['agenda:schedule'], when, job, data, callback);
+
+    return agenda.schedule(when, job, data, callback);
+  },
 };

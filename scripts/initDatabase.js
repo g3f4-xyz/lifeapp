@@ -42,7 +42,6 @@ dbHook.tasks.insert([
         helperText: "Informacje o testowym polu Priority",
         meta: {
           required: true,
-          defaultValue: "LOW",
           options: [{
             text: "Low",
             value: "LOW",
@@ -67,7 +66,6 @@ dbHook.tasks.insert([
         helperText: "Informacje o testowym polu Status",
         meta: {
           required: true,
-          defaultValue: "TODO",
           options: [{
             text: "To do",
             value: "TODO",
@@ -129,7 +127,6 @@ dbHook.tasks.insert([
         helperText: "Informacje o testowym polu Priority",
         meta: {
           required: true,
-          defaultValue: "LOW",
           options: [{
             text: "Low",
             value: "LOW",
@@ -154,7 +151,6 @@ dbHook.tasks.insert([
         helperText: "Informacje o testowym polu Status",
         meta: {
           required: true,
-          defaultValue: "TODO",
           options: [{
             text: "To do",
             value: "TODO",
@@ -204,7 +200,7 @@ dbHook.tasks.insert([
       },
       {
         fieldId: "DATE",
-        format: "DATE",
+        format: "TEXT",
         type: "datetime-local",
         order: 4,
         label: "Date",
@@ -253,7 +249,6 @@ dbHook.tasktypes.insert([{
     helperText: "Status helperText",
     meta: {
       required: true,
-      defaultValue: "DONE",
       options: [{
         text: "To do",
         value: "TODO",
@@ -266,7 +261,7 @@ dbHook.tasktypes.insert([{
       }],
     },
     value: {
-      id: "",
+      id: "TODO",
     },
   }, {
     fieldId: "PRIORITY",
@@ -277,7 +272,6 @@ dbHook.tasktypes.insert([{
     helperText: "Priority helperText",
     meta: {
       required: true,
-      defaultValue: "LOW",
       options: [{
         text: "Low",
         value: "LOW",
@@ -290,7 +284,7 @@ dbHook.tasktypes.insert([{
       }],
     },
     value: {
-      id: "",
+      id: "NORMAL",
     },
   }],
 }, {

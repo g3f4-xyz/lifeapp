@@ -1,5 +1,5 @@
 const { GraphQLBoolean } = require('graphql');
-const { mutationWithClientMutationId, cursorForObjectInConnection } = require('graphql-relay');
+const { fromGlobalId, mutationWithClientMutationId, cursorForObjectInConnection } = require('graphql-relay');
 const { TaskTypeEdge } = require('../connections');
 const { DEMO_USER } = require('../../config');
 const { saveTask, getTaskList } = require('../../db/api');
@@ -28,8 +28,17 @@ module.exports = mutationWithClientMutationId({
       },
     },
   },
-  mutateAndGetPayload: async ({ isNew, task }, { user = DEMO_USER }) => {
-    console.log(['saveTaskMutation:mutateAndGetPayload'], task.fields);
-    return await saveTask({ isNew, task: { ...task, ownerId: user.id } });
+  mutateAndGetPayload: async ({ isNew, task: { id: hashId, ...task } }, { user = DEMO_USER }) => {
+    console.log(['saveTaskMutation:mutateAndGetPayload'], { isNew, hashId });
+    const { id: taskId } = await fromGlobalId(hashId);
+
+    return await saveTask({
+      isNew,
+      taskId,
+      task: {
+        ...task,
+        ownerId: user.id,
+      },
+    });
   },
 });
