@@ -219,10 +219,10 @@ dbHook.tasks.insert([
 // KONFIGURACJA
 // TYPY ZADAŃ
 dbHook.tasktypes.insert([{
-  typeId: "TASK",
-  name: "Task",
-  description: "Bazowe zadanie. Pozwala na ustawienie tytułu, priorytetu oraz sterowanie statusem.",
-  order: null,
+  typeId: "TODO",
+  name: "ToDo",
+  description: "Bazowe zadanie. Pozwala na ustawienie tytułu, priorytetu oraz sterowanie statusem. oraz dodanie opisu",
+  order: 0,
   isCustom: false,
   parentId: null,
   fields: [{
@@ -286,15 +286,7 @@ dbHook.tasktypes.insert([{
     value: {
       id: "NORMAL",
     },
-  }],
-}, {
-  typeId: "TODO",
-  name: "ToDo",
-  description: "Klasyczy TODO. Od zwykłego zadania różni się tym, że możemy dodać szczegółowy opis.",
-  order: 0,
-  isCustom: false,
-  parentId: "TASK",
-  fields: [{
+  }, {
     fieldId: "DESCRIPTION",
     format: "TEXT",
     order: 2,
