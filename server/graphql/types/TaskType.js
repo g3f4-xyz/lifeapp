@@ -15,9 +15,9 @@ module.exports = new GraphQLObjectType({
       type: GraphQLString,
       resolve: ({ fields }) => fields.find(({ fieldId }) => fieldId === 'TITLE').value.text,
     },
-    description: {
+    note: {
       type: GraphQLString,
-      resolve: ({ fields }) => fields.find(({ fieldId }) => fieldId === 'DESCRIPTION').value.text,
+      resolve: ({ fields }) => fields.find(({ fieldId }) => fieldId === 'NOTE').value.text,
     },
     priority: {
       type: GraphQLBoolean,

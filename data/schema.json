@@ -209,7 +209,7 @@
               "deprecationReason": null
             },
             {
-              "name": "description",
+              "name": "note",
               "description": null,
               "args": [],
               "type": {

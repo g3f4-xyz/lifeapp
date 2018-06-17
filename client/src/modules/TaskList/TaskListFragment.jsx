@@ -68,7 +68,7 @@ class TaskListFragment extends React.PureComponent {
   render() {
     console.log(['TaskListFragment:render'], this.props);
     const { classes, data, onDelete, onDetails, onEdit } = this.props;
-    const { id, taskType, title, description, priority, status } = data;
+    const { id, taskType, title, note, priority, status } = data;
 
     return (
       <ExpansionPanel>
@@ -91,7 +91,7 @@ class TaskListFragment extends React.PureComponent {
         </ExpansionPanelSummary>
         <ExpansionPanelDetails className={classes.content}>
           <div>
-            {description}
+            {note}
           </div>
           <div className={classes.actions}>
             <Button onClick={() => onDetails(id)}>Show</Button>
@@ -110,7 +110,7 @@ export default createFragmentContainer(
     fragment TaskListFragment on TaskType {
       id
       taskType
-      description
+      note
       title
       priority
       status

@@ -72,11 +72,11 @@ dbHook.tasks.insert([
         },
       },
       {
-        fieldId: "DESCRIPTION",
+        fieldId: "NOTE",
         format: "TEXT",
         type: "text",
         order: 2,
-        label: "Description",
+        label: "Note",
         helperText: "Informacje o testowym polu Description",
         meta: {
           required: false,
@@ -147,11 +147,11 @@ dbHook.tasks.insert([
         },
       },
       {
-        fieldId: "DESCRIPTION",
+        fieldId: "NOTE",
         format: "TEXT",
         type: "text",
         order: 2,
-        label: "Description",
+        label: "Note",
         helperText: "Informacje o testowym polu Description",
         meta: {
           required: false,
@@ -257,12 +257,12 @@ dbHook.tasktypes.insert([{
       bool: false,
     },
   }, {
-    fieldId: "DESCRIPTION",
+    fieldId: "NOTE",
     format: "TEXT",
     order: 2,
     type: "text",
-    label: "Description",
-    helperText: "Description helperText",
+    label: "Note",
+    helperText: "Note helperText",
     meta: {
       required: false,
       min: 0,

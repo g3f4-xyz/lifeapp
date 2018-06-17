@@ -217,7 +217,7 @@ type TaskType implements Node {
   id: ID!
   taskType: String
   title: String
-  description: String
+  note: String
   priority: Boolean
   status: String
   fields(filterByIds: [String]): [FieldType]
