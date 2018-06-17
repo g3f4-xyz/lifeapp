@@ -31,11 +31,12 @@ const addTask = async task => {
       const date = newTask.fields.find(({ fieldId }) => fieldId === 'DATE_TIME').value.text;
       const person = newTask.fields.find(({ fieldId }) => fieldId === 'PERSON').value.text;
       const location = newTask.fields.find(({ fieldId }) => fieldId === 'LOCATION').value.text;
-      const when = (new Date(date)).toISOString();
+      const when = '10 seconds';
+      // const when = (new Date(date)).toISOString();
 
       console.log(['api:addTask:MEETING'], { date, when });
 
-      schedule('10 seconds', 'notification', {
+      schedule(when, 'notification', {
         ownerId: task.ownerId,
         notification: {
           body: `Time: ${date} | Location: ${location}`,
