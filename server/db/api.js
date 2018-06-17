@@ -1,3 +1,4 @@
+const moment = require('moment');
 const { schedule } = require('../agenda');
 const SubscriptionModel = require('../db/models/SubscriptionModel');
 const TaskModel = require('../db/models/TaskModel');
@@ -28,13 +29,17 @@ const addTask = async task => {
     const newTask = new TaskModel(task);
 
     if (newTask.taskType === 'MEETING') {
-      const when = newTask.fields.find(({ fieldId }) => fieldId === 'DATE_TIME').value.text;
+      const date = newTask.fields.find(({ fieldId }) => fieldId === 'DATE_TIME').value.text;
       const person = newTask.fields.find(({ fieldId }) => fieldId === 'PERSON').value.text;
       const location = newTask.fields.find(({ fieldId }) => fieldId === 'LOCATION').value.text;
+      const when = new Date(moment(date).subtract(1, 'hour').toString());
+
+      console.log(['api:addTask:MEETING'], { date, when });
+
       schedule(when, 'notification', {
         ownerId: task.ownerId,
         notification: {
-          body: `Time: ${when} | Location: ${location}`,
+          body: `Time: ${date} | Location: ${location}`,
           title: `You have meeting with ${person}`,
         },
       });
