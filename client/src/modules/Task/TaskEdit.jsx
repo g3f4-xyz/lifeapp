@@ -5,7 +5,7 @@ import update from 'immutability-helper';
 import IconButton from '@material-ui/core/IconButton';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import saveTaskMutation from '../../mutations/saveTask';
-import Fields from '../../components/Fields';
+import Fields from '../../containers/Fields';
 
 const styles = {
   row: {

@@ -37,7 +37,7 @@ dbHook.tasks.insert([
         fieldId: "PRIORITY",
         format: "BOOL",
         type: "switch",
-        order: 0,
+        order: -2,
         label: "Important",
         helperText: "Informacje o testowym polu Priority",
         meta: {
@@ -50,7 +50,7 @@ dbHook.tasks.insert([
       {
         fieldId: "STATUS",
         format: "CHOICE",
-        order: 0,
+        order: -1,
         type: "select",
         label: "Status",
         helperText: "Informacje o testowym polu Status",
@@ -112,7 +112,7 @@ dbHook.tasks.insert([
         fieldId: "PRIORITY",
         format: "BOOL",
         type: "switch",
-        order: 0,
+        order: -2,
         label: "Important",
         helperText: "Informacje o testowym polu Priority",
         meta: {
@@ -125,7 +125,7 @@ dbHook.tasks.insert([
       {
         fieldId: "STATUS",
         format: "CHOICE",
-        order: 0,
+        order: -1,
         type: "select",
         label: "Status",
         helperText: "Informacje o testowym polu Status",
@@ -208,7 +208,7 @@ dbHook.tasktypes.insert([{
   fields: [{
     fieldId: "TITLE",
     format: "TEXT",
-    order: -1,
+    order: 1,
     type: "text",
     label: "Title",
     helperText: "Title helperText",
@@ -295,7 +295,7 @@ dbHook.tasktypes.insert([{
   }, {
     fieldId: "DATE_TIME",
     format: "TEXT",
-    order: 4,
+    order: 3,
     type: "datetime-local",
     label: "Date and time",
     helperText: "Date and time helperText",
@@ -316,7 +316,7 @@ dbHook.tasktypes.insert([{
   fields: [{
     fieldId: "PERSON",
     format: "TEXT",
-    order:5,
+    order: 4,
     type: "text",
     label: "Person",
     helperText: "Person helperText",
@@ -337,7 +337,7 @@ dbHook.tasktypes.insert([{
   fields: [{
     fieldId: "RELATED_TASKS",
     format: "TEXT",
-    order: 6,
+    order: 3,
     type: "text",
     label: "Related tasks",
     helperText: "Related tasks helperText",

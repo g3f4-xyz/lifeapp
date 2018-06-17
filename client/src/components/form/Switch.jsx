@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withStyles } from '@material-ui/core/styles';
 import SwitchComponent from '@material-ui/core/Switch';
-import FormGroup from '@material-ui/core/FormGroup';
 
 const styles = theme => ({
   formControl: {
@@ -21,9 +21,8 @@ class Switch extends React.Component {
     const { classes, id, fieldId, label, checked, onChange } = this.props;
 
     return (
-      <FormGroup>
+      <FormControl className={classes.formControl}>
         <FormControlLabel
-          className={classes.formControl}
           id={id}
           control={
             <SwitchComponent
@@ -34,7 +33,7 @@ class Switch extends React.Component {
           }
           label={label}
         />
-      </FormGroup>
+      </FormControl>
     )
   }
 }
