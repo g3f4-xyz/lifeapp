@@ -1,5 +1,5 @@
 const { fromGlobalId } = require('graphql-relay');
-const { getTask, getTaskList, getTaskType, getTaskTypeList, getUser } = require('../db/api');
+const { getTask, getTaskList, getTaskType, getTaskTypeList, getUser } = require('../api');
 
 const GETTERS = {
   TaskType: getTask,

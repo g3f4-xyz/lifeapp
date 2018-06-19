@@ -1,8 +1,8 @@
 const moment = require('moment');
-const { schedule } = require('../agenda');
-const SubscriptionModel = require('../db/models/SubscriptionModel');
-const TaskModel = require('../db/models/TaskModel');
-const TaskTypeModel = require('../db/models/TaskTypeModel');
+const SubscriptionModel = require('.//models/SubscriptionModel');
+const TaskModel = require('.//models/TaskModel');
+const TaskTypeModel = require('.//models/TaskTypeModel');
+const emitter = require('./emitter');
 
 const addSubscription = async (ownerId, subscription) => {
   console.log(['api:addSubscription'], { ownerId, subscription });
@@ -28,24 +28,13 @@ const addTask = async task => {
   try {
     const newTask = new TaskModel(task);
 
-    if (newTask.taskType === 'MEETING') {
-      const date = newTask.fields.find(({ fieldId }) => fieldId === 'DATE_TIME').value.text;
-      const person = newTask.fields.find(({ fieldId }) => fieldId === 'PERSON').value.text;
-      const location = newTask.fields.find(({ fieldId }) => fieldId === 'LOCATION').value.text;
-      const when = new Date(moment(date).subtract(1, 'hour').toString());
 
-      console.log(['api:addTask:MEETING'], { date, when });
 
-      schedule(when, 'notification', {
-        ownerId: task.ownerId,
-        notification: {
-          body: `Time: ${date} | Location: ${location}`,
-          title: `You have meeting with ${person}`,
-        },
-      });
-    }
+    await newTask.save();
 
-    return await newTask.save();
+    emitter.emit('task:added', newTask);
+
+    return newTask;
   }
 
   catch (error) {

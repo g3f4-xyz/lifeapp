@@ -1,4 +1,4 @@
-const { addSubscription } = require('../db/api');
+const { addSubscription } = require('../api');
 
 module.exports = async (req, res) => {
   // Get pushSubscription object

@@ -1,12 +1,14 @@
 const Agenda = require('agenda');
+const moment = require('moment');
 const webPush = require('web-push');
 const { DB_HOST } = require('./config');
+const emitter = require('./api/emitter');
 
 let agenda = new Agenda({ db: { address: DB_HOST } });
 
 agenda.define('notification', async (job, done) => {
   console.log(['agenda:job:notification'], job.attrs);
-  const { getSubscriptions } = require('./db/api');
+  const { getSubscriptions } = require('./api');
   const { ownerId, notification: { body, title } } = job.attrs.data;
   const payload = JSON.stringify({
     title,
@@ -28,7 +30,7 @@ agenda.define('notification', async (job, done) => {
 });
 
 agenda.on('ready', () => {
-  console.log(['agenda:ready']);
+  console.log('agenda ready');
   agenda.start();
 });
 
@@ -41,10 +43,22 @@ const graceful = () => {
 process.on('SIGTERM', graceful);
 process.on('SIGINT' , graceful);
 
-module.exports = {
-  schedule: (when, job, data, callback) => {
-    console.log(['agenda:schedule'], when, job, data, callback);
+emitter.on('task:added', (task) => {
+  console.log(['api:emitter:on:task:added'], task);
+  if (task.taskType === 'MEETING') {
+    const date = task.fields.find(({ fieldId }) => fieldId === 'DATE_TIME').value.text;
+    const person = task.fields.find(({ fieldId }) => fieldId === 'PERSON').value.text;
+    const location = task.fields.find(({ fieldId }) => fieldId === 'LOCATION').value.text;
+    const when = new Date(moment(date).subtract(1, 'hour').toString());
 
-    return agenda.schedule(when, job, data, callback);
-  },
-};
+    console.log(['api:addTask:MEETING'], { date, when });
+
+    agenda.schedule(when, 'notification', {
+      ownerId: task.ownerId,
+      notification: {
+        body: `Time: ${date} | Location: ${location}`,
+        title: `You have meeting with ${person}`,
+      },
+    });
+  }
+});

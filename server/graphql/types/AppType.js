@@ -1,6 +1,6 @@
 const { GraphQLID, GraphQLObjectType, GraphQLString } = require('graphql');
 const { globalIdField, fromGlobalId } = require('graphql-relay');
-const { getEmptyTask, getTask } = require('../../db/api');
+const { getEmptyTask, getTask } = require('../../api');
 const TaskType = require('./TaskType');
 const TaskListType = require('./TaskListType');
 const TaskTypeListType = require('./TaskTypeListType');

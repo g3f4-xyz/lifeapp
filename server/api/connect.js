@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { DB_HOST } = require('../config');
+require('./emitter');
 
 // Use native promises
 mongoose.Promise = global.Promise;
