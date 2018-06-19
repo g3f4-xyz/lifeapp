@@ -19,6 +19,8 @@ import grey from '@material-ui/core/colors/grey';
 import red from '@material-ui/core/colors/red';
 import yellow from '@material-ui/core/colors/yellow';
 
+window.moment = require('moment')
+
 const styles = theme => ({
   actions: {
     display: 'flex',
@@ -79,7 +81,7 @@ class TaskListFragment extends React.PureComponent {
                 TODO: <CheckBoxOutlineBlankIcon className={classnames(classes.grey, classes.icon)} />,
                 IN_PROGRESS: <SlideshowIcon className={classnames(classes.yellow, classes.icon)} />,
                 DONE: <CheckBoxIcon className={classnames(classes.green, classes.icon)} />,
-              }[status]}
+              }[status] || <icon />}
             </Tooltip>
           {priority && (
             <Tooltip title="Important!">

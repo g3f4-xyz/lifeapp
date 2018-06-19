@@ -142,10 +142,56 @@ const getSubscriptions = async ownerId => {
   }
 };
 
-const getEmptyTask = async type => {
-  console.log(['api:getEmptyTask'], type);
+const FIELDS_TYPES = {
+  TEXT: 'text',
+  SELECT: 'select',
+  SWITCH: 'switch',
+  DATETIME_LOCAL: 'datetime-local',
+};
+
+const getEmptyTask = async taskType => {
+  console.log(['api:getEmptyTask'], taskType);
+  const defaultValueByTaskTypeAndFieldId = {
+    MEETING: {
+      TITLE: {
+        text: 'Spotkanie z ',
+      },
+    },
+  };
+  const defaultValueByFieldId = {
+    STATUS: {
+      id: 'TODO',
+    },
+  };
+  const defaultValuesByTypeMap = {
+    [FIELDS_TYPES.DATETIME_LOCAL]: {
+      text: moment(new Date(Date.now()), 'YYYY-MM-DD HH:mm').add(1, 'hours').add(1, 'minute').format().slice(0, 16),
+    },
+    [FIELDS_TYPES.TEXT]: {
+      text: '',
+    },
+    [FIELDS_TYPES.SELECT]: {
+      id: '',
+    },
+    [FIELDS_TYPES.SWITCH]: {
+      bool: false,
+    },
+  };
+  const mapFieldDefaultValue = field => {
+    console.log(['mapFieldDefaultValue'], field);
+    const { fieldId, type } = field;
+    const defaultValue =
+      defaultValueByTaskTypeAndFieldId[taskType] && defaultValueByTaskTypeAndFieldId[taskType][fieldId] ||
+      defaultValueByFieldId[fieldId] ||
+      defaultValuesByTypeMap[type];
+
+    return {
+      ...field,
+      value: defaultValue,
+    };
+  };
   try {
-    const taskType = await TaskTypeModel.findOne({ typeId: type });
+    const taskTypeModel = await TaskTypeModel.findOne({ typeId: taskType });
     const taskTypeList = await TaskTypeModel.find().sort({ _id : -1 });
     const getTypeRelatedFields = (type, aggregator = []) => {
       const { parentId, fields = [] } = type.toJSON();
@@ -160,8 +206,8 @@ const getEmptyTask = async type => {
     };
 
     return {
-      taskType: type,
-      fields: getTypeRelatedFields(taskType),
+      taskType,
+      fields: getTypeRelatedFields(taskTypeModel).map(mapFieldDefaultValue),
     };
   }
 
