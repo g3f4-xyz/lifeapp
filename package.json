@@ -14,7 +14,6 @@
     "start": "DB=remote node server",
     "test": "echo \"Error: no test specified\" && exit 0",
     "build:login": "babel-node ./scripts/buildLogin.js",
-    "update:schema": "node ./scripts/updateSchema",
     "validate": "npm ls"
   },
   "keywords": [],

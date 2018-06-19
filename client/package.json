@@ -22,11 +22,14 @@
     "test": "node setup && react-scripts test --env=jsdom",
     "start": "node setup && react-scripts start",
     "eject": "react-scripts eject",
-    "relay": "relay-compiler --src ./src --schema ../data/schema.graphql --extensions=jsx --extensions=js",
-    "relay:watch": "relay-compiler --src ./src --schema ../data/schema.graphql --extensions=jsx --extensions=js --watch"
+    "get:local:schema": "fetch-graphql-schema http://localhost:30000/graphql -o schema.json",
+    "relay": "relay-compiler --src ./src --schema ./schema.graphql --extensions=jsx --extensions=js",
+    "relay:watch": "relay-compiler --src ./src --schema ./schema.graphql --extensions=jsx --extensions=js --watch"
   },
   "devDependencies": {
     "babel-plugin-relay": "^1.6.0",
+    "fetch-graphql-schema": "0.2.1",
+    "graphql": "^0.13.2",
     "react-scripts": "1.0.13",
     "relay-compiler": "^1.6.0"
   }
